@@ -1,13 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Platform, Button, StyleSheet, Text, View } from 'react-native';
 
 // In App.js in a new project
 import * as React from 'react';
 import { NavigationContainer, TabActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 function HomeScreen({ navigation }) {
   return (
@@ -24,6 +24,7 @@ function MapScreen() {
     </View>
   );
 }
+
 
 function MessagesScreen() {
   return (
@@ -44,7 +45,13 @@ function ProfileScreen() {
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator initialRouteName="HomeScreen"
+      tabBarPosition="bottom"
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarItemStyle: { width: 100 },
+        tabBarStyle: { backgroundColor: 'powderblue' },
+      }}>
       <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
@@ -57,6 +64,8 @@ function App() {
 export default App;
 
 const styles = StyleSheet.create({
+  //height: Platform.OS === 'ios' ? 200 : 100, // example of platform specific styling!
+                                             // do more of this!
   container: {
     flex: 1,
     backgroundColor: '#fff',
