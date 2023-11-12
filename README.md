@@ -1,22 +1,24 @@
 # park-swift
 Repository for the Park Swift project team within VOID Tech at the University of Michigan
 
-To start application with expo:
+First go to Park-Swift app directory:
 
 `cd Park-Swift`
 
+Then run the installer script:
+
+`./bin/install`
+
+This installer script executes the following lines:
+
 `npm install`
-
-`npx expo start` or `npx expo start --tunnel` (use --tunnel if `npx expo start` doesn't work on Windows)
-
-To install dependencies run:
 
 `npm install @react-navigation/material-top-tabs react-native-tab-view`
 
 `npx expo install react-native-pager-view`
 
-Make sure node is updated to the latest version before running `npx expo start` by running one of the following:
-
 `nvm install node --reinstall-packages-from=current`
 
-`nvm use node`
+Lastly, to start the app use:
+
+`npx expo start` or `npx expo start --tunnel` (use --tunnel if `npx expo start` doesn't work on Windows)
