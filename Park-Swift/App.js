@@ -1,15 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 // In App.js in a new project
 import * as React from 'react';
-import { NavigationContainer, TabActions } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const Tab = createMaterialTopTabNavigator();
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home Screen</Text>
