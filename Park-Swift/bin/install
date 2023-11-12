@@ -1,0 +1,9 @@
+#!/bin/sh
+
+npm install
+
+npm install @react-navigation/material-top-tabs react-native-tab-view
+
+npx expo install react-native-pager-view
+
+nvm install node --reinstall-packages-from=current
