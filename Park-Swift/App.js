@@ -1,16 +1,38 @@
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, View} from 'react-native';
+import axios from 'axios';
 // In App.js in a new project
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+const baseUrl = 'http://localhost:3001'; // Update with the correct address
 
 const Tab = createMaterialTopTabNavigator();
 
 function HomeScreen() {
+  const [data, setData] = useState("");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/api/homepage`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        setData(responseData.message);
+      } catch (error) {
+        console.error('Error fetching data from the server', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Home Screen</Text>
+      <Text>Data from the server: {data.message}</Text>
     </View>
   );
 }

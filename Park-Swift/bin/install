@@ -6,4 +6,6 @@ npm install @react-navigation/material-top-tabs react-native-tab-view
 
 npx expo install react-native-pager-view
 
+npm install axios
+
 nvm install node --reinstall-packages-from=current
