@@ -4,13 +4,20 @@ import { StyleSheet, Text, View } from 'react-native';
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import CurrentTile from './screens/home';
+import SearchBar from './screens/search';
+
 
 const Tab = createMaterialTopTabNavigator();
 
 function HomeScreen() {
+  // adding currentTile and search bar components
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
+      <React.Fragment>
+        <SearchBar/>
+        <CurrentTile/>
+      </React.Fragment>
     </View>
   );
 }
@@ -71,3 +78,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+
+//Search Bar
+
+
+
+
+
+// creating box component
+
+
+
