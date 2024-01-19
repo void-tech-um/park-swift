@@ -21,4 +21,6 @@ This installer script executes the following lines:
 
 Lastly, to start the app use:
 
-`npx expo start` or `npx expo start --tunnel` (use --tunnel if `npx expo start` doesn't work on Windows)
+`npx expo start` or `npx expo start --tunnel` (use --tunnel if `npx expo start` doesn't work on Windows). Also use `npx expo start --tunnel` if `npx expo start` doesn't work on Mac and you have an error message similar to below:
+
+[Alt text](<tunnel-issue-mac.png>)
