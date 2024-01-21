@@ -2,9 +2,6 @@ import 'react-native-gesture-handler';
 // import React, { useEffect, useState } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 // import { LoginScreen, HomeScreen, RegistrationScreen } from './screens'
-// import {decode, encode} from 'base-64'
-// if (!global.btoa) {  global.btoa = encode }
-// if (!global.atob) { global.atob = decode }
 
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -193,45 +190,45 @@ export default function App() {
 
 
 
-// const Tab = createMaterialTopTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 
-// function HomeScreen() {
-//   // adding currentTile and search bar components
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <React.Fragment>
-//         <SearchBar/>
-//         <CurrentTile/>
-//       </React.Fragment>
-//     </View>
-//   );
-// }
+function HomeScreen() {
+  // adding currentTile and search bar components
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <React.Fragment>
+        <SearchBar/>
+        <CurrentTile/>
+      </React.Fragment>
+    </View>
+  );
+}
 
-// function MapScreen() {
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text>Map Screen</Text>
-//     </View>
-//   );
-// }
+function MapScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Map Screen</Text>
+    </View>
+  );
+}
 
 
-// function MessagesScreen() {
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text>Messages Screen</Text>
-//     </View>
-//   );
-// }
+function MessagesScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Messages Screen</Text>
+    </View>
+  );
+}
 
-// function ProfileScreen() {
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Text>Profile Screen</Text>
-//     </View>
-//   );
-// }
+function ProfileScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Profile Screen</Text>
+    </View>
+  );
+}
 
 // function App() {
 //   return (
