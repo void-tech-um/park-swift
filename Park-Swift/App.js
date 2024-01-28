@@ -16,6 +16,7 @@ import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import firebase from "./services/firebase-config.js";
+import ProfileDetail from './screens/profile.js';
 
 
 const Stack = createStackNavigator();
@@ -225,7 +226,7 @@ function MessagesScreen() {
 function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile Screen</Text>
+      <ProfileDetail/>
     </View>
   );
 }
