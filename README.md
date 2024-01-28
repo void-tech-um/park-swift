@@ -15,9 +15,9 @@ This installer script executes the following lines:
 
 `npm install @react-navigation/material-top-tabs react-native-tab-view`
 
-`npx expo install react-native-pager-view`
-
 `nvm install node --reinstall-packages-from=current`
+
+`npx expo install react-native-pager-view`
 
 Lastly, to start the app use:
 
@@ -26,3 +26,5 @@ Lastly, to start the app use:
 Also, use `npx expo start --tunnel` on Mac if `npx expo start` doesn't work and you have an error message similar to below:
 
 [Tunnel Error Message](<tunnel-issue-mac.png>)
+
+If you are having an error that says nvm is not installed please refer to [NVM installation instructions](<https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating>)
