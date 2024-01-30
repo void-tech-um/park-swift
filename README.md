@@ -9,15 +9,11 @@ Then run the installer script:
 
 `./bin/install`
 
-This installer script executes the following lines:
-
-`npm install`
-
-`npm install @react-navigation/material-top-tabs react-native-tab-view`
+If the installer script doesn't work and you get an issue stating that either node isn't installed, or that it is the wrong version please run the following two commands and then try to run the installer script again:
 
 `nvm install node --reinstall-packages-from=current`
 
-`npx expo install react-native-pager-view`
+`npm install`
 
 Lastly, to start the app use:
 
