@@ -12,6 +12,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import ProfileDetail from './screens/profile';
+import ListingInfoPage from './screens/listinginfopage.js';
+import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -165,36 +168,36 @@ function RegistrationScreen({navigation}) {
     )
 }
 
-export default function App() {
+// export default function App() {
 
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+//   const [loading, setLoading] = useState(true)
+//   const [user, setUser] = useState(null)
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        { user ? (
-          <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} extraData={user} />}
-          </Stack.Screen>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Registration" component={RegistrationScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator>
+//         { user ? (
+//           <Stack.Screen name="Home">
+//             {props => <HomeScreen {...props} extraData={user} />}
+//           </Stack.Screen>
+//         ) : (
+//           <>
+//             <Stack.Screen name="Login" component={LoginScreen} />
+//             <Stack.Screen name="Registration" component={RegistrationScreen} />
+//           </>
+//         )}
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// }
 
 
 
 const Tab = createMaterialTopTabNavigator();
 
-
 function HomeScreen() {
   // adding currentTile and search bar components
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <React.Fragment>
@@ -225,33 +228,36 @@ function MessagesScreen() {
 function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile Screen</Text>
+      <ProfileDetail/>
     </View>
   );
 }
 
-// function App() {
-//   return (
-//     <NavigationContainer>
-//       <Tab.Navigator initialRouteName="HomeScreen"
-//       tabBarPosition="bottom"
-//       screenOptions={{
-//         tabBarLabelStyle: { fontSize: 12 },
-//         tabBarItemStyle: { width: 100 },
-//         tabBarStyle: { backgroundColor: 'powderblue' },
-//       }}>
-//         <Tab.Screen name="Map" component={MapScreen} />
-//         <Tab.Screen name="LoginScreen" component={LoginScreen} />
-//         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
-//         <Tab.Screen name="Home" component={HomeScreen} />
-//         <Tab.Screen name="Messages" component={MessagesScreen} />
-//         <Tab.Screen name="Profile" component={ProfileScreen} />
-//       </Tab.Navigator>
-//     </NavigationContainer>
-//   );
-// }
+// uncomment this when building around firebase auth fail
+function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator initialRouteName="HomeScreen"
+      tabBarPosition="bottom"
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarItemStyle: { width: 100 },
+        tabBarStyle: { backgroundColor: 'powderblue' },
+      }}>
+        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="LoginScreen" component={LoginScreen} />
+        <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
+        <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
+        <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Messages" component={MessagesScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
 
-// export default App;
+export default App;
 
 const styles = StyleSheet.create({
   //height: Platform.OS === 'ios' ? 200 : 100, // example of platform specific styling!

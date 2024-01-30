@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons'; 
-
+import HamburgerMenu from './hamburgerMenu.js';
 
 
 const SearchBar = () => {
@@ -9,30 +9,35 @@ const SearchBar = () => {
     const handleSearch = (text) => {
         setSearchText(text);
     };
+
+    const [isMenuVisible, setMenuVisible] = useState(false);
+
+    const toggleMenu = () => {
+      setMenuVisible(!isMenuVisible);
+    };
     
     return (
         <View style = {styles_searchbar.container}>
 
-        <TouchableOpacity style={styles_searchbar.iconContainer}>
+          <TouchableOpacity style={styles_searchbar.iconContainer}>
+            <AntDesign name="menuunfold" size={24} color="white" onPress={toggleMenu} />
+          </TouchableOpacity>
+          <HamburgerMenu isVisible={isMenuVisible} onClose={toggleMenu} />
 
-            
-        <AntDesign name="menuunfold" size={24} color="white" />
-      </TouchableOpacity>
+          <TextInput 
+            style = {styles_searchbar.input}
+            placeholder = "Search address"
+            placeholderTextColor = "gray"
+            onChangeText = {handleSearch}
+            value = {searchText}
+          />
 
-      <TextInput 
-        style = {styles_searchbar.input}
-        placeholder = "Search address"
-        placeholderTextColor = "gray"
-        onChangeText = {handleSearch}
-        value = {searchText}
-    />
-
-    <TouchableOpacity style = {styles_searchbar.iconContainer}>
-        <Ionicons name = "ios-funnel-outline" size = {24} color = "white" />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity style = {styles_searchbar.iconContainer}>
+            <Ionicons name = "ios-funnel-outline" size = {24} color = "white" />
+          </TouchableOpacity>
+        </View>
     );
-    };
+  };
 
     const styles_searchbar = StyleSheet.create({
         container: {
