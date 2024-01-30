@@ -191,8 +191,8 @@ function RegistrationScreen({navigation}) {
 // }
 
 
-const Tab = createMaterialTopTabNavigator();
 
+const Tab = createMaterialTopTabNavigator();
 
 function HomeScreen() {
   // adding currentTile and search bar components
