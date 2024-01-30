@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import ListingInfoPage from './screens/listinginfopage.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -231,6 +232,7 @@ function ProfileScreen() {
   );
 }
 
+// uncomment this when building around firebase auth fail
 function App() {
   return (
     <NavigationContainer>
@@ -243,6 +245,7 @@ function App() {
       }}>
         <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="LoginScreen" component={LoginScreen} />
+        <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
