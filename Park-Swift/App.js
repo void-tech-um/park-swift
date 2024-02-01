@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import ProfileDetail from './screens/profile';
 import ListingInfoPage from './screens/listinginfopage.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -193,7 +194,6 @@ function RegistrationScreen({navigation}) {
 
 const Tab = createMaterialTopTabNavigator();
 
-
 function HomeScreen() {
   // adding currentTile and search bar components
 
@@ -227,7 +227,7 @@ function MessagesScreen() {
 function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile Screen</Text>
+      <ProfileDetail/>
     </View>
   );
 }
