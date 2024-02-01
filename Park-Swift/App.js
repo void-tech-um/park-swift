@@ -196,6 +196,7 @@ const Tab = createMaterialTopTabNavigator();
 
 function HomeScreen() {
   // adding currentTile and search bar components
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <React.Fragment>
