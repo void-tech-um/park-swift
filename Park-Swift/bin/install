@@ -6,4 +6,8 @@ npm install @react-navigation/material-top-tabs react-native-tab-view
 
 npx expo install react-native-pager-view
 
+npm install react-native-star-rating
+
+npm install react-native-stars
+
 nvm install node --reinstall-packages-from=current

@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import ProfileDetail from './screens/profile';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -42,7 +43,7 @@ function MessagesScreen() {
 function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile Screen</Text>
+      <ProfileDetail/>
     </View>
   );
 }
