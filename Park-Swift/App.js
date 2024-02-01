@@ -13,6 +13,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
 import ListingInfoPage from './screens/listinginfopage.js';
+import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -245,6 +246,7 @@ function App() {
         <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="LoginScreen" component={LoginScreen} />
         <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
+        <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
