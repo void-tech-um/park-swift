@@ -18,7 +18,9 @@ import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+
 import firebase from "./services/firebase-config.js";
+import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
 
 
 const Stack = createStackNavigator();
@@ -246,12 +248,15 @@ function App() {
       }}>
         <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="LoginScreen" component={LoginScreen} />
+        <Tab.Screen name="ListYourSpaceScreen" component={ListYourSpaceScreen} />
         <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
         <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        
+
       </Tab.Navigator>
     </NavigationContainer>
   );
