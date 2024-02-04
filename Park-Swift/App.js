@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import RVP from './screens/recentlyVisitedProfiles.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -165,28 +166,28 @@ function RegistrationScreen({navigation}) {
     )
 }
 
-export default function App() {
+// export default function App() {
 
-  const [loading, setLoading] = useState(true)
-  const [user, setUser] = useState(null)
+//   const [loading, setLoading] = useState(true)
+//   const [user, setUser] = useState(null)
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        { user ? (
-          <Stack.Screen name="Home">
-            {props => <HomeScreen {...props} extraData={user} />}
-          </Stack.Screen>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Registration" component={RegistrationScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+//   return (
+//     <NavigationContainer>
+//       <Stack.Navigator>
+//         { user ? (
+//           <Stack.Screen name="Home">
+//             {props => <HomeScreen {...props} extraData={user} />}
+//           </Stack.Screen>
+//         ) : (
+//           <>
+//             <Stack.Screen name="Login" component={LoginScreen} />
+//             <Stack.Screen name="Registration" component={RegistrationScreen} />
+//           </>
+//         )}
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// }
 
 
 
@@ -230,28 +231,35 @@ function ProfileScreen() {
   );
 }
 
-// function App() {
-//   return (
-//     <NavigationContainer>
-//       <Tab.Navigator initialRouteName="HomeScreen"
-//       tabBarPosition="bottom"
-//       screenOptions={{
-//         tabBarLabelStyle: { fontSize: 12 },
-//         tabBarItemStyle: { width: 100 },
-//         tabBarStyle: { backgroundColor: 'powderblue' },
-//       }}>
-//         <Tab.Screen name="Map" component={MapScreen} />
-//         <Tab.Screen name="LoginScreen" component={LoginScreen} />
-//         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
-//         <Tab.Screen name="Home" component={HomeScreen} />
-//         <Tab.Screen name="Messages" component={MessagesScreen} />
-//         <Tab.Screen name="Profile" component={ProfileScreen} />
-//       </Tab.Navigator>
-//     </NavigationContainer>
-//   );
-// }
+function RecentlyVisitedProfiles() {
+  return (
+    <RVP/>
+  );
+}
 
-// export default App;
+function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator initialRouteName="HomeScreen"
+      tabBarPosition="bottom"
+      screenOptions={{
+        tabBarLabelStyle: { fontSize: 12 },
+        tabBarItemStyle: { width: 100 },
+        tabBarStyle: { backgroundColor: 'powderblue' },
+      }}>
+        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="LoginScreen" component={LoginScreen} />
+        <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Messages" component={MessagesScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;
 
 const styles = StyleSheet.create({
   //height: Platform.OS === 'ios' ? 200 : 100, // example of platform specific styling!
