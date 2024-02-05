@@ -13,6 +13,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
 import Listing from './screens/listing.js';
+import ProfileDetail from './screens/profile';
+import ListingInfoPage from './screens/listinginfopage.js';
+import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -193,9 +196,9 @@ function RegistrationScreen({navigation}) {
 
 const Tab = createMaterialTopTabNavigator();
 
-
 function HomeScreen() {
   // adding currentTile and search bar components
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <React.Fragment>
@@ -226,11 +229,12 @@ function MessagesScreen() {
 function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile Screen</Text>
+      <ProfileDetail/>
     </View>
   );
 }
 
+// uncomment this when building around firebase auth fail
 function App() {
   return (
     <NavigationContainer>
@@ -243,6 +247,8 @@ function App() {
       }}>
         <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="LoginScreen" component={LoginScreen} />
+        <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
+        <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
