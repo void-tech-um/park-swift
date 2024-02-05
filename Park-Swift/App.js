@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import Listing from './screens/listing.js';
 import ProfileDetail from './screens/profile';
 import ListingInfoPage from './screens/listinginfopage.js';
 import ThankYouScreen from './screens/confirmation.js';
@@ -252,6 +253,7 @@ function App() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Listing" component={Listing} />
       </Tab.Navigator>
     </NavigationContainer>
   );
