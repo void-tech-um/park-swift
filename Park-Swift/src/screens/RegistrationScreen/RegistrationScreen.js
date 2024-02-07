@@ -38,7 +38,6 @@ export default function RegistrationScreen({navigation}) {
                 })
                     .then(() => {
                         navigation.navigate('Home', {user: data})
-                        // 
                     })
                     .catch((error) => {
                         console.error('Error setting user data:', error);

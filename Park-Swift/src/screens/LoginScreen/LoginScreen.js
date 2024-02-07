@@ -18,19 +18,21 @@ export default function LoginScreen({navigation}) {
     const onLoginPress = () => {
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+            // alert(userCredential.user.uid)
             const uid = userCredential.user.uid;
-
-            // Assuming 'auth' is your Firebase Authentication instance
-            // and 'db' is your Firebase Realtime Database instance
             const usersRef = ref(database, 'users/' + uid);
+            // alert(usersRef.key)
             onValue(usersRef, (snapshot) => {
                 const userData = snapshot.val();
-
                 if (!userData) {
                     alert("User does not exist anymore.");
                     return;
+                }else{
+                    
+                    navigation.navigate('Home', { user: userData });
                 }
-                navigation.navigate('Home', { user: userData });
+                
+                
             }, {
                 onlyOnce: true // This ensures the callback is triggered only once
             });
