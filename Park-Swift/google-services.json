@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "955711910546",
+    "project_id": "void-tech-fc970",
+    "storage_bucket": "void-tech-fc970.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955711910546:android:d0d06ea6325c2a0eceac4b",
+        "android_client_info": {
+          "package_name": "com.reactnativefirebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlo1fkwhVkPlnLC45s_nytlNUwpP17MpQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
