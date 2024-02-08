@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import RVP from './screens/recentlyVisitedProfiles.js';
 import Listing from './screens/listing.js';
 import ProfileDetail from './screens/profile';
 import ListingInfoPage from './screens/listinginfopage.js';
@@ -236,6 +237,11 @@ function ProfileScreen() {
   );
 }
 
+function RecentlyVisitedProfiles() {
+  return (
+    <RVP/>
+  );
+}
 // uncomment this when building around firebase auth fail
 function App() {
   return (
@@ -256,7 +262,7 @@ function App() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
-
+        <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} />
         <Tab.Screen name="Listing" component={Listing} />
       </Tab.Navigator>
     </NavigationContainer>
