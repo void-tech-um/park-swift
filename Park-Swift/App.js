@@ -18,8 +18,7 @@ import ListingInfoPage from './screens/listinginfopage.js';
 import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-
+import Tabs from './components/NavBar.js';
 import firebase from "./services/firebase-config.js";
 import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
 
@@ -198,7 +197,7 @@ function RegistrationScreen({navigation}) {
 
 const Tab = createMaterialTopTabNavigator();
 
-function HomeScreen() {
+export function HomeScreen() {
   // adding currentTile and search bar components
 
   return (
@@ -211,7 +210,7 @@ function HomeScreen() {
   );
 }
 
-function MapScreen() {
+export function MapScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Map Screen</Text>
@@ -220,7 +219,7 @@ function MapScreen() {
 }
 
 
-function MessagesScreen() {
+export function MessagesScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Messages Screen</Text>
@@ -228,7 +227,7 @@ function MessagesScreen() {
   );
 }
 
-function ProfileScreen() {
+export function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <ProfileDetail/>
@@ -240,25 +239,7 @@ function ProfileScreen() {
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="HomeScreen"
-      tabBarPosition="bottom"
-      screenOptions={{
-        tabBarLabelStyle: { fontSize: 12 },
-        tabBarItemStyle: { width: 100 },
-        tabBarStyle: { backgroundColor: 'powderblue' },
-      }}>
-        <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="LoginScreen" component={LoginScreen} />
-        <Tab.Screen name="ListYourSpaceScreen" component={ListYourSpaceScreen} />
-        <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
-        <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
-        <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Messages" component={MessagesScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-
-        <Tab.Screen name="Listing" component={Listing} />
-      </Tab.Navigator>
+      <Tabs/>
     </NavigationContainer>
   );
 }
