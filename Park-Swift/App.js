@@ -13,10 +13,16 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
 import RVP from './screens/recentlyVisitedProfiles.js';
+import Listing from './screens/listing.js';
+import ProfileDetail from './screens/profile';
+import ListingInfoPage from './screens/listinginfopage.js';
+import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+
 import firebase from "./services/firebase-config.js";
+import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
 
 
 const Stack = createStackNavigator();
@@ -193,9 +199,9 @@ function RegistrationScreen({navigation}) {
 
 const Tab = createMaterialTopTabNavigator();
 
-
 function HomeScreen() {
   // adding currentTile and search bar components
+
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <React.Fragment>
@@ -226,7 +232,7 @@ function MessagesScreen() {
 function ProfileScreen() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Profile Screen</Text>
+      <ProfileDetail/>
     </View>
   );
 }
@@ -236,7 +242,7 @@ function RecentlyVisitedProfiles() {
     <RVP/>
   );
 }
-
+// uncomment this when building around firebase auth fail
 function App() {
   return (
     <NavigationContainer>
@@ -249,11 +255,15 @@ function App() {
       }}>
         <Tab.Screen name="Map" component={MapScreen} />
         <Tab.Screen name="LoginScreen" component={LoginScreen} />
+        <Tab.Screen name="ListYourSpaceScreen" component={ListYourSpaceScreen} />
+        <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
+        <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
         <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} />
+        <Tab.Screen name="Listing" component={Listing} />
       </Tab.Navigator>
     </NavigationContainer>
   );
