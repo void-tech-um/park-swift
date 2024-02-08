@@ -93,7 +93,6 @@ function TabNav() {
   );
 }
 
-// uncomment this when building around firebase auth fail
 function App() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
@@ -101,6 +100,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* TODO: 104 AND 105 COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
         {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
         {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
         <Stack.Screen name="Tab" component={TabNav} />
