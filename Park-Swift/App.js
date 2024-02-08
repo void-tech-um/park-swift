@@ -100,7 +100,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* TODO: 104 AND 105 COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
+        {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
         {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
         {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
         <Stack.Screen name="Tab" component={TabNav} />
