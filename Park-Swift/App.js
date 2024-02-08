@@ -10,6 +10,7 @@ import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
+import RecentlyVisitedProfiles from './screens/recentlyVisitedProfiles.js';
 import Listing from './screens/listing.js';
 import ProfileDetail from './screens/profile';
 import ListingInfoPage from './screens/listinginfopage.js';
@@ -86,7 +87,7 @@ function TabNav() {
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
-
+        <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} />
         <Tab.Screen name="Listing" component={Listing} />
       </Tab.Navigator>
     

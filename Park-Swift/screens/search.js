@@ -44,7 +44,7 @@ const SearchBar = () => {
           flexDirection: 'row',
           alignItems: 'center',
           backgroundColor: '#333', // Dark grey background
-          padding: 10,
+          padding: 0,
         },
         input: {
           flex: 1,
