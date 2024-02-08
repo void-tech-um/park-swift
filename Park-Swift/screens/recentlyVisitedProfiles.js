@@ -1,12 +1,12 @@
 import React from 'react';
 // import { Appbar } from 'react-native-paper';
-import { View,Text } from 'react-native';
+import { View,Text, ScrollView } from 'react-native';
 import {IconButton } from 'react-native-paper';
 import SearchbarComponent from './searchBar';
 import ProfileCard from './profileCard';
 
 
-const RVP = () => {
+const RecentlyVisitedProfiles = () => {
     return(
         <>
         <View>
@@ -18,14 +18,16 @@ const RVP = () => {
                 <View style={{flex: 0.9}}><Text style={{marginTop: 90, fontSize: 27, textAlign: 'center', fontWeight: "bold"}}> Recently Visited Profiles</Text></View>
             </View>
             <View style={{marginTop: 0}}><SearchbarComponent/></View>
-            <View><ProfileCard /></View>
-            <View><ProfileCard /></View>
-            <View><ProfileCard /></View>
-            <View><ProfileCard /></View>
+            <ScrollView>
+                <View><ProfileCard /></View>
+                <View><ProfileCard /></View>
+                <View><ProfileCard /></View>
+                <View><ProfileCard /></View>
+            </ScrollView>
         </View>
         </>
     );
 };
 
 
-export default RVP;
+export default RecentlyVisitedProfiles;
