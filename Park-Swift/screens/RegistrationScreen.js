@@ -36,7 +36,7 @@ export default function RegistrationScreen({navigation}) {
                     id: data.id
                 })
                     .then(() => {
-                        navigation.navigate('Home', {user: data})
+                        navigation.navigate('Tab', {user: data})
                     })
                     .catch((error) => {
                         console.error('Error setting user data:', error);
@@ -54,7 +54,7 @@ export default function RegistrationScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logo}
-                    source={require('../../../assets/icon.png')}
+                    //source={require('../../../assets/icon.png')}
                 />
                 <TextInput
                     style={styles.input}
@@ -163,5 +163,3 @@ const styles = StyleSheet.create({
         fontSize: 16
     }
 })
-
-export { default as RegistrationScreen }

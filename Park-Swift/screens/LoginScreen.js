@@ -28,7 +28,7 @@ export default function LoginScreen({navigation}) {
                     return;
                 }else{
                     
-                    navigation.navigate('Home', { user: userData });
+                    navigation.navigate('Tab', { user: userData });
                 }
                 
                 
@@ -51,7 +51,7 @@ export default function LoginScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logo}
-                    source={require('../../../assets/icon.png')}
+                    //source={require('../../../assets/icon.png')}
                 />
                 <TextInput
                     style={styles.input}
@@ -142,4 +142,3 @@ const styles = StyleSheet.create({
     }
 })
 
-export { default as LoginScreen }

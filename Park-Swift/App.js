@@ -1,15 +1,13 @@
 import 'react-native-gesture-handler';
-// import React, { useEffect, useState } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-// import { LoginScreen, HomeScreen, RegistrationScreen } from './screens'
-
 import { StyleSheet, Text, View } from 'react-native';
 
-// In App.js in a new project
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import LoginScreen from './screens/LoginScreen.js';
+import RegistrationScreen from './screens/RegistrationScreen.js';
 import CurrentTile from './screens/home';
 import SearchBar from './screens/search';
 import Listing from './screens/listing.js';
@@ -18,6 +16,11 @@ import ListingInfoPage from './screens/listinginfopage.js';
 import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { app, analytics, auth, database } from './services/config';
+import { ref, set } from 'firebase/database';
+//import {decode, encode} from 'base-64'
+//if (!global.btoa) {  global.btoa = encode }
+//if (!global.atob) { global.atob = decode }
 
 import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
 
@@ -66,10 +69,9 @@ function ProfileScreen() {
   );
 }
 
-// uncomment this when building around firebase auth fail
-function App() {
+function TabNav() {
   return (
-    <NavigationContainer>
+    
       <Tab.Navigator initialRouteName="HomeScreen"
       tabBarPosition="bottom"
       screenOptions={{
@@ -78,34 +80,38 @@ function App() {
         tabBarStyle: { backgroundColor: 'powderblue' },
       }}>
         <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="LoginScreen" component={LoginScreen} />
         <Tab.Screen name="ListYourSpaceScreen" component={ListYourSpaceScreen} />
         <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
         <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
-        <Tab.Screen name="RegistrationScreen" component={RegistrationScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
 
         <Tab.Screen name="Listing" component={Listing} />
       </Tab.Navigator>
+    
+  );
+}
+
+// uncomment this when building around firebase auth fail
+function App() {
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState(null)
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
+        {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
+        <Stack.Screen name="Tab" component={TabNav} />
+           {/* {props => <HomeScreen {...props} extraData={user} />}  */}
+        {/* </Stack.Screen> */}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default App;
-
-const styles = StyleSheet.create({
-  //height: Platform.OS === 'ios' ? 200 : 100, // example of platform specific styling!
-                                             // do more of this!
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
-
 
 
 // //Search Bar
