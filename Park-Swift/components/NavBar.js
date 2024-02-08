@@ -8,7 +8,7 @@ import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
 
 const Tab = createBottomTabNavigator();
 
-const Tabs = () => {
+const NavBar = () => {
     return(
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -56,4 +56,4 @@ const Tabs = () => {
     );
 }
 
-export default Tabs;
+export default NavBar;

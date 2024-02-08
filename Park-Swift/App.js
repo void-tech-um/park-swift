@@ -19,9 +19,10 @@ import ListingInfoPage from './screens/listinginfopage.js';
 import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import Tabs from './components/NavBar.js';
+import NavBar from './components/NavBar.js';
 import firebase from "./services/firebase-config.js";
 import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
+
 
 
 const Stack = createStackNavigator();
@@ -245,7 +246,7 @@ function RecentlyVisitedProfiles() {
 function App() {
   return (
     <NavigationContainer>
-      <Tabs/>
+      <NavBar/>
     </NavigationContainer>
   );
 }
