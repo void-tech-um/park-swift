@@ -28,8 +28,6 @@ import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
 
 const Stack = createStackNavigator();
 
-
-
 const Tab = createMaterialTopTabNavigator();
 
 function HomeScreen() {
@@ -73,7 +71,7 @@ function ProfileScreen() {
 function TabNav() {
   return (
     
-      <Tab.Navigator initialRouteName="HomeScreen"
+      <Tab.Navigator initialRouteName="Home"
       tabBarPosition="bottom"
       screenOptions={{
         tabBarLabelStyle: { fontSize: 12 },
@@ -102,11 +100,11 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
-        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
-        {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
-        <Stack.Screen name="Tab" component={TabNav} />
-           {/* {props => <HomeScreen {...props} extraData={user} />}  */}
-        {/* </Stack.Screen> */}
+        {/* <Stack.Screen name="Login" component={LoginScreen} /> 
+        <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
+        <Stack.Screen name="Tab">
+            {props => <TabNav {...props} extraData={user} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
