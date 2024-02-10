@@ -8,6 +8,7 @@ import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
+import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 
 import ThankYouScreen from '../screens/confirmation';
 import Listing from '../screens/listing';
@@ -18,6 +19,7 @@ const Tab = createBottomTabNavigator();
 const NavBar = () => {
     return(
         <Tab.Navigator
+            initialRouteName="Home"
             screenOptions={({ route }) => ({
                 tabBarShowLabel: false,
                 tabBarStyle: {
@@ -68,6 +70,9 @@ const NavBar = () => {
                 tabBarVisible:false,
             }} />
             <Tab.Screen name="Listing" component={Listing} options={{
+                tabBarVisible:false,
+            }}/>
+            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} options={{
                 tabBarVisible:false,
             }}/>
         </Tab.Navigator>
