@@ -1,6 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeScreen, MapScreen,MessagesScreen,ProfileScreen } from '../App';
+import HomeScreen from '../screens/HomeScreen';
+import MapScreen from '../screens/MapScreen';
+import MessagesScreen from '../screens/MessagesScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';

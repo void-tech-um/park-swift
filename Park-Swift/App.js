@@ -199,43 +199,6 @@ function RegistrationScreen({navigation}) {
 
 const Tab = createMaterialTopTabNavigator();
 
-export function HomeScreen() {
-  // adding currentTile and search bar components
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <React.Fragment>
-        <SearchBar/>
-        <CurrentTile/>
-      </React.Fragment>
-    </View>
-  );
-}
-
-export function MapScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Map Screen</Text>
-    </View>
-  );
-}
-
-
-export function MessagesScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Messages Screen</Text>
-    </View>
-  );
-}
-
-export function ProfileScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <ProfileDetail/>
-    </View>
-  );
-}
 
 function RecentlyVisitedProfiles() {
   return (
