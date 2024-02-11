@@ -4,9 +4,13 @@ import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
+
+import ThankYouScreen from '../screens/confirmation';
+import Listing from '../screens/listing';
 
 
 const Tab = createBottomTabNavigator();
@@ -42,6 +46,7 @@ const NavBar = () => {
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),}}/>
+
             <Tab.Screen name="Map" component={MapScreen} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
@@ -54,6 +59,16 @@ const NavBar = () => {
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-circle-outline" color={'white'} size={33}/>
                 ),
+            }}/>
+
+            <Tab.Screen name="List Info Page" component={ListingInfoPage} options={{
+                tabBarVisible:false,
+            }}/>
+            <Tab.Screen name="Thank You" component={ThankYouScreen} options={{
+                tabBarVisible:false,
+            }} />
+            <Tab.Screen name="Listing" component={Listing} options={{
+                tabBarVisible:false,
             }}/>
         </Tab.Navigator>
     );
