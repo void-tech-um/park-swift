@@ -31,13 +31,6 @@ const Stack = createStackNavigator();
 
 const Tab = createMaterialTopTabNavigator();
 
-
-function TabNav() {
-  return (
-     <NavBar/>
-  );
-}
-
 function App() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
@@ -48,7 +41,7 @@ function App() {
         {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
         {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
         {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
-        <Stack.Screen name="Tab" component={TabNav} />
+        <Stack.Screen name="Tab" component={NavBar} />
            {/* {props => <HomeScreen {...props} extraData={user} />}  */}
         {/* </Stack.Screen> */}
       </Stack.Navigator>
