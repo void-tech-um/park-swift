@@ -20,7 +20,6 @@ import ThankYouScreen from './screens/confirmation.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import NavBar from './components/NavBar.js';
-import NavBar2 from './components/NavBar2.js';
 import firebase from "./services/firebase-config.js";
 import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
 
