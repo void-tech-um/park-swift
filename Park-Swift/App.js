@@ -15,6 +15,7 @@ import Listing from './screens/listing.js';
 import ProfileDetail from './screens/profile';
 import ListingInfoPage from './screens/listinginfopage.js';
 import ThankYouScreen from './screens/confirmation.js';
+import FilterScreen from './screens/filter.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { app, analytics, auth, database } from './services/config';
@@ -84,11 +85,13 @@ function TabNav() {
         <Tab.Screen name="ListYourSpaceScreen" component={ListYourSpaceScreen} />
         <Tab.Screen name="testing_listing_info" component={ListingInfoPage} />
         <Tab.Screen name="ThankYouScreen" component={ThankYouScreen} />
+        <Tab.Screen name="FilterScreen" component={FilterScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Messages" component={MessagesScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
         <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} />
         <Tab.Screen name="Listing" component={Listing} />
+        
       </Tab.Navigator>
     
   );
