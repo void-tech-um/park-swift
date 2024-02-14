@@ -24,3 +24,6 @@ Also, use `npx expo start --tunnel` on Mac if `npx expo start` doesn't work and 
 [Tunnel Error Message](<tunnel-issue-mac.png>)
 
 If you are having an error that says nvm is not installed please refer to [NVM installation instructions](<https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating>)
+
+If you are having weird errors with expo failing to recognize old dependencies are removed, 
+clear the expo cache with `expo r -c`
