@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import Icon from the library
 
 const FilterScreen = () => {
     return (
@@ -23,7 +24,7 @@ const FilterScreen = () => {
             </View>
             <View style={styles.locationActionContainer}>
                 <TouchableOpacity style={styles.circleButton} onPress={() => console.log('Circle button pressed')}>
-                    {/* You can include icon or text inside TouchableOpacity if needed */}
+                    {/* Circle button */}
                 </TouchableOpacity>
                 <Text style={styles.locationActionText}>Use address:</Text>
             </View>
@@ -32,19 +33,43 @@ const FilterScreen = () => {
                     <Text style={styles.locButtonText}>123 S Division St, Ann Arbor, MI</Text>
                 </TouchableOpacity>
             </View>
-            <View style={styles.locationCurrActionContainer}>
+            <View style={styles.locationActionContainer}>
                 <TouchableOpacity style={styles.circleButton} onPress={() => console.log('Circle button pressed')}>
-                    {/* You can include icon or text inside TouchableOpacity if needed */}
+                    {/* Circle button */}
                 </TouchableOpacity>
-                <Text style={styles.locationActionText}>Use Current Location:</Text>
+                <Text style={styles.locationActionText}>Use current location:</Text>
             </View>
             <View style={styles.locationButton}>
-                <TouchableOpacity onPress={() => console.log('Location pressed')} style={styles.locButton}>
-                    <Text style={styles.locButtonText}>913 S University Ave, Ann Arbor..</Text>
+                <TouchableOpacity onPress={() => console.log('Location pressed')} style={styles.locButtonWithIcon}>
+                    <Icon name="place" size={20} color="gray" />
+                    <Text style={styles.locButtonTextWithIcon}>913 S University Ave, Ann Arbor..</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.rangeContainer}>
                 <Text style={styles.locationText}>Specify Range:</Text>
+            </View>
+            <View style={styles.rangeActionContainer}>
+                <TouchableOpacity style={styles.circleButton} onPress={() => console.log('Circle button pressed')}>
+                    {/* Circle button */}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.smallButton} onPress={() => console.log('Small button pressed')}>
+                    <Text style={styles.smallButtonText}>30 minutes</Text>
+                </TouchableOpacity>
+                <Text style={styles.rangeActionText}>away at most.</Text>
+            </View>
+            <View style={styles.rangeActionContainer2}>
+                <TouchableOpacity style={styles.circleButton} onPress={() => console.log('Circle button pressed')}>
+                    {/* Circle button */}
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.smallButton} onPress={() => console.log('Small button pressed')}>
+                    <Text style={styles.smallButtonText}>8 miles</Text>
+                </TouchableOpacity>
+                <Text style={styles.rangeActionText}>away at most.</Text>
+            </View>
+            <View style={styles.doneButtonContainer}>
+                <TouchableOpacity onPress={() => console.log('Done pressed')} style={styles.doneButton}>
+                    <Text style={styles.doneButtonText}>Done</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -52,19 +77,18 @@ const FilterScreen = () => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        // Ensures the main container takes the full screen, adjust as needed
         flex: 1,
-        alignItems: 'center', // Aligns children components to the center horizontally
-        paddingTop: 20, // Aligns children components to the center vertically
+        alignItems: 'center',
+        paddingTop: 20,
     },
     container: {
-        height: '15%', // Adjusted as per your setting
-        width: '90%', // Spans most of the width of the page
-        alignSelf: 'center', // Center the box horizontally
-        justifyContent: 'center', // Center the content vertically
-        alignItems: 'center', // Center the content horizontally
-        backgroundColor: '#C4C4C4', // Example background color
-        marginTop: 0, // Add some margin at the top
+        height: '15%',
+        width: '90%',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#C4C4C4',
+        marginTop: 0,
     },
     filterText: {
         fontSize: 20,
@@ -73,18 +97,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     buttonsContainer: {
-        flexDirection: 'row', // Arrange buttons in a row
-        width: '100%', // Use 100% of the container width for the buttons
-        padding: 10, // Add padding to create space against the container's ends
-        justifyContent: 'space-between', // This will be overridden by flex anyway, but good for fallback
+        flexDirection: 'row',
+        width: '100%',
+        padding: 10,
+        justifyContent: 'space-between',
     },
     button: {
-        flex: 1, // Equal width for each button
+        flex: 1,
         backgroundColor: '#464646',
         padding: 10,
         borderRadius: 13,
         alignItems: 'center',
-        marginHorizontal: 2, // Horizontal margin to keep space between buttons
+        marginHorizontal: 2,
         marginBottom: 5,
     },
     buttonText: {
@@ -92,69 +116,129 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     locationContainer: {
-        width: '90%', // Match the container width
-        marginTop: 8, // Space between the gray box and this text
-        alignSelf: 'center', // Align with the container
+        width: '90%',
+        marginTop: 8,
+        alignSelf: 'center',
     },
     locationText: {
-        fontSize: 20, // Adjust size as needed
-        marginTop: 20, // Space between the gray box and this text
-        fontWeight: 'bold', // Make it stand out
+        fontSize: 20,
+        marginTop: 15,
+        fontWeight: 'bold',
     },
     locationActionContainer: {
-        flexDirection: 'row', // Aligns button and text horizontally
-        alignItems: 'center', // Centers items vertically within the container
-        marginTop: 25, // Adjust as needed for spacing from the "Mark your location:" text
-        width: '85%', // Match the container width for alignment
-        alignSelf: 'center', // Ensure alignment matches with the above container
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 25,
+        width: '85%',
+        alignSelf: 'center',
     },
-    circleButton: {
-        height: 35, // Circle size
-        width: 35, // Circle size
-        borderRadius: 20, // Half of height and width to make it circular
-        borderColor: 'black',
-        borderWidth: 1,
-        justifyContent: 'center', // Center content inside the button vertically
-        alignItems: 'center', // Center content inside the button horizontally
-        marginRight: 10, // Space between the button and the text
-    },
-    locationActionText: {
-        fontSize: 18, // Adjust as needed
-        // Add additional styling for the text as needed
-    },
-    locationButton: {
-        flexDirection: 'row', // Aligns button and text horizontally
-        alignItems: 'center', // Centers items vertically within the container
-        marginTop: 12, // Adjust as needed for spacing from the "Mark your location:" text
-        width: '85%', // Match the container width for alignment
-        alignSelf: 'center', // Ensure alignment matches with the above container
-    },
-    locButton: {
-        flex: 1, // Equal width for each button
-        backgroundColor: '#464646',
-        padding: 12,
+    locButtonWithIcon: {
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        padding: 10,
         borderRadius: 13,
         alignItems: 'center',
-        marginHorizontal: 2, // Horizontal margin to keep space between buttons
+        borderWidth: 1,
+        borderColor: 'black',
+        width: '100%', // This ensures the button fills its container
+        justifyContent: 'space-between', // Adjusts the spacing within the button
+        marginLeft: 0, // Ensures alignment with other buttons if needed
+        marginRight: 0, // Ensures alignment with other buttons if needed
+    },
+    locButtonTextWithIcon: {
+        color: 'gray',
+        fontSize: 18,
+        marginLeft: 10,
+    },
+    circleButton: {
+        height: 35,
+        width: 35,
+        borderRadius: 20,
+        borderColor: 'black',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    locationActionText: {
+        fontSize: 18,
+    },
+    locationButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 12,
+        width: '85%', // This makes sure the button's container is the intended width
+        alignSelf: 'center',
+    },
+    
+    locButton: {
+        flex: 1,
+        backgroundColor: '#464646',
+        padding: 10,
+        borderRadius: 13,
+        alignItems: 'center',
+        marginHorizontal: 2,
         marginBottom: 5,
     },
     locButtonText: {
         color: 'white',
         fontSize: 19,
     },
-    locationCurrActionContainer: {
-        flexDirection: 'row', // Aligns button and text horizontally
-        alignItems: 'center', // Centers items vertically within the container
-        marginTop: 15, // Adjust as needed for spacing from the "Mark your location:" text
-        width: '85%', // Match the container width for alignment
-        alignSelf: 'center', // Ensure alignment matches with the above container
-    },
     rangeContainer: {
-        width: '90%', // Match the container width
-        marginTop: 25, // Space between the gray box and this text
-        alignSelf: 'center', // Align with the container
+        width: '90%',
+        marginTop: 25,
+        alignSelf: 'center',
     },
-
+    rangeActionContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 15,
+        width: '85%',
+        alignSelf: 'center',
+    },
+    rangeActionContainer2: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 27,
+        width: '85%',
+        alignSelf: 'center',
+    },
+    smallButton: {
+        backgroundColor: '#464646',
+        width: '50%',
+        marginLeft: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 13,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 10,
+    },
+    smallButtonText: {
+        color: 'white',
+        fontSize: 18,
+    },
+    rangeActionText: {
+        fontSize: 18,
+    },
+    doneButtonContainer: {
+        marginTop: 25,
+        width: '50%',
+        alignSelf: 'center',
+    },
+    doneButton: {
+        backgroundColor: '#C4C4C4',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 13,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    doneButtonText: {
+        color: 'white',
+        fontSize: 18,
+        textAlign: 'center',
+    },
 });
 
 export default FilterScreen;
