@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
-function ListYourSpaceScreen() {
+function createPost() {
  const [price, setPrice] = React.useState('');
  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
  const [isNegotiable, setIsNegotiable] = React.useState(null);
@@ -14,6 +14,7 @@ function ListYourSpaceScreen() {
 
 
  return (
+  <ScrollView>
    <View style={styles.container}>
      <View style={styles.titleRow}>
        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
@@ -52,6 +53,7 @@ function ListYourSpaceScreen() {
            { label: 'Day', value: 'day' },
            { label: 'Week', value: 'week' },
            { label: 'Month', value: 'month' },
+           { label: 'Semester', value: 'semester' },
          ]}
          style={pickerSelectStyles}
          value={rentalPeriod}
@@ -61,10 +63,6 @@ function ListYourSpaceScreen() {
            return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
          }}
        />
-
-
-
-
      </View>
 
 
@@ -118,9 +116,9 @@ function ListYourSpaceScreen() {
  }}
  markedDates={selectedDates}
 />
-
-
    </View>
+
+</ScrollView>
  );
 }
 
@@ -268,7 +266,7 @@ const pickerSelectStyles = StyleSheet.create({
 });
 
 
-export default ListYourSpaceScreen;
+export default createPost;
 
 
 

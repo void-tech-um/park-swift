@@ -24,7 +24,7 @@ import { ref, set } from 'firebase/database';
 //if (!global.btoa) {  global.btoa = encode }
 //if (!global.atob) { global.atob = decode }
 
-import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
+import createPost from './screens/createPost';
 
 
 const Stack = createStackNavigator();
@@ -39,11 +39,11 @@ function App() {
     <NavigationContainer>
       <Stack.Navigator>
         {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
-        {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
-        {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
-        <Stack.Screen name="Tab" component={NavBar} />
-           {/* {props => <HomeScreen {...props} extraData={user} />}  */}
-        {/* </Stack.Screen> */}
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Registration" component={RegistrationScreen} />
+        <Stack.Screen name="Tab">
+           {props => <NavBar {...props} extraData={user} />}  
+        </Stack.Screen> 
       </Stack.Navigator>
     </NavigationContainer>
   );

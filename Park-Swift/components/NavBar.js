@@ -7,7 +7,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
-import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
+import createPost from '../screens/createPost';
 import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 
 import ThankYouScreen from '../screens/confirmation';
@@ -44,7 +44,7 @@ const NavBar = () => {
                     <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
                 ),
             }} />
-            <Tab.Screen name="List Your Space" component={ListYourSpaceScreen} options={{
+            <Tab.Screen name="createPost" component={createPost} options={{
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),}}/>

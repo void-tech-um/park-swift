@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { ref, set } from 'firebase/database';
-import { database } from '../services/config';
+import { getAuth } from "firebase/auth";
+import { registerUser } from '../firebaseFunctions/firebase';
+
 const auth = getAuth();
 
 export default function RegistrationScreen({navigation}) {
@@ -21,26 +21,9 @@ export default function RegistrationScreen({navigation}) {
             alert("Passwords don't match.")
             return
         }
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const uid = userCredential.user.uid
-                const data = {
-                    id: uid,
-                    email,
-                    fullName,
-                };
-                const usersRef = ref(database, 'users/' + uid);
-                set(usersRef, {
-                    fullName: data.fullName,
-                    email: data.email,
-                    id: data.id
-                })
-                    .then(() => {
-                        navigation.navigate('Tab', {user: data})
-                    })
-                    .catch((error) => {
-                        console.error('Error setting user data:', error);
-                    });
+        registerUser(email, password, fullName)
+            .then((data) => {
+                navigation.navigate('Tab', {user: data})
             })
             .catch((error) => {
                 alert(error)
