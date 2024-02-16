@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 const auth = getAuth();
-import { ref, set, onValue} from 'firebase/database';
-import { database } from '../services/config';
+import {loginUser} from '../firebaseFunctions/firebase';
 
 export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
@@ -13,35 +12,14 @@ export default function LoginScreen({navigation}) {
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
     }
-
     const onLoginPress = () => {
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // alert(userCredential.user.uid)
-            const uid = userCredential.user.uid;
-            const usersRef = ref(database, 'users/' + uid);
-            // alert(usersRef.key)
-            onValue(usersRef, (snapshot) => {
-                const userData = snapshot.val();
-                if (!userData) {
-                    alert("User does not exist anymore.");
-                    return;
-                }else{
-                    
-                    navigation.navigate('Tab', { user: userData });
-                }
-                
-                
-            }, {
-                onlyOnce: true // This ensures the callback is triggered only once
+        loginUser(email, password)
+            .then((data) => {
+                navigation.navigate('Tab', {user: data})
+            })
+            .catch((error) => {
+                alert(error)
             });
-        })
-        .catch(error => {
-            alert("User does not exist");
-            // alert(error.message);
-        });
-
-
     }
 
     return (
