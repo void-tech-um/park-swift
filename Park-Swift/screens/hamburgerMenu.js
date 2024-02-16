@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Text, Modal, StyleSheet, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-
 const HamburgerMenu = ({ isVisible, onClose }) => {
     const navigation = useNavigation();
 
@@ -27,6 +26,16 @@ const HamburgerMenu = ({ isVisible, onClose }) => {
                 <TouchableWithoutFeedback >
                     <View >
                         {/* keeping all the links to Map for now since Settings, FAQS..etc dont exist yet*/}
+                        <TouchableOpacity onPress={() => handleLinkPress("List Info Page")}>
+                            <Text style={styles.textStyle}>List Info Page</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleLinkPress("Thank You")}>
+                            <Text style={styles.textStyle}>Thank You</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleLinkPress("Listing")}>
+                            <Text style={styles.textStyle}>Listing</Text>
+                        </TouchableOpacity>
+
                         <TouchableOpacity onPress={() => handleLinkPress("Map")}>
                             <Text style={styles.textStyle}>Settings</Text>
                         </TouchableOpacity>
