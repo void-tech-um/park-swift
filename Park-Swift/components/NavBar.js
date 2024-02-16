@@ -12,6 +12,7 @@ import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 
 import ThankYouScreen from '../screens/confirmation';
 import Listing from '../screens/listing';
+import FilterScreen from '../screens/filter';
 
 
 const Tab = createBottomTabNavigator();
@@ -73,6 +74,9 @@ const NavBar = () => {
                 tabBarVisible:false,
             }}/>
             <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} options={{
+                tabBarVisible:false,
+            }}/>
+            <Tab.Screen name="FilterScreen" component={FilterScreen} options={{
                 tabBarVisible:false,
             }}/>
         </Tab.Navigator>
