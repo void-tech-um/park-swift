@@ -7,12 +7,12 @@ import ListingCard from '../components/ListingCard.js';
 
 const listingsData = [
   {
-      address: 1,
-      date: "next.js portfolio website",
-      startTime: "project 1 description",
-      endTime: "project 1 description",
+      address: "505 S State",
+      date: "01/01/24",
+      startTime: "01/01/24",
+      endTime: "01/01/24",
       image: "/images/landscape.jpg",
-      ppHour: "/",
+      ppHour: "500",
       listingURL: "/",
 
   },
