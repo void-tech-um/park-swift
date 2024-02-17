@@ -27,16 +27,18 @@ function HomeScreen() {
         <React.Fragment>
           <SearchBar/>
           <CurrentTile/>
-          {listingsData.map((listing) => (
-            <ListingCard
-              address={listing.address}
-              date={listing.date}
-              startTime={listing.startTime}
-              endTime={listing.endTime}
-              image={listing.gitURL}
-              launchURL={listing.launchURL}
-            />
-          ))}
+          <View>
+            {listingsData.map((listing) => (
+              <ListingCard
+                address={listing.address}
+                date={listing.date}
+                startTime={listing.startTime}
+                endTime={listing.endTime}
+                image={listing.gitURL}
+                launchURL={listing.launchURL}
+              />
+            ))}
+          </View>
         </React.Fragment>
       </View>
     );

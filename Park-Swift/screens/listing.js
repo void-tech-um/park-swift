@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
+import { useNavigation } from '@react-navigation/native';
 
 const Listing = () => {
+    const navigation = useNavigation();
+
+    const handleBackPress = () => {
+        navigation.goBack();
+    };
+
     return (
         <View style = {styles.container}>
             {/* Add the grey heading with the menu 3 line thing above the Listing heading */}
@@ -10,7 +17,7 @@ const Listing = () => {
             <View style = {styles.topHeader}>
             </View>
             <View style = {styles.header}>
-                <TouchableOpacity onPress={() => alert('Back')}>
+                <TouchableOpacity onPress={handleBackPress}>
                     <Ionicons name = "arrow-back" size = {40} color = "black" />
                 </TouchableOpacity>
                 <Text style = {styles.listingHeading}>123 Address Rd</Text>
