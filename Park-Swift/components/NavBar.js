@@ -17,7 +17,7 @@ const Tab = createBottomTabNavigator();
 
 const NavBar = () => {
     return(
-        <Tab.Navigator
+        <Tab.Navigator 
             screenOptions={({ route }) => ({
                 tabBarShowLabel: false,
                 tabBarStyle: {
