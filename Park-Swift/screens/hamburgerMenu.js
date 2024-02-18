@@ -44,7 +44,7 @@ const HamburgerMenu = ({ isVisible, onClose }) => {
                             <Text style={styles.textStyle}>FAQs</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => handleLinkPress("Map")}>
+                        <TouchableOpacity onPress={() => handleLinkPress("List Your Space")}>
                             <Text style={styles.textStyle}>List Parking</Text>
                         </TouchableOpacity>
 

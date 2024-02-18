@@ -5,15 +5,24 @@ import {IconButton } from 'react-native-paper';
 import SearchbarComponent from './searchBar';
 import ProfileCard from './profileCard';
 
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const RecentlyVisitedProfiles = () => {
+const RecentlyVisitedProfiles = ( ) => {
+    const navigation = useNavigation();
+    const navigateToHomePage = () => {
+        navigation.navigate('Home');
+    };
+
     return(
         <>
         <View>
             {/* <Appbar.Header></Appbar.Header> */}
             <View style={{flexDirection: 'row'}}>
                 <View style={{ flex: 0.1, paddingTop: 75}} >
-                    <IconButton icon="arrow-left" size={40} iconColor={"black"}></IconButton>
+                    <TouchableOpacity onPress={navigateToHomePage}>
+                        <IconButton icon="arrow-left" size={40} iconColor={"black"} />
+                    </TouchableOpacity>
                 </View>
                 <View style={{flex: 0.9}}><Text style={{marginTop: 90, fontSize: 27, textAlign: 'center', fontWeight: "bold"}}> Recently Visited Profiles</Text></View>
             </View>
