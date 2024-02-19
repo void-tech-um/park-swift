@@ -3,19 +3,35 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 
 import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { createPost } from '../firebaseFunctions/firebase';
 
-
-function createPost() {
+function CreatePost({navigation, route}) {
+ const { userData } = route.params;
+ const [location, setLocation] = React.useState('');
  const [price, setPrice] = React.useState('');
  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
  const [isNegotiable, setIsNegotiable] = React.useState(null);
  const [selectedDates, setSelectedDates] = React.useState({});
- const [location, setLocation] = React.useState('');
 
+const onPostPress = () => {
+  createPost(location, rentalPeriod, price, isNegotiable, selectedDates)
+    .then(() => {
+      navigation.navigate('Home');
+    })
+    .catch((error) => {
+      console.error('Error creating post:', error);
+      // Handle the error here, e.g., show an error message to the user
+    });
+}
 
  return (
   <ScrollView>
    <View style={styles.container}>
+      <TouchableOpacity
+       style={styles.button}
+        onPress={() => onPostPress()}>
+       <Text style={styles.buttonTitle}>Make Post</Text>
+     </TouchableOpacity>
      <View style={styles.titleRow}>
        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
        <Text style={styles.title}>List Your Space</Text>
@@ -266,7 +282,7 @@ const pickerSelectStyles = StyleSheet.create({
 });
 
 
-export default createPost;
+export default CreatePost;
 
 
 

@@ -1,7 +1,7 @@
 // firebaseFunctions.js
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, onValue} from 'firebase/database';
+import { ref, set, onValue, push } from 'firebase/database';
 import { database } from '../services/config';
 
 const auth = getAuth();
@@ -44,12 +44,27 @@ export function loginUser(email, password, fullName) {
                 onlyOnce: true // This ensures the callback is triggered only once
             });
         });
-}
-
-export function createPost(userId) {
-    const usersRef = ref(database, 'users/' + userId);
-    const postRef = ref(database, 'posts/' + userId);
-    const newPostRef = push(postRef);
-    return set(newPostRef, postData).then(() => postData);
-        
+}        
+export function createPost(location, rentalPeriod, price, negotiable, selectedDates) {
+    if (!location || !rentalPeriod || !price || negotiable == null || !selectedDates) {
+        alert('All parameters must be provided');
+    }
+    const postsRef = ref(database, 'posts/');
+    const newPostRef = push(postsRef);
+    const postData = {
+        // userID: userID,
+        location: location,
+        rentalPeriod: rentalPeriod, 
+        price: price,
+        // description:description,
+        negotiable: negotiable,
+        selectedDates: selectedDates, 
+        createdAt: new Date().toISOString(),
+    };
+    return set(newPostRef, postData)
+        .then(() => postData)
+        .catch((error) => {
+            alert('Error creating post:', error);
+            throw error;
+        });
 }

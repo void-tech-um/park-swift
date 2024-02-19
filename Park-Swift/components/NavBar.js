@@ -4,10 +4,11 @@ import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import CreatePost from '../screens/createPost';
 import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
-import createPost from '../screens/createPost';
+import reatePost from '../screens/createPost';
 import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 
 import ThankYouScreen from '../screens/confirmation';
@@ -16,7 +17,7 @@ import Listing from '../screens/listing';
 
 const Tab = createBottomTabNavigator();
 
-const NavBar = () => {
+const NavBar = ({ extraData }) => {
     return(
         <Tab.Navigator
             initialRouteName="Home"
@@ -44,7 +45,7 @@ const NavBar = () => {
                     <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
                 ),
             }} />
-            <Tab.Screen name="createPost" component={createPost} options={{
+            <Tab.Screen name="createPost" component={CreatePost} initialParams={{ userData: extraData }}  options={{
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),}}/>
