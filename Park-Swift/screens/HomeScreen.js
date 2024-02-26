@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View} from 'react-native';
+import {View, ScrollView, FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import SearchBar from './search';
 import CurrentTile from './home';
 
@@ -7,13 +7,47 @@ import ListingCard from '../components/ListingCard.js';
 
 const listingsData = [
   {
+      id: 1,
       address: "505 S State",
       date: "01/01/24",
-      startTime: "01/01/24",
-      endTime: "01/01/24",
+      startTime: "12pm",
+      endTime: "3pm",
       image: "/images/landscape.jpg",
       ppHour: "500",
       listingURL: "/",
+
+  },
+  {
+    id: 2,
+    address: "505 S State",
+    date: "01/01/24",
+    startTime: "12pm",
+    endTime: "3pm",
+    image: "/images/landscape.jpg",
+    ppHour: "500",
+    listingURL: "/",
+
+  },
+  {
+    id: 3,
+    address: "505 S State",
+    date: "01/01/24",
+    startTime: "12pm",
+    endTime: "3pm",
+    image: "/images/landscape.jpg",
+    ppHour: "500",
+    listingURL: "/",
+
+  },
+  {
+    id: 4,
+    address: "505 S State",
+    date: "01/01/24",
+    startTime: "12pm",
+    endTime: "3pm",
+    image: "/images/landscape.jpg",
+    ppHour: "500",
+    listingURL: "/",
 
   },
 ]
@@ -27,18 +61,42 @@ function HomeScreen() {
         <React.Fragment>
           <SearchBar/>
           <CurrentTile/>
-          <View>
+          <ScrollView 
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{flexGrow: 1, padding: 0, alignItems: 'stretch'}}
+          >
             {listingsData.map((listing) => (
               <ListingCard
                 address={listing.address}
                 date={listing.date}
                 startTime={listing.startTime}
                 endTime={listing.endTime}
-                image={listing.gitURL}
-                launchURL={listing.launchURL}
+                image={listing.image}
+                ppHour={listing.ppHour}
+                listingURL={listing.listingURL}
               />
             ))}
-          </View>
+          </ScrollView>
+
+          {/* <SafeAreaView>
+          <FlatList
+            data={listingsData}
+            keyExtractor={listing => listing.id}
+            contentContainerStyle={styles.listingCards}
+            numColumns={1} // Set to 1 column
+            renderItem={({ listing }) => (
+              <ListingCard
+                // address={listing.address}
+                // date={listing.date}
+                // startTime={listing.startTime}
+                // endTime={listing.endTime}
+                // image={listing.gitURL}
+                // launchURL={listing.launchURL}
+              />
+            )}
+          />
+        </SafeAreaView> */}
         </React.Fragment>
       </View>
     );
