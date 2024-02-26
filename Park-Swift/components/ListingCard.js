@@ -22,7 +22,7 @@ const ListingCard = ({address, date, startTime, endTime, image, ppHour, listingU
                     source={{uri: 'https://d9lvjui2ux1xa.cloudfront.net/img/topic/header_images/parking-spaces-lg.jpg'}}
                     style={styles.image}
             />
-             <View style={styles.content}>
+            <View style={styles.content}>
                 <Text style={styles.address}>{address}</Text>
                 <Text style={styles.description}>time away from you</Text>
                 <Text style={styles.description}>{date}</Text>
@@ -34,7 +34,7 @@ const ListingCard = ({address, date, startTime, endTime, image, ppHour, listingU
                 </TouchableOpacity>
             </View>
             <View style={styles.banner}>
-                <Text style={styles.description}>{ppHour}</Text>
+                <Text style={styles.bannerText}>{ppHour}</Text>
             </View>
 
             {/* <View style={styles.bannerContainer}>
@@ -65,68 +65,58 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        height: 200,
-        width: "120%",
+        height: "25%",
+        width: "80%",
         backgroundColor: "#D9D9D9",
         marginBottom: "5%",
-    },
-    bannerContainer: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        width: 0,
-        height: 0,
-        borderTopWidth: 40,
-        borderTopColor: '#ffffff',
-        borderLeftWidth: 40,
-        borderLeftColor: 'transparent',
+        marginLeft: "3.5%",
     },
     banner: {
-        // position: 'absolute',
-        // top: 0,
-        // right: 0,
-        // width: 0,
-        // height: 0,
-        // borderTopWidth: 40,
-        // borderTopColor: 'red', // Change color as needed
-        // borderLeftWidth: 40,
-        // borderLeftColor: 'transparent',
-        // zIndex: 1,
+        alignItems: "center",
+        flexGrow: 1,
         height: "100%",
         width: "33%",
         backgroundColor: "#888888",
+    },
+    bannerText: {
+        alignItems: "center",
+        padding: 10,
+        justifyContent: "center",
+        color: "white",
+        fontSize: 16,
+        alignItems: "stretch",
     },
     buttonText: {
         alignItems: "center",
         padding: 10,
         justifyContent: "center",
         color: "white",
+        fontSize: 16,
+        fontWeight: 'bold',
+        alignItems: "stretch",
     },
     buttonBox: {
         alignItems: "center",
-        padding: 10,
-        margin: "10%",
         justifyContent: "center",
+        padding: 2,
+        marginTop: 20,
         borderRadius: 30, // Adjust to make it more oval-shaped
         backgroundColor: '#464646',
     },
     image: {
+        flexGrow: 1,
         width: '33%',
         height: '100%',
         resizeMode: 'cover', // or 'cover' depending on requirement
         //borderRadius: 8,
-        //marginRight: "1%",
-    },
-    button: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'blue',
+        //marginRight: "5%",
     },
     content: {
-        flex: 1,
+        display: "flex",
+        flexDirection: "column",
         padding: "3%",
-        flexGrow: "2",
-        // width: "10%",
+        flexGrow: 2,
+        width: "50%",
     },
     address: {
         fontSize: 18,

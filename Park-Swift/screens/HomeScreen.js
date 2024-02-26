@@ -64,7 +64,6 @@ function HomeScreen() {
           <ScrollView 
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{flexGrow: 1, padding: 0, alignItems: 'stretch'}}
           >
             {listingsData.map((listing) => (
               <ListingCard
