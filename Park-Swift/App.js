@@ -45,6 +45,7 @@ function App() {
         <Stack.Screen name="Tab" component={NavBar} />
            {/* {props => <HomeScreen {...props} extraData={user} />}  */}
         {/* </Stack.Screen> */}
+        <Stack.Screen name="ThankYou" component={ThankYouScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

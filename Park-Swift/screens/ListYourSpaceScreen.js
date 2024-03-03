@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import ListSpaceButton from '../components/ListSpaceButton';
+ 
 
 
 function ListYourSpaceScreen() {
@@ -19,8 +21,8 @@ function ListYourSpaceScreen() {
        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
        <Text style={styles.title}>List Your Space</Text>
      </View>
-
-
+     <ScrollView style={styles.scrollView}>
+     <View>
      <Text style={styles.headerText}>Location</Text>
      <View style={styles.inputWithIcon}>
        <MaterialCommunityIcons name="magnify" size={20} color="black" style={styles.iconInsideInput} />
@@ -100,7 +102,6 @@ function ListYourSpaceScreen() {
    // Check if the day is already selected
    const isSelected = selectedDates[day.dateString] ? true : false;
 
-
    setSelectedDates(prevDates => {
      if (isSelected) {
        // If selected, remove the selection
@@ -119,6 +120,10 @@ function ListYourSpaceScreen() {
  markedDates={selectedDates}
 />
 
+</View>
+</ScrollView>
+
+<ListSpaceButton/>
 
    </View>
  );
@@ -127,6 +132,7 @@ function ListYourSpaceScreen() {
 
 const styles = StyleSheet.create({
  container: {
+   top:-120,
    flex: 1,
    padding: 10,
    paddingTop: 150,
@@ -265,6 +271,22 @@ const pickerSelectStyles = StyleSheet.create({
    right: 0,
    transform: [{ translateY: -10 }], // Adjust this value as needed to center the icon
  },
+ button: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingVertical: 12,
+  paddingHorizontal: 32,
+  borderRadius: 4,
+  elevation: 3,
+  backgroundColor: 'black',
+},
+text: {
+  fontSize: 16,
+  lineHeight: 21,
+  fontWeight: 'bold',
+  letterSpacing: 0.25,
+  color: 'white',
+},
 });
 
 
