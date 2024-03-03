@@ -5,7 +5,7 @@ import { getAuth } from "firebase/auth";
 const auth = getAuth();
 import {loginUser} from '../firebaseFunctions/firebase';
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({navigation, setUser}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -15,7 +15,8 @@ export default function LoginScreen({navigation}) {
     const onLoginPress = () => {
         loginUser(email, password)
             .then((data) => {
-                navigation.navigate('Tab', {user: data})
+                // alert(data.user.uid)    
+                navigation.navigate('Tab', {userId: data.user.uid})
             })
             .catch((error) => {
                 alert(error)

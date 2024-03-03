@@ -8,7 +8,6 @@ import CreatePost from '../screens/createPost';
 import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
-import reatePost from '../screens/createPost';
 import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 
 import ThankYouScreen from '../screens/confirmation';
@@ -17,7 +16,12 @@ import Listing from '../screens/listing';
 
 const Tab = createBottomTabNavigator();
 
-const NavBar = ({ extraData }) => {
+const NavBar = ({ route, navigation }) => {
+
+    const userId = route.params.userId;
+
+
+
     return(
         <Tab.Navigator
             initialRouteName="Home"
@@ -45,10 +49,11 @@ const NavBar = ({ extraData }) => {
                     <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
                 ),
             }} />
-            <Tab.Screen name="createPost" component={CreatePost} initialParams={{ userData: extraData }}  options={{
+            <Tab.Screen name="createPost"  component={CreatePost} initialParams={{userId : userId}} options={{
                 tabBarIcon:({color,size})=>(
-                <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
-            ),}}/>
+                    <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
+                ),
+            }}/>
 
             <Tab.Screen name="Map" component={MapScreen} options={{
                 tabBarLabel: 'Map',

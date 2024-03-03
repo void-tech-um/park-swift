@@ -5,8 +5,8 @@ import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { createPost } from '../firebaseFunctions/firebase';
 
-function CreatePost({navigation, route}) {
- const { userData } = route.params;
+function CreatePost({ navigation, route }) {
+ const userId = route.params.userId;
  const [location, setLocation] = React.useState('');
  const [price, setPrice] = React.useState('');
  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
@@ -14,7 +14,8 @@ function CreatePost({navigation, route}) {
  const [selectedDates, setSelectedDates] = React.useState({});
 
 const onPostPress = () => {
-  createPost(location, rentalPeriod, price, isNegotiable, selectedDates)
+  alert(userId);
+  createPost(userId, location, rentalPeriod, price, isNegotiable, selectedDates)
     .then(() => {
       navigation.navigate('Home');
     })

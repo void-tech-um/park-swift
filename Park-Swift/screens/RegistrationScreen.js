@@ -23,11 +23,12 @@ export default function RegistrationScreen({navigation}) {
         }
         registerUser(email, password, fullName)
             .then((data) => {
+                // alert(data.user.uid)
                 navigation.navigate('Tab', {user: data})
             })
             .catch((error) => {
                 alert(error)
-            });
+            }); 
         }
 
     return (

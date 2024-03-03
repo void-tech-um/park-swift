@@ -20,39 +20,37 @@ export function registerUser(email, password, fullName) {
                 fullName: data.fullName,
                 email: data.email,
                 id: data.id
-            }).then(() => data);
+            }).then(() => userCredential);
         });
 }
 
-export function loginUser(email, password, fullName) {
+export function loginUser(email, password) {
     return signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            // alert(userCredential.user.uid)
             const uid = userCredential.user.uid;
             const usersRef = ref(database, 'users/' + uid);
-            // alert(usersRef.key)
-            onValue(usersRef, (snapshot) => {
-                const userData = snapshot.val();
-                if (!userData) {
-                    alert("User does not exist anymore.");
-                    return;
-                }else{
-                    
-                    navigation.navigate('Tab', { user: userData });
-                }
-            }, {
-                onlyOnce: true // This ensures the callback is triggered only once
+            return new Promise((resolve, reject) => {
+                onValue(usersRef, (snapshot) => {
+                    const userData = snapshot.val();
+                    if (!userData) {
+                        alert("User does not exist anymore.");
+                    } else {
+                        resolve(userCredential);
+                    }
+                }, {
+                    onlyOnce: true // This ensures the callback is triggered only once
+                });
             });
         });
-}        
-export function createPost(location, rentalPeriod, price, negotiable, selectedDates) {
+}      
+export function createPost(userID, location, rentalPeriod, price, negotiable, selectedDates) {
     if (!location || !rentalPeriod || !price || negotiable == null || !selectedDates) {
         alert('All parameters must be provided');
     }
     const postsRef = ref(database, 'posts/');
     const newPostRef = push(postsRef);
     const postData = {
-        // userID: userID,
+        userID: userID,
         location: location,
         rentalPeriod: rentalPeriod, 
         price: price,
