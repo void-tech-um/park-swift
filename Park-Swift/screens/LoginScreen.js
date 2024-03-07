@@ -15,7 +15,7 @@ export default function LoginScreen({navigation, setUser}) {
     const onLoginPress = () => {
         loginUser(email, password)
             .then((data) => {
-                // alert(data.user.uid)    
+
                 navigation.navigate('Tab', {userId: data.user.uid})
             })
             .catch((error) => {

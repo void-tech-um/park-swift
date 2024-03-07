@@ -1,7 +1,7 @@
 // firebaseFunctions.js
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, onValue, push } from 'firebase/database';
+import { ref, set, onValue, push,get } from 'firebase/database';
 import { database } from '../services/config';
 
 const auth = getAuth();
@@ -19,7 +19,7 @@ export function registerUser(email, password, fullName) {
             return set(usersRef, {
                 fullName: data.fullName,
                 email: data.email,
-                id: data.id
+                id: data.id,
             }).then(() => userCredential);
         });
 }
@@ -30,24 +30,26 @@ export function loginUser(email, password) {
             const uid = userCredential.user.uid;
             const usersRef = ref(database, 'users/' + uid);
             return new Promise((resolve, reject) => {
-                onValue(usersRef, (snapshot) => {
+                get(usersRef).then((snapshot) => {
                     const userData = snapshot.val();
                     if (!userData) {
-                        alert("User does not exist anymore.");
+                        reject("User does not exist anymore.");
                     } else {
                         resolve(userCredential);
                     }
-                }, {
-                    onlyOnce: true // This ensures the callback is triggered only once
+                }).catch((error) => {
+                    console.error(error);
+                    reject(error);
                 });
             });
         });
-}      
+}    
 export function createPost(userID, location, rentalPeriod, price, negotiable, selectedDates) {
     if (!location || !rentalPeriod || !price || negotiable == null || !selectedDates) {
-        alert('All parameters must be provided');
+        error('All parameters must be provided');
     }
     const postsRef = ref(database, 'posts/');
+    // const userPostsRef = ref(database, 'users/' + uid + 'userPosts/');
     const newPostRef = push(postsRef);
     const postData = {
         userID: userID,
@@ -60,7 +62,12 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, se
         createdAt: new Date().toISOString(),
     };
     return set(newPostRef, postData)
-        .then(() => postData)
+        .then(() => {
+            alert("did the set")
+            // Get a reference to the user's userPosts array
+            const userPostsRef = ref(database, 'users/' + userID + '/posts/' + newPostRef.key);
+            return set(userPostsRef, newPostRef.key);
+        })
         .catch((error) => {
             alert('Error creating post:', error);
             throw error;
