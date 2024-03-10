@@ -32,7 +32,7 @@ const NavBar = () => {
                 height: "12%",
                 paddingHorizontal: 5,
                 paddingTop: 0,
-                backgroundColor: '#959595',
+                backgroundColor: '#033566',
                 position: 'absolute',
                 // borderTopWidth: 0,
                 },
@@ -43,7 +43,7 @@ const NavBar = () => {
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home-outline" color={'white'} size={36}/>
                 ),
-                headerStyle: {backgroundColor: '#959595', 
+                headerStyle: {backgroundColor: '#033566', 
                             height:'12%',},
                 title:"",
             }}/>
@@ -52,7 +52,7 @@ const NavBar = () => {
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
                 ),
-                headerStyle: {backgroundColor: '#959595',
+                headerStyle: {backgroundColor: '#033566',
                             height:'12%',},
                 title:"",
             }} />
@@ -60,7 +60,7 @@ const NavBar = () => {
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),
-            headerStyle: {backgroundColor: '#959595',
+            headerStyle: {backgroundColor: '#033566',
                             height:'12%',},
             title:"", }}/>
 
@@ -69,7 +69,7 @@ const NavBar = () => {
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="map-outline" color={'white'} size={33} />
                 ),
-                headerStyle: {backgroundColor: '#959595'
+                headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }}/>
@@ -79,32 +79,32 @@ const NavBar = () => {
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-circle-outline" color={'white'} size={33}/>
                 ),
-                headerStyle: {backgroundColor: '#959595'
+                headerStyle: {backgroundColor: '#033566'
                                 ,height:'12%',} ,
                 title:"",
             }}/>
 
             <Tab.Screen name="List Info Page" component={ListingInfoPage} options={{
                 tabBarVisible:false,
-                headerStyle: {backgroundColor: '#959595'
+                headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }}/>
             <Tab.Screen name="Thank You" component={ThankYouScreen} options={{
                 tabBarVisible:false,
-                headerStyle: {backgroundColor: '#959595'
+                headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }} />
             <Tab.Screen name="Listing" component={Listing} options={{
                 tabBarVisible:false,
-                headerStyle: {backgroundColor: '#959595'
+                headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }}/>
             <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} options={{
                 tabBarVisible:false,
-                headerStyle: {backgroundColor: '#959595'
+                headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }}/>

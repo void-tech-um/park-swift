@@ -41,10 +41,6 @@ const MenuSearchBar = () => {
             onChangeText = {handleSearch}
             value = {searchText}
           /> */}
-
-          <TouchableOpacity style = {styles_searchbar.iconContainer2}>
-          <MaterialCommunityIcons name="filter-outline" color={'white'} size={36} onPress={toggleMenu}/>
-          </TouchableOpacity>
         </View>
     );
   };
@@ -53,14 +49,14 @@ const MenuSearchBar = () => {
         container: {
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: '#959595', // Dark grey background
+          backgroundColor: '#033566', // Dark grey background
           padding: '3%',
           paddingTop:'20%',
           top:'-96%',
         },
         input: {
           flex: 8,
-          backgroundColor: '#d9d9d9',
+          backgroundColor: '#f5f5f5',
           color:'#a3a3a3', 
           alignSelf: 'center',
           height:'98%',

@@ -35,7 +35,7 @@ const List_Header = () => {
         container: {
           flexDirection: 'row',
           alignItems: 'center',
-          backgroundColor: '#959595', // Dark grey background
+          backgroundColor: '#033566', // Dark grey background
           padding: '3%',
           paddingTop:'20%',
           top:'-96%',
