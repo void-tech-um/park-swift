@@ -13,7 +13,7 @@ import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 import ThankYouScreen from '../screens/confirmation';
 import Listing from '../screens/listing';
 import FilterScreen from '../screens/filter';
-import Homepage from '../screens/homepage';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -34,7 +34,7 @@ const NavBar = () => {
                 },
             })}
             >
-            <Tab.Screen name="Home" component={Homepage} options={{
+            <Tab.Screen name="Home" component={HomeScreen} options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home-outline" color={'white'} size={36}/>
