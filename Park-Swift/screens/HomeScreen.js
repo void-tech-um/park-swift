@@ -1,9 +1,12 @@
 import * as React from 'react';
-import {View, ScrollView, FlatList, SafeAreaView, StyleSheet} from 'react-native';
+import {View, ScrollView, FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import SearchBar from './search';
 import CurrentTile from './home';
+import SortingButton from '../components/SortingButton2';
+import CurrentlyRentingCard from '../components/CurrentlyRenting';
 
 import ListingCard from '../components/ListingCard.js';
+
 
 const listingsData = [
   {
@@ -59,12 +62,18 @@ function HomeScreen() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <React.Fragment>
-          <SearchBar/>
+        <View style={styles.searchBarContainer}>
+          <SearchBar />
+        </View>
           <CurrentTile/>
           <ScrollView 
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
+            <CurrentlyRentingCard />
+            {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
+            <Text style={styles.listingsNearYouText}>Listings Near You</Text>
+            <SortingButton />
             {listingsData.map((listing) => (
               <ListingCard
                 address={listing.address}
@@ -97,8 +106,29 @@ function HomeScreen() {
           />
         </SafeAreaView> */}
         </React.Fragment>
-      </View>
-    );
-  }
+    </View>
+  );
+};
 
-  export default HomeScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+  searchBarContainer: {
+    marginTop: 60,
+    width: '95%',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  listingsNearYouText: {
+    fontWeight: 'bold',
+    color: 'black',
+    marginTop: 180, // Add a little space above the text if needed
+    fontSize: 25,
+    marginLeft: 10,
+  },
+  // No additional or complex styling to affect layout
+});
+
+export default Homepage;

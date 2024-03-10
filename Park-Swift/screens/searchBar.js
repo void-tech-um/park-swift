@@ -9,7 +9,7 @@ const SearchbarComponent = () => {
       placeholder="Search"
       onChangeText={setSearchQuery}
       value={searchQuery}style 
-      style = {{marginTop: 30, backgroundColor: 'white', width: 375, alignSelf: 'center'}}
+      style = {{backgroundColor: 'white', width: 375, alignSelf: 'center'}}
     />
   );
 };
