@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
- 
+import Profile_Header from '../components/Profile_Header';
 
 
 function ListYourSpaceScreen() {
@@ -17,11 +17,17 @@ function ListYourSpaceScreen() {
 
  return (
    <View style={styles.container}>
+    <View style={styles.top}>
+      <View style={styles.header}>
+      <Profile_Header/>
+      </View>
      <View style={styles.titleRow}>
        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
        <Text style={styles.title}>List Your Space</Text>
      </View>
-     <ScrollView style={styles.scrollView}>
+     </View>
+
+     <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
      <View>
      <Text style={styles.headerText}>Location</Text>
      <View style={styles.inputWithIcon}>
@@ -33,7 +39,6 @@ function ListYourSpaceScreen() {
          onChangeText={setLocation}
        />
      </View>
-
 
      <Text style={styles.headerText}>Price</Text>
      <View style={styles.inputWithIcon}>
@@ -120,29 +125,36 @@ function ListYourSpaceScreen() {
  markedDates={selectedDates}
 />
 
-</View>
-</ScrollView>
-
-<ListSpaceButton/>
-
+  </View>
+  <ListSpaceButton/>
+  <View style={styles.spaceholder}>
+  </View>
+  </ScrollView>
    </View>
  );
 }
 
 
 const styles = StyleSheet.create({
+  header:{
+    top:"68%",
+  },
  container: {
-   top:-120,
-   flex: 1,
-   padding: 10,
-   paddingTop: 150,
+   top:"-10%",
+   flex: 1,   // this is not working
+   paddingTop: "32%",
+   paddingBottom:"6%",
    backgroundColor: '#fff',
-  
+   height:'130%', 
+ },
+ scrollContent:{
+  padding:"3%",
  },
  titleRow: {
    flexDirection: 'row',
    alignItems: 'center',
-   marginBottom: 20,
+   marginBottom:"-10%",
+   top:"-10%",
  },
  title: {
    fontSize: 30,
@@ -154,7 +166,6 @@ const styles = StyleSheet.create({
    fontSize: 20,
    color: 'black',
    fontWeight: 'bold',
-   marginTop: 15,
  },
  inputWithIcon: {
    flexDirection: 'row',
@@ -232,6 +243,13 @@ const styles = StyleSheet.create({
  borderColor: '#d3d3d3',
  justifyContent: 'center',
  },
+ scrollView: {
+ // Ensure ScrollView takes up remaining space
+  marginBottom:10, // Adjust as needed
+},
+spaceholder: {
+  marginTop:'8%',
+}
 });
 
 
@@ -287,6 +305,10 @@ text: {
   letterSpacing: 0.25,
   color: 'white',
 },
+scrollContent: {
+  flexGrow: 1,
+  paddingBottom: 20, // Ensure space for the ListButton
+}
 });
 
 

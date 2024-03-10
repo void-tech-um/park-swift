@@ -47,7 +47,8 @@ const Listing = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFF', // white background for whole page
+        backgroundColor: '#FFF',
+        height:"100%", // white background for whole page
     },
     topHeader: {
         flexDirection: 'row',

@@ -8,7 +8,7 @@ function HomeScreen() {
     // adding currentTile and search bar components
   
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
         <React.Fragment>
           <SearchBar/>
           <CurrentTile/>

@@ -2,6 +2,7 @@ import React from 'react';
 import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
+import List_Profile_Header from '../components/List_Header';
 
 const ProfileDetail = () => {
   return (
@@ -34,7 +35,7 @@ const ProfileDetail = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    top:'-20%',
     // backgroundColor: '#ECF0F3',
   },
   body: {

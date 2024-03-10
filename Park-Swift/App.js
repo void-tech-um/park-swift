@@ -41,10 +41,10 @@ function App() {
         {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
         {/* <Stack.Screen name="Login" component={LoginScreen} /> */}
         {/* <Stack.Screen name="Registration" component={RegistrationScreen} /> */}
-        <Stack.Screen name="Tab" component={NavBar} />
+        <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false}}/>
            {/* {props => <HomeScreen {...props} extraData={user} />}  */}
         {/* </Stack.Screen> */}
-        <Stack.Screen name="ThankYou" component={ThankYouScreen} />
+        <Stack.Screen name="ThankYou" component={ThankYouScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
