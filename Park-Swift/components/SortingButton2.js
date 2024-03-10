@@ -27,6 +27,8 @@ const SortingButton = () => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: '-58%',
+      marginRight: '-60%',
     },
     button: {
       backgroundColor: '#D9D9D9',
