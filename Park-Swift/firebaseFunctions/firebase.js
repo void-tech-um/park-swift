@@ -46,7 +46,7 @@ export function loginUser(email, password) {
 }    
 export function createPost(userID, location, rentalPeriod, price, negotiable, selectedDates) {
     if (!location || !rentalPeriod || !price || negotiable == null || !selectedDates) {
-        error('All parameters must be provided');
+        alert('All parameters must be provided');
     }
     const postsRef = ref(database, 'posts/');
     // const userPostsRef = ref(database, 'users/' + uid + 'userPosts/');
@@ -63,7 +63,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, se
     };
     return set(newPostRef, postData)
         .then(() => {
-            alert("did the set")
+            alert("Did the set")
             // Get a reference to the user's userPosts array
             const userPostsRef = ref(database, 'users/' + userID + '/posts/' + newPostRef.key);
             return set(userPostsRef, newPostRef.key);
@@ -72,4 +72,46 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, se
             alert('Error creating post:', error);
             throw error;
         });
+}
+// Get user's posts  
+export function getUserPosts(userID) {
+    const userPostsRef = ref(database, 'users/' + userID + '/posts/');
+    return new Promise((resolve, reject) => {
+        onValue(userPostsRef, (snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                posts.push(post);
+            });
+            resolve(posts);
+        }).catch((error) => {
+            reject(error);
+        });
+    });
+}
+
+// Get one post based on postID
+export function getPost(postID) {
+    const postRef = ref(database, 'posts/' + postID);
+    return new Promise((resolve, reject) => {
+        onValue(postRef, (snapshot) => {
+            const post = snapshot.val();
+            resolve(post);
+        }).catch((error) => {
+            reject(error);
+        });
+    });
+}
+
+// Get user info based on userID 
+export function getUser(userID){
+    const userRef = ref(database, 'users/' + userID);
+    return new Promise((resolve, reject) => {
+        onValue(userRef, (snapshot) => {
+            const user = snapshot.val();
+            resolve(user);
+        }).catch((error) => {
+            reject(error);
+        });
+    });
 }

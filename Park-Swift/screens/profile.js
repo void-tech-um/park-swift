@@ -1,9 +1,26 @@
-import React from 'react';
+import * as React from 'react';
 import StarRating from '../components/StarRating';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
+import { useState, useEffect } from 'react';
 import { SearchBar } from 'react-native-screens';
+import {getUser}  from '../firebaseFunctions/firebase';
 
-const ProfileDetail = () => {
+function Profile({route}) {
+  const [myUser, setMyUser] = useState(null);
+  const userId = route.params.userId;
+  useEffect(() => {
+    getUser(userId)
+        .then((userData) => {
+          setMyUser(userData);
+        })
+        .catch((error) => {
+            console.error('Error fetching post:', error);
+        });
+}, []);
+if (!myUser) {
+    return <Text>Loading...</Text>;
+}
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -11,7 +28,7 @@ const ProfileDetail = () => {
           <Text style={styles.avatar}>img</Text>
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>Your Name</Text>
+          <Text style={styles.name}>{myUser.name}</Text>
         </View>
         <View style={styles.star}>
         <StarRating/>
@@ -30,7 +47,7 @@ const ProfileDetail = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -93,4 +110,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileDetail;
+export default Profile;

@@ -1,8 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; 
+import {getPost}  from '../firebaseFunctions/firebase';
+
 
 const Listing = () => {
+
+    const [myPost, setMyPost] = useState(null);
+
+    useEffect(() => {
+        getPost('-NsL_obWnA6ELlZvaW8o')
+            .then((postData) => {
+                setMyPost(postData);
+            })
+            .catch((error) => {
+                console.error('Error fetching post:', error);
+            });
+    }, []);
+    if (!myPost) {
+        return <Text>Loading...</Text>;
+    }
+    if(myPost.negotiable == 1){
+        negotiableVar = "Negotiable"; 
+    }else{
+        negotiableVar = "Fixed"
+    }
     return (
         <View style = {styles.container}>
             {/* Add the grey heading with the menu 3 line thing above the Listing heading */}
@@ -13,7 +35,7 @@ const Listing = () => {
                 <TouchableOpacity onPress={() => alert('Back')}>
                     <Ionicons name = "arrow-back" size = {40} color = "black" />
                 </TouchableOpacity>
-                <Text style = {styles.listingHeading}>123 Address Rd</Text>
+                <Text style = {styles.listingHeading}>{myPost.location}</Text>
             </View>
 
             {/* Image Placeholder */}
@@ -25,7 +47,7 @@ const Listing = () => {
                 
                 <Text style = {styles.infoLabels}>Price</Text>
                 <View style = {styles.infoSection}>
-                    <Text style = {styles.infoContent}>$500/Semester Negotiable</Text>
+                    <Text style = {styles.infoContent}>${myPost.price}/{myPost.rentalPeriod} {negotiableVar}</Text>
                 </View>
 
                 <Text style = {styles.infoLabels}>Size</Text>

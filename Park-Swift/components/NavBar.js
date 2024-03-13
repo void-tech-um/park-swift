@@ -20,8 +20,6 @@ const NavBar = ({ route, navigation }) => {
 
     const userId = route.params.userId;
 
-
-
     return(
         <Tab.Navigator
             initialRouteName="Home"
@@ -37,13 +35,13 @@ const NavBar = ({ route, navigation }) => {
                 },
             })}
             >
-            <Tab.Screen name="Home" component={HomeScreen} options={{
+            <Tab.Screen name="Home" component={HomeScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home-outline" color={'white'} size={36}/>
                 ),
             }}/>
-            <Tab.Screen name="Message" component={MessagesScreen} options={{
+            <Tab.Screen name="Message" component={MessagesScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
@@ -55,30 +53,30 @@ const NavBar = ({ route, navigation }) => {
                 ),
             }}/>
 
-            <Tab.Screen name="Map" component={MapScreen} options={{
+            <Tab.Screen name="Map" component={MapScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="map-outline" color={'white'} size={33} />
                 ),
             }}/>
 
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{
+            <Tab.Screen name="Profile" component={ProfileScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-circle-outline" color={'white'} size={33}/>
                 ),
             }}/>
 
-            <Tab.Screen name="List Info Page" component={ListingInfoPage} options={{
+            <Tab.Screen name="List Info Page" component={ListingInfoPage} initialParams={{userId : userId}}  options={{
                 tabBarVisible:false,
             }}/>
-            <Tab.Screen name="Thank You" component={ThankYouScreen} options={{
+            <Tab.Screen name="Thank You" component={ThankYouScreen} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
             }} />
-            <Tab.Screen name="Listing" component={Listing} options={{
+            <Tab.Screen name="Listing" component={Listing}initialParams={{userId : userId}}  options={{
                 tabBarVisible:false,
             }}/>
-            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} options={{
+            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
             }}/>
         </Tab.Navigator>

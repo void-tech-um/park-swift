@@ -42,9 +42,7 @@ function App() {
         {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
         <Stack.Screen name="Login" component={LoginScreen}/>
         <Stack.Screen name="Registration" component={RegistrationScreen} />
-        <Stack.Screen name="Tab">
-           {props => <NavBar {...props} extraData={user} />}  
-        </Stack.Screen> 
+        <Stack.Screen name="Tab" component={NavBar} />
       </Stack.Navigator>
     </NavigationContainer>
   );
