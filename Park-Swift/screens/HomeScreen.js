@@ -62,18 +62,22 @@ function HomeScreen() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <React.Fragment>
-        <View style={styles.searchBarContainer}>
-          <SearchBar />
-        </View>
-          <CurrentTile/>
+          <View style={styles.searchBarContainer}>
+            <SearchBar />
+          </View>
+        </React.Fragment>
           <ScrollView 
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
           >
-            <CurrentlyRentingCard />
-            {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
-            <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-            <SortingButton />
+            <View>
+              <CurrentTile/>
+              <CurrentlyRentingCard />
+              {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
+              <Text style={styles.listingsNearYouText}>Listings Near You</Text>
+              <SortingButton />
+            </View>
+            <React.Fragment>
             {listingsData.map((listing) => (
               <ListingCard
                 address={listing.address}
@@ -85,6 +89,7 @@ function HomeScreen() {
                 listingURL={listing.listingURL}
               />
             ))}
+            </React.Fragment>
           </ScrollView>
 
           {/* <SafeAreaView>
@@ -105,7 +110,6 @@ function HomeScreen() {
             )}
           />
         </SafeAreaView> */}
-        </React.Fragment>
     </View>
   );
 };
@@ -131,4 +135,4 @@ const styles = StyleSheet.create({
   // No additional or complex styling to affect layout
 });
 
-export default Homepage;
+export default HomeScreen;
