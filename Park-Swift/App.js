@@ -15,6 +15,7 @@ import Listing from './screens/listing.js';
 import ProfileDetail from './screens/profile';
 import ListingInfoPage from './screens/listinginfopage.js';
 import ThankYouScreen from './screens/confirmation.js';
+import FilterScreen from './screens/filter.js';
 import { Image, TextInput, TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import NavBar from './components/NavBar.js';

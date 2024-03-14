@@ -14,6 +14,7 @@ import ThankYouScreen from '../screens/confirmation';
 import Listing from '../screens/listing';
 import HamburgerMenu from '../screens/hamburgerMenu';
 import { Modal, TouchableOpacity} from 'react-native-paper';
+import FilterScreen from '../screens/filter';
 
 
 const Tab = createBottomTabNavigator();
@@ -107,6 +108,9 @@ const NavBar = () => {
                 headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
+            }}/>
+            <Tab.Screen name="FilterScreen" component={FilterScreen} options={{
+                tabBarVisible:false,
             }}/>
         </Tab.Navigator>
     </>
