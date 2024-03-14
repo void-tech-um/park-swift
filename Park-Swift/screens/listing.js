@@ -17,6 +17,7 @@ const Listing = () => {
                 console.error('Error fetching post:', error);
             });
     }, []);
+    
     if (!myPost) {
         return <Text>Loading...</Text>;
     }

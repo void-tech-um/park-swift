@@ -20,7 +20,6 @@ function Profile({route}) {
 if (!myUser) {
     return <Text>Loading...</Text>;
 }
-
   return (
     <View style={styles.container}>
       <View style={styles.body}>

@@ -23,8 +23,7 @@ export default function RegistrationScreen({navigation}) {
         }
         registerUser(email, password, fullName)
             .then((data) => {
-                // alert(data.user.uid)
-                navigation.navigate('Tab', {user: data})
+                navigation.navigate('Tab', {userId: data.user.uid})
             })
             .catch((error) => {
                 alert(error)
