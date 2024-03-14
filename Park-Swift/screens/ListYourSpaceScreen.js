@@ -117,6 +117,16 @@ function ListYourSpaceScreen() {
             </TouchableOpacity>
           </View>
 
+          <Text style={styles.headerText}>Description</Text>
+<View style={styles.inputWithIcon}>
+  <TextInput
+    style={[styles.inputRounded, styles.inputDescription]}
+    placeholder="Describe your space"
+    multiline
+    numberOfLines={4} // Adjust based on your needs
+  />
+</View>
+
           <Text style={styles.centeredHeaderText}>Available Dates</Text>
           <Calendar
             style={styles.calendarStyle}
@@ -141,6 +151,14 @@ const styles = StyleSheet.create({
    backgroundColor: '#fff',
   
  },
+
+ inputDescription: {
+  marginRight: 10,
+  flex: 1,
+  height: 100, 
+  marginTop: 6,
+  paddingLeft: 10, 
+},
  titleRow: {
    flexDirection: 'row',
    alignItems: 'center',
