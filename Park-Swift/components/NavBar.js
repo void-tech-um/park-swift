@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import MessagesScreen from '../screens/MessagesScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import Profile from '../screens/profile';
 import CreatePost from '../screens/createPost';
 import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -60,7 +60,7 @@ const NavBar = ({ route, navigation }) => {
                 ),
             }}/>
 
-            <Tab.Screen name="Profile" component={ProfileScreen} initialParams={{userId : userId}} options={{
+            <Tab.Screen name="Profile" component={Profile} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-circle-outline" color={'white'} size={33}/>

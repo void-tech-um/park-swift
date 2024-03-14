@@ -28,7 +28,7 @@ if (!myUser) {
           <Text style={styles.avatar}>img</Text>
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>{myUser.name}</Text>
+          <Text style={styles.name}>{myUser.fullName}</Text>
         </View>
         <View style={styles.star}>
         <StarRating/>
@@ -38,12 +38,9 @@ if (!myUser) {
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>Email:</Text>
-          <Text style={styles.infoText}>your@email.com</Text>
+          <Text style={styles.infoText}>{myUser.email}</Text>
         </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoLabel}>Contact:</Text>
-          <Text style={styles.infoText}>your contact</Text>
-        </View>
+        
       </View>
     </View>
   );
