@@ -4,13 +4,11 @@ import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import ListingInfoPage from '../screens/listinginfopage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
 import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 import { StyleSheet } from 'react-native';
-import ThankYouScreen from '../screens/confirmation';
 import Listing from '../screens/listing';
 import HamburgerMenu from '../screens/hamburgerMenu';
 import { Modal, TouchableOpacity} from 'react-native-paper';
@@ -84,19 +82,6 @@ const NavBar = () => {
                                 ,height:'12%',} ,
                 title:"",
             }}/>
-
-            <Tab.Screen name="List Info Page" component={ListingInfoPage} options={{
-                tabBarVisible:false,
-                headerStyle: {backgroundColor: '#033566'
-                            ,height:'12%',} ,
-                title:"",
-            }}/>
-            <Tab.Screen name="Thank You" component={ThankYouScreen} options={{
-                tabBarVisible:false,
-                headerStyle: {backgroundColor: '#033566'
-                            ,height:'12%',} ,
-                title:"",
-            }} />
             <Tab.Screen name="Listing" component={Listing} options={{
                 tabBarVisible:false,
                 headerStyle: {backgroundColor: '#033566'
