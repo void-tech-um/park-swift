@@ -75,7 +75,7 @@ function ListYourSpaceScreen() {
               onPress={() => setSize('small')}>
               <View style={[styles.inputRounded, styles.inputSize]}>
                 {chooseSize === 'small' && (
-                  <View style={styles.selectedBubble} />
+                  <MaterialCommunityIcons name="check" size={24} color="black" />
                 )}
               </View>
               <Text style={styles.optionText}>Small</Text>
@@ -85,7 +85,7 @@ function ListYourSpaceScreen() {
               onPress={() => setSize('medium')}>
               <View style={[styles.inputRounded, styles.inputSize]}>
                 {chooseSize === 'medium' && (
-                  <View style={styles.selectedBubble} />
+                  <MaterialCommunityIcons name="check" size={24} color="black" />
                 )}
               </View>
               <Text style={styles.bubbleText}>Medium</Text>
@@ -95,7 +95,7 @@ function ListYourSpaceScreen() {
               onPress={() => setSize('large')}>
               <View style={[styles.inputRounded, styles.inputSize]}>
                 {chooseSize === 'large' && (
-                  <View style={styles.selectedBubble} />
+                  <MaterialCommunityIcons name="check" size={24} color="black" />
                 )}
               </View>
               <Text style={styles.optionText}>Large</Text>
