@@ -14,12 +14,14 @@ function Profile({route}) {
           setMyUser(userData);
         })
         .catch((error) => {
-            console.error('Error fetching post:', error);
+            console.error('Error fetching profile:', error);
         });
-}, []);
-if (!myUser) {
+  }, [userId]);
+
+  if (!myUser) {
     return <Text>Loading...</Text>;
-}
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>

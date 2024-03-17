@@ -93,25 +93,26 @@ export function getUserPosts(userID) {
 // Get one post based on postID
 export function getPost(postID) {
     const postRef = ref(database, 'posts/' + postID);
-    return new Promise((resolve, reject) => {
-        onValue(postRef, (snapshot) => {
-            const post = snapshot.val();
-            resolve(post);
-        }).catch((error) => {
-            reject(error);
+    return get(postRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                return snapshot.val();
+            } else {
+                throw new Error('Post does not exist');
+            }
         });
-    });
 }
 
+
 // Get user info based on userID 
-export function getUser(userID){
-    const userRef = ref(database, 'users/' + userID);
-    return new Promise((resolve, reject) => {
-        onValue(userRef, (snapshot) => {
-            const user = snapshot.val();
-            resolve(user);
-        }).catch((error) => {
-            reject(error);
+export function getUser(userId) {
+    const userRef = ref(database, 'users/' + userId);
+    return get(userRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                return snapshot.val();
+            } else {
+                throw new Error('User does not exist');
+            }
         });
-    });
 }
