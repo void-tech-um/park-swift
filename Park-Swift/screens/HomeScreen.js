@@ -5,6 +5,7 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
 
+
 function HomeScreen() {
     // adding currentTile and search bar components
   
@@ -14,7 +15,6 @@ function HomeScreen() {
           <View style={styles.searchBarContainer}>
             <SearchBar />
           </View>
-          <CurrentTile/>
         </React.Fragment>
         <CurrentlyRentingCard />
         {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
   // No additional or complex styling to affect layout
 });
 
-export default Homepage;
+export default HomeScreen;
