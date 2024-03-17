@@ -5,19 +5,24 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
 
-const Homepage = () => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.searchBarContainer}>
-        <SearchBar />
+
+function HomeScreen() {
+    // adding currentTile and search bar components
+  
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
+        <React.Fragment>
+          <View style={styles.searchBarContainer}>
+            <SearchBar />
+          </View>
+        </React.Fragment>
+        <CurrentlyRentingCard />
+        {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
+        <Text style={styles.listingsNearYouText}>Listings Near You</Text>
+        <SortingButton />
+        <ListingCard />
       </View>
-      <CurrentlyRentingCard />
-      {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
-      <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-      <SortingButton />
-      <ListingCard />
-    </View>
-  );
+   );
 };
 
 const styles = StyleSheet.create({
@@ -36,9 +41,9 @@ const styles = StyleSheet.create({
     color: 'black',
     marginTop: 180, // Add a little space above the text if needed
     fontSize: 25,
-    marginLeft: 10,
+    marginLeft: -220,
   },
   // No additional or complex styling to affect layout
 });
 
-export default Homepage;
+export default HomeScreen;

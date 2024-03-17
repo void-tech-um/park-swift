@@ -4,7 +4,7 @@ import { View, Image, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
 import { Card } from 'react-native-elements';
 
-const AddressMapping = () => {
+const AddressMapping = () => { 
   return (
     <View style={styles.container}>
       <Text style={styles.caption}>Address 123</Text>
@@ -13,7 +13,7 @@ const AddressMapping = () => {
         source={{ uri: 'https://placekitten.com/200/300' }} // Replace with your image source
       />
     </View>
-  );
+  ); 
 };
 
 const styles = StyleSheet.create({
