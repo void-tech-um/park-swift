@@ -2,8 +2,26 @@ import React from 'react';
 import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
+import { useState, useEffect } from 'react';
+import {getUser}  from '../firebaseFunctions/firebase';
 
-const ProfileDetail = () => {
+function ProfileDetail({route}) {
+  const [myUser, setMyUser] = useState(null);
+  const userId = route.params.userId;
+  useEffect(() => {
+    getUser(userId)
+        .then((userData) => {
+          setMyUser(userData);
+        })
+        .catch((error) => {
+            console.error('Error fetching profile:', error);
+        });
+  }, [userId]);
+
+  if (!myUser) {
+    return <Text>Loading...</Text>;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.body}>
@@ -11,7 +29,7 @@ const ProfileDetail = () => {
           <Text style={styles.avatar}>img</Text>
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>Your Name</Text>
+          <Text style={styles.name}>{myUser.fullName}</Text>
         </View>
         <View style={styles.star}>
         <StarRating/>
@@ -21,11 +39,11 @@ const ProfileDetail = () => {
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>Email:</Text>
-          <Text style={styles.infoText}>your@email.com</Text>
+          <Text style={styles.infoText}>{myUser.email}</Text>
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.infoLabel}>Contact:</Text>
-          <Text style={styles.infoText}>your contact</Text>
+          <Text style={styles.infoText}>{myUser.email}</Text>
         </View>
       </View>
     </View>
