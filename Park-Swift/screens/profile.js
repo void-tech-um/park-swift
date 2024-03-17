@@ -5,7 +5,7 @@ import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebase';
 
-function ProfileDetail({route}) {
+function ProfileScreen({route}) {
   const [myUser, setMyUser] = useState(null);
   const userId = route.params.userId;
   useEffect(() => {
@@ -111,4 +111,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileDetail;
+export default ProfileScreen;
