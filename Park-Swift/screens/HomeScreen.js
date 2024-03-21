@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginTop: 180, // Add a little space above the text if needed
     fontSize: 25,
-    marginLeft: 10,
+    marginLeft: -220,
   },
   // No additional or complex styling to affect layout
 });
