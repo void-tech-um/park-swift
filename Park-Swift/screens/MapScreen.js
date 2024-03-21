@@ -1,13 +1,43 @@
-import * as React from 'react';
-import {Text,View} from 'react-native';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import MapView, { UrlTile, Marker } from 'react-native-maps';
 
+const MapScreen = () => {
+  const markers = [
+    { id: '1', latitude: 42.280826, longitude: -83.743038, title: 'Ann Arbor' }, // Example location
+    // Add more markers as needed
+  ];
 
-function MapScreen() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Map Screen</Text>
-      </View>
-    );
-}
+  return (
+    <View style={styles.container}>
+      <MapView style={styles.map}>
+        <UrlTile
+          urlTemplate="http://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maximumZ={19}
+        />
+        {markers.map(marker => (
+          <Marker
+            key={marker.id}
+            coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+            title={marker.title}
+          />
+        ))}
+      </MapView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default MapScreen;
