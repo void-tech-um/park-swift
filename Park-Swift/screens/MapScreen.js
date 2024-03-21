@@ -1,34 +1,43 @@
 import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import { View, StyleSheet } from 'react-native';
+import MapView, { UrlTile, Marker } from 'react-native-maps';
 
+const MapScreen = () => {
+  const markers = [
+    { id: '1', latitude: 42.280826, longitude: -83.743038, title: 'Ann Arbor' }, // Example location
+    // Add more markers as needed
+  ];
 
-  const Map = () => {
-    const position = [51.505, -0.09]; // Example: London's coordinates
-
-    // Fix for default marker icons not showing due to path issues in React
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-      iconUrl: require('leaflet/dist/images/marker-icon.png'),
-      shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-    });
-
-    return (
-      <MapContainer center={position} zoom={13} style={{ height: '400px', width: '100%' }}>
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  return (
+    <View style={styles.container}>
+      <MapView style={styles.map}>
+        <UrlTile
+          urlTemplate="http://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maximumZ={19}
         />
-        <Marker position={position}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </MapContainer>
-    );
-  };
+        {markers.map(marker => (
+          <Marker
+            key={marker.id}
+            coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+            title={marker.title}
+          />
+        ))}
+      </MapView>
+    </View>
+  );
+};
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default MapScreen;
