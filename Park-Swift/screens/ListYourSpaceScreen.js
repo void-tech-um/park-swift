@@ -311,6 +311,3 @@ text: {
 
 
 export default ListYourSpaceScreen;
-
-
-
