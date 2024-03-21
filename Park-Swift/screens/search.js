@@ -65,6 +65,7 @@ const MenuSearchBar = () => {
         iconContainer: {
           flex:1,
           padding: 5,
+          
         },
       });
 

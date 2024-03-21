@@ -60,6 +60,7 @@ const NavBar = () => {
                 title:"",
             }} />
             <Tab.Screen name="List Your Space" component={ListYourSpaceScreen} options={{
+                tabBarLabel: 'Home',
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),

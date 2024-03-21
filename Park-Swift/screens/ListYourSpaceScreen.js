@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
-import List_Header from '../components/Profile_Header';
+import List_Header from '../components/List_Header';
 
 
 function ListYourSpaceScreen() {
@@ -17,8 +17,7 @@ function ListYourSpaceScreen() {
 
  return (
   <View>
-    <List_Header/>
-    
+    <List_Header/>  
    <View style={styles.container}>
      <View style={styles.titleRow}>
        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
@@ -140,7 +139,7 @@ const styles = StyleSheet.create({
  },
  scrollContent:{
   padding:"3%",
-  paddingBottom:"75%",
+  paddingBottom:"200%",
  },
  titleRow: {
    flexDirection: 'row',
@@ -237,6 +236,7 @@ const styles = StyleSheet.create({
  },
 spaceholder: {
   marginTop:'8%',
+  marginBottom:'40%'
 }
 });
 
