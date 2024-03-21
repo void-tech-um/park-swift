@@ -44,8 +44,8 @@ export function loginUser(email, password) {
             });
         });
 }    
-export function createPost(userID, location, rentalPeriod, price, negotiable, selectedDates) {
-    if (!location || !rentalPeriod || !price || negotiable == null || !selectedDates) {
+export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate) {
+    if (!location || !rentalPeriod || !price || negotiable == null || !firstDate || !lastDate) {
         alert('All parameters must be provided');
     }
     const postsRef = ref(database, 'posts/');
@@ -58,12 +58,14 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, se
         price: price,
         // description:description,
         negotiable: negotiable,
-        selectedDates: selectedDates, 
+        firstDate : firstDate,
+        lastDate : lastDate,
+        // selectedDates: selectedDates, 
         createdAt: new Date().toISOString(),
     };
     return set(newPostRef, postData)
         .then(() => {
-            alert("Did the set")
+            // alert("Did the set")
             // Get a reference to the user's userPosts array
             const userPostsRef = ref(database, 'users/' + userID + '/posts/' + newPostRef.key);
             return set(userPostsRef, newPostRef.key);

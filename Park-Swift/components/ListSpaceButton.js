@@ -9,7 +9,7 @@ export default function ListSpaceButton({onPress}) {
     const handlePress = () => {
         // Navigate to the "ThankYou" screen
         onPress();
-        navigation.navigate('ThankYou');
+        
     };
     return (
         <View style={styles.container}>

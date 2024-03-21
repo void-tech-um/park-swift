@@ -5,8 +5,7 @@ import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
 import { createPost } from '../firebaseFunctions/firebase';
-
- 
+import { useState } from 'react';
 
 
 function CreatePost({ navigation, route }) {
@@ -16,12 +15,43 @@ function CreatePost({ navigation, route }) {
   const [rentalPeriod, setRentalPeriod] = React.useState('hour');
   const [isNegotiable, setIsNegotiable] = React.useState(null);
   const [selectedDates, setSelectedDates] = React.useState({});
+  const [firstDate, setFirstDate] = useState(null);
+  const [lastDate, setLastDate] = useState(null);
  
+  const handleDayPress = (day) => {
+    if (!firstDate || (firstDate && lastDate)) {
+      setFirstDate(day.dateString);
+      setLastDate(null); 
+      setSelectedDates({ [day.dateString]: { selected: true, selectedColor: 'grey' } });
+    } else if (firstDate && !lastDate) {
+      setLastDate(day.dateString);
+      if (new Date(day.dateString) < new Date(firstDate)) {
+        fillDatesBetween(day.dateString, firstDate); 
+      } else {
+        fillDatesBetween(firstDate, day.dateString);
+      }
+    }
+  };
+  const fillDatesBetween = (startDate, endDate) => {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    end.setDate(end.getDate() + 1); 
+    const datesToMark = {};
+  
+    while (start < end) {
+      const dateString = start.toISOString().split('T')[0];
+      datesToMark[dateString] = { selected: true, selectedColor: 'grey' };
+      start.setDate(start.getDate() + 1);
+    }
+  
+    setSelectedDates(datesToMark);
+  };
+
  const onPostPress = () => {
-   alert(userId);
-   createPost(userId, location, rentalPeriod, price, isNegotiable, selectedDates)
+  //  alert(userId);
+   createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate)
      .then(() => {
-       navigation.navigate('Home');
+      navigation.navigate('ThankYou');
      })
      .catch((error) => {
        console.error('Error creating post:', error);
@@ -29,120 +59,102 @@ function CreatePost({ navigation, route }) {
      });
   }
  
- return (
-   <View style={styles.container}>
-     <View style={styles.titleRow}>
-       <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
-       <Text style={styles.title}>List Your Space</Text>
-     </View>
-     <ScrollView style={styles.scrollView}>
-     <View>
-     <Text style={styles.headerText}>Location</Text>
-     <View style={styles.inputWithIcon}>
-       <MaterialCommunityIcons name="magnify" size={20} color="black" style={styles.iconInsideInput} />
-       <TextInput
-         style={[styles.inputRounded, styles.inputLocation]}
-         placeholder="Address"
-         value={location}
-         onChangeText={setLocation}
-       />
-     </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.titleRow}>
+        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
+        <Text style={styles.title}>List Your Space</Text>
+      </View>
+      <ScrollView style={styles.scrollView}>
+        <View>
+          <Text style={styles.headerText}>Location</Text>
+          <View style={styles.inputWithIcon}>
+            <MaterialCommunityIcons name="magnify" size={20} color="black" style={styles.iconInsideInput} />
+            <TextInput
+              style={[styles.inputRounded, styles.inputLocation]}
+              placeholder="Address"
+              value={location}
+              onChangeText={setLocation}
+            />
+          </View>
 
+          <Text style={styles.headerText}>Price</Text>
+          <View style={styles.inputWithIcon}>
+            <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
+            <TextInput
+              style={[styles.inputRounded, styles.inputPrice]}
+              keyboardType="numeric"
+              placeholder="0.00"
+              value={price}
+              onChangeText={setPrice}
+            />
+            <Text style={styles.slash}>/</Text>
 
-     <Text style={styles.headerText}>Price</Text>
-     <View style={styles.inputWithIcon}>
-       <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
-       <TextInput
-         style={[styles.inputRounded, styles.inputPrice]}
-         keyboardType="numeric"
-         placeholder="0.00"
-         value={price}
-         onChangeText={setPrice}
-       />
-       <Text style={styles.slash}>/</Text>
-     
-       <RNPickerSelect
-         onValueChange={(value) => setRentalPeriod(value)}
-         items={[
-           { label: 'Hour', value: 'hour' },
-           { label: 'Day', value: 'day' },
-           { label: 'Week', value: 'week' },
-           { label: 'Month', value: 'month' },
-         ]}
-         style={pickerSelectStyles}
-         value={rentalPeriod}
-         useNativeAndroidPickerStyle={false}
-         placeholder={{}}
-         Icon={() => {
-           return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
-         }}
-       />
+            <RNPickerSelect
+              onValueChange={(value) => setRentalPeriod(value)}
+              items={[
+                { label: 'Hour', value: 'hour' },
+                { label: 'Day', value: 'day' },
+                { label: 'Week', value: 'week' },
+                { label: 'Month', value: 'month' },
+              ]}
+              style={pickerSelectStyles}
+              value={rentalPeriod}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => {
+                return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+              }}
+            />
+          </View>
 
+          <Text style={styles.headerText}>Negotiable?</Text>
+          <View style={styles.negotiableContainer}>
+            <TouchableOpacity
+              style={styles.option}
+              onPress={() => setIsNegotiable(true)}>
+              <View style={[styles.circle, styles.lightGreyCircle]}>
+                {isNegotiable === true && (
+                  <MaterialCommunityIcons name="check" size={24} color="black" />
+                )}
+              </View>
+              <Text style={styles.optionText}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.option, styles.noOption]}
+              onPress={() => setIsNegotiable(false)}>
+              <View style={[styles.circle, styles.lightGreyCircle]}>
+                {isNegotiable === false && (
+                  <MaterialCommunityIcons name="check" size={24} color="black" />
+                )}
+              </View>
+              <Text style={styles.optionText}>No</Text>
+            </TouchableOpacity>
+          </View>
 
-
-
-     </View>
-
-
-     <Text style={styles.headerText}>Negotiable?</Text>
-     <View style={styles.negotiableContainer}>
-       <TouchableOpacity
-         style={styles.option}
-         onPress={() => setIsNegotiable(true)}>
-         <View style={[styles.circle, styles.lightGreyCircle]}>
-           {isNegotiable === true && (
-             <MaterialCommunityIcons name="check" size={24} color="black" />
-           )}
-         </View>
-         <Text style={styles.optionText}>Yes</Text>
-       </TouchableOpacity>
-       <TouchableOpacity
-         style={[styles.option, styles.noOption]}
-         onPress={() => setIsNegotiable(false)}>
-         <View style={[styles.circle, styles.lightGreyCircle]}>
-           {isNegotiable === false && (
-             <MaterialCommunityIcons name="check" size={24} color="black" />
-           )}
-         </View>
-         <Text style={styles.optionText}>No</Text>
-       </TouchableOpacity>
-     </View>
-
-
-     <Text style={styles.centeredHeaderText}>Available Dates</Text>
-     <Calendar
- style={styles.calendarStyle}
- onDayPress={(day) => {
-   // Check if the day is already selected
-   const isSelected = selectedDates[day.dateString] ? true : false;
-
-   setSelectedDates(prevDates => {
-     if (isSelected) {
-       // If selected, remove the selection
-       const updatedDates = { ...prevDates };
-       delete updatedDates[day.dateString]; // Remove the key for the unselected date
-       return updatedDates;
-     } else {
-       // If not selected, add the selection
-       return {
-         ...prevDates,
-         [day.dateString]: { selected: true, selectedColor: 'grey' }
-       };
-     }
-   });
- }}
- markedDates={selectedDates}
-/>
-
+          <Text style={styles.headerText}>Description</Text>
+<View style={styles.inputWithIcon}>
+  <TextInput
+    style={[styles.inputRounded, styles.inputDescription]}
+    placeholder="Describe your space"
+    multiline
+    numberOfLines={4} // Adjust based on your needs
+  />
 </View>
-</ScrollView>
 
-<ListSpaceButton onPress={() => onPostPress()} />
+          <Text style={styles.centeredHeaderText}>Available Dates</Text>
+          <Calendar
+            style={styles.calendarStyle}
+            onDayPress={(day) => handleDayPress(day)}
+            markedDates={selectedDates}
+          />
+        </View>
+      </ScrollView>
 
-   </View>
- );
+      <ListSpaceButton onPress={() => onPostPress()} />
+    </View>
+  );
 }
-
 
 const styles = StyleSheet.create({
  container: {
@@ -153,6 +165,14 @@ const styles = StyleSheet.create({
    backgroundColor: '#fff',
   
  },
+
+ inputDescription: {
+  marginRight: 10,
+  flex: 1,
+  height: 100, 
+  marginTop: 6,
+  paddingLeft: 10, 
+},
  titleRow: {
    flexDirection: 'row',
    alignItems: 'center',
@@ -283,7 +303,7 @@ const pickerSelectStyles = StyleSheet.create({
  iconContainer: {
    top: '50%',
    right: 0,
-   transform: [{ translateY: -10 }], // Adjust this value as needed to center the icon
+   transform: [{ translateY: -10 }], 
  },
  button: {
   alignItems: 'center',
@@ -302,7 +322,6 @@ text: {
   color: 'white',
 },
 });
-
 
 export default CreatePost;
 

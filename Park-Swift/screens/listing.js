@@ -7,7 +7,7 @@ const Listing = () => {
     const [myPost, setMyPost] = useState(null);
 
     useEffect(() => {
-        getPost('-NsL_obWnA6ELlZvaW8o')
+        getPost('-NtTXKQDyThU0CC3KLd_')
             .then((postData) => {
                 setMyPost(postData);
             })
@@ -60,7 +60,7 @@ const Listing = () => {
 
         <Text style={styles.infoLabels}>Date</Text>
         <View style={styles.infoSection}>
-          <Text style={styles.infoContent}>8/29/23 - 05/02/24</Text>
+          <Text style={styles.infoContent}>{myPost.firstDate} - {myPost.lastDate}</Text>
         </View>
         <Text style={styles.sectionLabels}>Description</Text>
       </View>
