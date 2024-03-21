@@ -10,6 +10,8 @@ npm install react-native-star-rating
 
 npm install react-native-stars
 
+npm install react-native-maps
+
 npx expo install react-native-pager-view
 
 npm install react-native-keyboard-aware-scroll-view
