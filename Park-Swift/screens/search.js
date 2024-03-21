@@ -47,12 +47,13 @@ const MenuSearchBar = () => {
 
     const styles_searchbar = StyleSheet.create({
         container: {
+          position:'flex',
+          justifyContents:'space-around',
           flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'left',
           backgroundColor: '#033566', // Dark grey background
           padding: '3%',
-          paddingTop:'20%',
-          top:'-96%',
+          paddingTop:'12.5%',
         },
         input: {
           flex: 8,
@@ -64,12 +65,7 @@ const MenuSearchBar = () => {
         iconContainer: {
           flex:1,
           padding: 5,
-          right:'15%',
         },
-        iconContainer2:{
-          flex:1.25,
-          left:'15%'
-        }
       });
 
 export default MenuSearchBar;

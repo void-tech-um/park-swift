@@ -4,24 +4,30 @@ import SortingButton from '../components/SortingButton2';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
+import MenuSearchBar from './search';
 
 
 function HomeScreen() {
     // adding currentTile and search bar components
   
     return (
+      <View style={{position:"fixed",}}>
+         <MenuSearchBar/>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
-        <React.Fragment>
-          <View style={styles.searchBarContainer}>
-            <SearchBar />
+        {/* <React.Fragment> */}
+          {/* <View style={styles.searchBarContainer}> */}
+  
+          <Text>Home Screen</Text>
           </View>
-        </React.Fragment>
-        <CurrentlyRentingCard />
-        {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
-        <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-        <SortingButton />
-        <ListingCard />
       </View>
+
+      //   {/* </React.Fragment> */}
+      //   <CurrentlyRentingCard />
+      //   {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
+      //   <Text style={styles.listingsNearYouText}>Listings Near You</Text>
+      //   <SortingButton />
+      //   <ListingCard />
+      // </View>
    );
 };
 
@@ -31,8 +37,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   searchBarContainer: {
-    marginTop: 60,
-    width: '95%',
+    position:"absolute",
+    // marginTop: 60,
+    width: '100%',
     justifyContent: 'center',
     alignSelf: 'center',
   },

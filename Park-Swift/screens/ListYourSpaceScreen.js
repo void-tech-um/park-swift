@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
-import Profile_Header from '../components/Profile_Header';
+import List_Header from '../components/Profile_Header';
 
 
 function ListYourSpaceScreen() {
@@ -16,17 +16,14 @@ function ListYourSpaceScreen() {
 
 
  return (
+  <View>
+    <List_Header/>
+    
    <View style={styles.container}>
-    <View style={styles.top}>
-      <View style={styles.header}>
-      <Profile_Header/>
-      </View>
      <View style={styles.titleRow}>
        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
        <Text style={styles.title}>List Your Space</Text>
      </View>
-     </View>
-
      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
      <View>
      <Text style={styles.headerText}>Location</Text>
@@ -68,8 +65,6 @@ function ListYourSpaceScreen() {
            return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
          }}
        />
-
-
 
 
      </View>
@@ -131,30 +126,27 @@ function ListYourSpaceScreen() {
   </View>
   </ScrollView>
    </View>
+   </View>
  );
 }
 
 
 const styles = StyleSheet.create({
-  header:{
-    top:"68%",
-  },
  container: {
-   top:"-10%",
-   flex: 1,   // this is not working
-   paddingTop: "32%",
+   paddingTop: "18%",
    paddingBottom:"6%",
    backgroundColor: '#fff',
    height:'130%', 
  },
  scrollContent:{
   padding:"3%",
+  paddingBottom:"75%",
  },
  titleRow: {
    flexDirection: 'row',
    alignItems: 'center',
    marginBottom:"-10%",
-   top:"-10%",
+   top:"-15%",
  },
  title: {
    fontSize: 30,
@@ -243,10 +235,6 @@ const styles = StyleSheet.create({
  borderColor: '#d3d3d3',
  justifyContent: 'center',
  },
- scrollView: {
- // Ensure ScrollView takes up remaining space
-  marginBottom:10, // Adjust as needed
-},
 spaceholder: {
   marginTop:'8%',
 }

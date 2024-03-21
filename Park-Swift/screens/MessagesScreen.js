@@ -5,9 +5,11 @@ import List_Header from '../components/List_Header';
 
 function MessagesScreen() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{position:'fixed',}}>
         <List_Header/>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Messages Screen</Text>
+      </View>
       </View>
     );
   }
