@@ -25,7 +25,7 @@ import { ref, set } from 'firebase/database';
 //if (!global.btoa) {  global.btoa = encode }
 //if (!global.atob) { global.atob = decode }
 
-import ListYourSpaceScreen from './screens/ListYourSpaceScreen';
+import postScreen from './screens/postScreen';
 
 
 const Stack = createStackNavigator();
