@@ -7,7 +7,7 @@ function MessagesScreen() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <List_Header/>
-        <Text>Messages Screen</Text>
+        <Text>Message Screen</Text>
       </View>
     );
   }

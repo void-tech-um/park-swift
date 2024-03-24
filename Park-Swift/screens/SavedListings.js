@@ -5,7 +5,7 @@ import SearchbarComponent from './searchBar';
 import ProfileCard from './profileCard';
 
 
-const RecentlyVisitedProfiles = () => {
+const SavedListings = () => {
     return(
         <>
         <View style={{flexDirection: 'column', flex: 6.4}}>
@@ -38,4 +38,4 @@ const RecentlyVisitedProfiles = () => {
 };
 
 
-export default RecentlyVisitedProfiles;
+export default SavedListings;

@@ -7,7 +7,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
-import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
+import SavedListings from '../screens/SavedListings';
 import { StyleSheet } from 'react-native';
 import Listing from '../screens/listing';
 import HamburgerMenu from '../screens/hamburgerMenu';
@@ -46,10 +46,10 @@ const NavBar = () => {
                             height:'12%',},
                 title:"",
             }}/>
-            <Tab.Screen name="Message" component={MessagesScreen} options={{
+            <Tab.Screen name="SavedListings" component={SavedListings} options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
+                    <MaterialCommunityIcons name="bookmark-multiple-outline" color={'white'} size={32} />
                 ),
                 headerStyle: {backgroundColor: '#033566',
                             height:'12%',},
@@ -88,12 +88,12 @@ const NavBar = () => {
                             ,height:'12%',} ,
                 title:"",
             }}/>
-            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} options={{
+            {/* <Tab.Screen name="SavedListings" component={SavedListings} options={{
                 tabBarVisible:false,
                 headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
-            }}/>
+            }}/> */}
             <Tab.Screen name="FilterScreen" component={FilterScreen} options={{
                 tabBarVisible:false,
             }}/>
