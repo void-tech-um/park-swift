@@ -33,12 +33,12 @@ const Profile_Header = () => {
 
     const styles_searchbar = StyleSheet.create({
         container: {
+          position:'flex',          
           flexDirection: 'row',
           alignItems: 'center',
           backgroundColor: '#033566', // Navy Background
           padding: '3%',
-          paddingTop:'20%',
-          top:'-37.3%',
+          paddingTop:'15%',
         },
         iconContainer: {
           flex:1,

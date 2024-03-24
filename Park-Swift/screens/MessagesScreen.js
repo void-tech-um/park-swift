@@ -5,7 +5,7 @@ import List_Header from '../components/List_Header';
 
 function MessagesScreen() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{position:'fixed',}}>
         <List_Header/>
         <Text>Message Screen</Text>
       </View>

@@ -13,6 +13,7 @@ import Listing from '../screens/listing';
 import HamburgerMenu from '../screens/hamburgerMenu';
 import { Modal, TouchableOpacity} from 'react-native-paper';
 import FilterScreen from '../screens/filter';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Tab = createBottomTabNavigator();
@@ -25,6 +26,9 @@ const NavBar = () => {
         <Tab.Navigator
             initialRouteName="Home"
             screenOptions={({ route }) => ({
+                headerSearchBarOption:{
+                    placeholder:"Hello",
+                },
                 headerShown:false,
                 tabBarShowLabel: false,
                 tabBarStyle: {
@@ -56,6 +60,7 @@ const NavBar = () => {
                 title:"",
             }} />
             <Tab.Screen name="List Your Space" component={ListYourSpaceScreen} options={{
+                tabBarLabel: 'Home',
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),
