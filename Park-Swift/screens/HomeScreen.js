@@ -13,21 +13,14 @@ function HomeScreen() {
     return (
       <View style={{position:"fixed",}}>
          <MenuSearchBar/>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
-        {/* <React.Fragment> */}
-          {/* <View style={styles.searchBarContainer}> */}
-  
-          <Text>Home Screen</Text>
-          </View>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
+          <CurrentlyRentingCard />
+            {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
+            <Text style={styles.listingsNearYouText}>Listings Near You</Text>
+            <SortingButton />
+            <ListingCard />
+        </View>
       </View>
-
-      //   {/* </React.Fragment> */}
-      //   <CurrentlyRentingCard />
-      //   {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
-      //   <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-      //   <SortingButton />
-      //   <ListingCard />
-      // </View>
    );
 };
 
