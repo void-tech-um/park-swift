@@ -6,11 +6,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ThankYouScreen from './screens/confirmation.js';
 import NavBar from './components/NavBar.js';
-import { app, analytics, auth, database } from './services/config';
-import { ref, set } from 'firebase/database';
-//import {decode, encode} from 'base-64'
-//if (!global.btoa) {  global.btoa = encode }
-//if (!global.atob) { global.atob = decode }
+import LoginScreen from './screens/LoginScreen.js';
+import RegistrationScreen from './screens/RegistrationScreen.js';
+//import { app, analytics, auth, database } from './services/config';
+//import { ref, set } from 'firebase/database';
 
 import postScreen from './screens/postScreen';
 
