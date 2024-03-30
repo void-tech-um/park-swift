@@ -7,12 +7,13 @@ import ProfileScreen from '../screens/profile';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import postScreen from '../screens/postScreen';
-import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
+import SavedListings from '../screens/SavedListings';
 import { StyleSheet } from 'react-native';
 import Listing from '../screens/listing';
 import HamburgerMenu from '../screens/hamburgerMenu';
 import { Modal, TouchableOpacity} from 'react-native-paper';
 import FilterScreen from '../screens/filter';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Tab = createBottomTabNavigator();
@@ -28,6 +29,9 @@ const NavBar = ({ route }) => {
         <Tab.Navigator
             initialRouteName="Home"
             screenOptions={({ route }) => ({
+                headerSearchBarOption:{
+                    placeholder:"Hello",
+                },
                 headerShown:false,
                 tabBarShowLabel: false,
                 tabBarStyle: {
@@ -49,16 +53,17 @@ const NavBar = ({ route }) => {
                             height:'12%',},
                 title:"",
             }}/>
-            <Tab.Screen name="Message" component={MessagesScreen} initialParams={{userId : userId}}options={{
+            <Tab.Screen name="SavedListings" component={SavedListings} initialParams={{userId : userId}}options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
+                    <MaterialCommunityIcons name="bookmark-multiple-outline" color={'white'} size={32} />
                 ),
                 headerStyle: {backgroundColor: '#033566',
                             height:'12%',},
                 title:"",
             }} />
             <Tab.Screen name="List Your Space" component={postScreen} initialParams={{userId : userId}} options={{
+                tabBarLabel: 'Home',
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),
@@ -86,12 +91,6 @@ const NavBar = ({ route }) => {
                 title:"",
             }}/>
             <Tab.Screen name="Listing" component={Listing} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
-                headerStyle: {backgroundColor: '#033566'
-                            ,height:'12%',} ,
-                title:"",
-            }}/>
-            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
                 headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,

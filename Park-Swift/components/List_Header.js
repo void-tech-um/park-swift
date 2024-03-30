@@ -33,17 +33,13 @@ const List_Header = () => {
 
     const styles_searchbar = StyleSheet.create({
         container: {
-          flexDirection: 'row',
-          alignItems: 'center',
+          alignItems: 'left',
           backgroundColor: '#033566', // Dark grey background
           padding: '3%',
-          paddingTop:'20%',
-          top:'-96%',
+          paddingTop:'12.5%',
         },
         iconContainer: {
-          flex:1,
           padding: 5,
-          right:'15%',
         },
       });
 
