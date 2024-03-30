@@ -3,10 +3,10 @@ import { createBottomTabNavigator, createDrawerNavigator } from "@react-navigati
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import MessagesScreen from '../screens/MessagesScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/profile';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
-import ListYourSpaceScreen from '../screens/ListYourSpaceScreen';
+import postScreen from '../screens/postScreen';
 import RecentlyVisitedProfiles from '../screens/recentlyVisitedProfiles';
 import { StyleSheet } from 'react-native';
 import Listing from '../screens/listing';
@@ -17,7 +17,10 @@ import FilterScreen from '../screens/filter';
 
 const Tab = createBottomTabNavigator();
 
-const NavBar = () => {
+const NavBar = ({ route }) => {
+
+    const userId = route.params.userId;
+
     const [isMenuVisible, setIsMenuVisible] = useState(false);
 
     return(
@@ -37,7 +40,7 @@ const NavBar = () => {
                 },
             })}
             >
-            <Tab.Screen name="Home" component={HomeScreen} options={{
+            <Tab.Screen name="Home" component={HomeScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home-outline" color={'white'} size={36}/>
@@ -46,7 +49,7 @@ const NavBar = () => {
                             height:'12%',},
                 title:"",
             }}/>
-            <Tab.Screen name="Message" component={MessagesScreen} options={{
+            <Tab.Screen name="Message" component={MessagesScreen} initialParams={{userId : userId}}options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="message-outline" color={'white'} size={32} />
@@ -55,7 +58,7 @@ const NavBar = () => {
                             height:'12%',},
                 title:"",
             }} />
-            <Tab.Screen name="List Your Space" component={ListYourSpaceScreen} options={{
+            <Tab.Screen name="List Your Space" component={postScreen} initialParams={{userId : userId}} options={{
                 tabBarIcon:({color,size})=>(
                 <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
             ),
@@ -63,7 +66,7 @@ const NavBar = () => {
                             height:'12%',},
             title:"", }}/>
 
-            <Tab.Screen name="Map" component={MapScreen} options={{
+            <Tab.Screen name="Map" component={MapScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="map-outline" color={'white'} size={33} />
@@ -73,7 +76,7 @@ const NavBar = () => {
                 title:"",
             }}/>
 
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{
+            <Tab.Screen name="Profile" component={ProfileScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="account-circle-outline" color={'white'} size={33}/>
@@ -82,19 +85,19 @@ const NavBar = () => {
                                 ,height:'12%',} ,
                 title:"",
             }}/>
-            <Tab.Screen name="Listing" component={Listing} options={{
+            <Tab.Screen name="Listing" component={Listing} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
                 headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }}/>
-            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} options={{
+            <Tab.Screen name="RecentlyVisitedProfiles" component={RecentlyVisitedProfiles} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
                 headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
             }}/>
-            <Tab.Screen name="FilterScreen" component={FilterScreen} options={{
+            <Tab.Screen name="FilterScreen" component={FilterScreen} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
             }}/>
         </Tab.Navigator>

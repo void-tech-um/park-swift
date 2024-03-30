@@ -3,12 +3,13 @@ import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ThankYouScreen from "../screens/confirmation";
 
-export default function ListSpaceButton() {
+export default function ListSpaceButton({onPress}) {
     const navigation = useNavigation();
 
     const handlePress = () => {
         // Navigate to the "ThankYou" screen
-        navigation.navigate('ThankYou');
+        onPress();
+        
     };
     return (
         <View style={styles.container}>

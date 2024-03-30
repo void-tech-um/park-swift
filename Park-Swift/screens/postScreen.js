@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
-import Profile_Header from '../components/Profile_Header';
+import { createPost } from '../firebaseFunctions/firebase';
+import { useState } from 'react';
 
 
-function ListYourSpaceScreen() {
-  const [price, setPrice] = useState('');
-  const [rentalPeriod, setRentalPeriod] = useState('hour');
-  const [isNegotiable, setIsNegotiable] = useState(null);
-  const [selectedDates, setSelectedDates] = useState({});
-  const [location, setLocation] = useState('');
+function CreatePost({ navigation, route }) {
+  const userId = route.params.userId;
+  const [location, setLocation] = React.useState('');
+  const [price, setPrice] = React.useState('');
+  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
+  const [isNegotiable, setIsNegotiable] = React.useState(null);
+  const [selectedDates, setSelectedDates] = React.useState({});
   const [firstDate, setFirstDate] = useState(null);
   const [lastDate, setLastDate] = useState(null);
-  
+ 
   const handleDayPress = (day) => {
     if (!firstDate || (firstDate && lastDate)) {
       setFirstDate(day.dateString);
@@ -30,7 +32,6 @@ function ListYourSpaceScreen() {
       }
     }
   };
-
   const fillDatesBetween = (startDate, endDate) => {
     let start = new Date(startDate);
     let end = new Date(endDate);
@@ -46,30 +47,36 @@ function ListYourSpaceScreen() {
     setSelectedDates(datesToMark);
   };
 
- return (
-   <View style={styles.container}>
-    <View style={styles.top}>
-      <View style={styles.header}>
-      <Profile_Header/>
+ const onPostPress = () => {
+  //  alert(userId);
+   createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate)
+     .then(() => {
+      navigation.navigate('ThankYou');
+     })
+     .catch((error) => {
+       console.error('Error creating post:', error);
+       // Handle the error here, e.g., show an error message to the user
+     });
+  }
+ 
+  return (
+    <View style={styles.container}>
+      <View style={styles.titleRow}>
+        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
+        <Text style={styles.title}>List Your Space</Text>
       </View>
-     <View style={styles.titleRow}>
-       <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
-       <Text style={styles.title}>List Your Space</Text>
-     </View>
-     </View>
-
-     <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-     <View>
-     <Text style={styles.headerText}>Location</Text>
-     <View style={styles.inputWithIcon}>
-       <MaterialCommunityIcons name="magnify" size={20} color="black" style={styles.iconInsideInput} />
-       <TextInput
-         style={[styles.inputRounded, styles.inputLocation]}
-         placeholder="Address"
-         value={location}
-         onChangeText={setLocation}
-       />
-     </View>
+      <ScrollView style={styles.scrollView}>
+        <View>
+          <Text style={styles.headerText}>Location</Text>
+          <View style={styles.inputWithIcon}>
+            <MaterialCommunityIcons name="magnify" size={20} color="black" style={styles.iconInsideInput} />
+            <TextInput
+              style={[styles.inputRounded, styles.inputLocation]}
+              placeholder="Address"
+              value={location}
+              onChangeText={setLocation}
+            />
+          </View>
 
           <Text style={styles.headerText}>Price</Text>
           <View style={styles.inputWithIcon}>
@@ -144,26 +151,19 @@ function ListYourSpaceScreen() {
         </View>
       </ScrollView>
 
-      <ListSpaceButton />
+      <ListSpaceButton onPress={() => onPostPress()} />
     </View>
   );
 }
 
-
 const styles = StyleSheet.create({
-  header:{
-    top:"68%",
-  },
  container: {
-   top:"-10%",
-   flex: 1,   // this is not working
-   paddingTop: "32%",
-   paddingBottom:"6%",
+   top:-120,
+   flex: 1,
+   padding: 10,
+   paddingTop: 150,
    backgroundColor: '#fff',
-   height:'130%', 
- },
- scrollContent:{
-  padding:"3%",
+  
  },
 
  inputDescription: {
@@ -176,8 +176,7 @@ const styles = StyleSheet.create({
  titleRow: {
    flexDirection: 'row',
    alignItems: 'center',
-   marginBottom:"-10%",
-   top:"-10%",
+   marginBottom: 20,
  },
  title: {
    fontSize: 30,
@@ -189,6 +188,7 @@ const styles = StyleSheet.create({
    fontSize: 20,
    color: 'black',
    fontWeight: 'bold',
+   marginTop: 15,
  },
  inputWithIcon: {
    flexDirection: 'row',
@@ -266,13 +266,6 @@ const styles = StyleSheet.create({
  borderColor: '#d3d3d3',
  justifyContent: 'center',
  },
- scrollView: {
- // Ensure ScrollView takes up remaining space
-  marginBottom:10, // Adjust as needed
-},
-spaceholder: {
-  marginTop:'8%',
-}
 });
 
 
@@ -328,11 +321,9 @@ text: {
   letterSpacing: 0.25,
   color: 'white',
 },
-scrollContent: {
-  flexGrow: 1,
-  paddingBottom: 20, // Ensure space for the ListButton
-}
 });
 
+export default CreatePost;
 
-export default ListYourSpaceScreen;
+
+
