@@ -6,6 +6,7 @@ const MapScreen = () => {
   const markers = [
     { id: '1', latitude: 42.280826, longitude: -83.743038, title: 'Ann Arbor' }, // Example location
     // Add more markers as needed
+
   ];
 
   return (
