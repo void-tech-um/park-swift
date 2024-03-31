@@ -69,57 +69,59 @@ const Listing = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFF", // white background for whole page
-  },
-  topHeader: {
-    flexDirection: "row",
-    backgroundColor: "#333", // dark grey background for top header
-    padding: 10,
-    height: 100,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFF", // dark grey background
-    padding: 10,
-  },
-  listingHeading: {
-    marginLeft: 8, // space between arrow and address title
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-  listingImagesPlaceholder: {
-    left: 20,
-    width: "100%",
-    height: 200,
-    backgroundColor: "#ccc",
-  },
-  sectionLabels: {
-    fontSize: 15,
-    fontWeight: "bold",
-    marginTop: 15,
-  },
-  listingInfoSection: {
-    padding: 15,
-  },
-  infoLabels: {
-    fontSize: 10,
-    marginTop: 10,
-  },
-  infoContent: {
-    fontSize: 15,
-  },
-  infoSection: {
-    width: "50%",
-    flexDirection: "row",
-    justifyContent: "space-between", //not sure how this works chat told me it would make it spaced like the wireframe
-    marginBottom: 8,
-    padding: 8, // padding inside the grey box
-    backgroundColor: "#ccc",
-    borderRadius: 5, // rounded corners for the boxes
-  },
-});
+    container: {
+        flex: 1,
+        backgroundColor: '#FFF',
+        height:"100%", // white background for whole page
+    },
+    topHeader: {
+        flexDirection: 'row',
+        backgroundColor: '#333', // dark grey background for top header
+        padding: 10,
+        height: 100,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFF', // dark grey background
+        padding: 10,
+    },
+    listingHeading: {
+        marginLeft: 8, // space between arrow and address title
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
+    listingImagesPlaceholder: {
+        left: 20,
+        width: '100%',
+        height: 200,
+        backgroundColor: '#ccc',
+    },
+    sectionLabels: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        marginTop: 15,
+    },
+    listingInfoSection: {
+        padding: 15,
+    },
+    infoLabels: {
+        fontSize: 10,
+        marginTop: 10,
+    },
+    infoContent: {
+        fontSize: 15,
+    },
+    infoSection: {
+        width: '50%',
+        flexDirection: 'row',
+        justifyContent: 'space-between', //not sure how this works chat told me it would make it spaced like the wireframe
+        marginBottom: 8,
+        padding: 8, // padding inside the grey box
+        backgroundColor: '#ccc',
+        borderRadius: 5, // rounded corners for the boxes
+      },
+
+})
 
 export default Listing;
