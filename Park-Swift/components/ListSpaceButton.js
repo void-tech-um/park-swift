@@ -23,7 +23,6 @@ export default function ListSpaceButton({onPress}) {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        // marginTop: 20,
         top:20,
     },
     button: {

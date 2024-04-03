@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import MapView, { UrlTile, Marker } from 'react-native-maps';
+import MenuSearchBar from './search';
 
 const MapScreen = () => {
   const markers = [
@@ -11,6 +12,7 @@ const MapScreen = () => {
 
   return (
     <View style={styles.container}>
+      <MenuSearchBar/>
       <MapView style={styles.map}>
         <UrlTile
           urlTemplate="http://tile.openstreetmap.org/{z}/{x}/{y}.png"
