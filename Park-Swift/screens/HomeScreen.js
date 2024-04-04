@@ -13,7 +13,7 @@ function HomeScreen() {
     return (
       <View style={{position:"fixed",}}>
          <MenuSearchBar/>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
+        <View style={{ alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
           <CurrentlyRentingCard />
             {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
             <Text style={styles.listingsNearYouText}>Listings Near You</Text>

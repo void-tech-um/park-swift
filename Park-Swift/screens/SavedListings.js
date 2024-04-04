@@ -1,15 +1,15 @@
 import React from 'react';
 import { View,Text, ScrollView } from 'react-native';
-import {IconButton } from 'react-native-paper';
+import {IconButton, List } from 'react-native-paper';
 import SearchbarComponent from './searchBar';
 import ProfileCard from './profileCard';
+import List_Header from '../components/List_Header';
 
 
 const SavedListings = () => {
     return(
-        <>
         <View style={{flexDirection: 'column', flex: 6.4}}>
-            
+            <List_Header/>
             <View style={{flexDirection: 'row', flex: 0.7}}>
                 <View style={{justifyContent: "center"}} >
                     <IconButton icon="arrow-left" size={40} iconColor={"black"}></IconButton>
@@ -33,7 +33,6 @@ const SavedListings = () => {
             </ScrollView>
             </View>
         </View>
-        </>
     );
 };
 

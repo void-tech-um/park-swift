@@ -11,7 +11,7 @@ const MapScreen = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View>
       <MenuSearchBar/>
       <MapView style={styles.map}>
         <UrlTile
