@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
 import { createPost } from '../firebaseFunctions/firebase';
 import { useState } from 'react';
+import List_Header from '../components/List_Header';
 
 
 function CreatePost({ navigation, route }) {
@@ -60,12 +61,15 @@ function CreatePost({ navigation, route }) {
   }
  
   return (
+    <View>
+      <List_Header/>
     <View style={styles.container}>
       <View style={styles.titleRow}>
         <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
         <Text style={styles.title}>List Your Space</Text>
       </View>
       <ScrollView style={styles.scrollView}>
+        <View style={styles.main}>
         <View>
           <Text style={styles.headerText}>Location</Text>
           <View style={styles.inputWithIcon}>
@@ -149,19 +153,22 @@ function CreatePost({ navigation, route }) {
             markedDates={selectedDates}
           />
         </View>
-      </ScrollView>
 
-      <ListSpaceButton onPress={() => onPostPress()} />
+      <ListSpaceButton style={styles.button} onPress={() => onPostPress()} />
+
+      </View>
+      </ScrollView>
+    </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
  container: {
-   top:-120,
-   flex: 1,
+  //  top:-120,
+  //  flex: 1,
    padding: 10,
-   paddingTop: 150,
+  // paddingTop: 150,
    backgroundColor: '#fff',
   
  },
@@ -265,6 +272,9 @@ const styles = StyleSheet.create({
  borderWidth: 1,
  borderColor: '#d3d3d3',
  justifyContent: 'center',
+ },
+ main:{
+  marginBottom:500,
  },
 });
 

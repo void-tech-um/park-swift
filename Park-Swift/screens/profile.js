@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebase';
+import List_Header from '../components/List_Header';
 
 function ProfileScreen({route}) {
   const [myUser, setMyUser] = useState(null);
@@ -24,6 +25,7 @@ function ProfileScreen({route}) {
 
   return (
     <View style={styles.container}>
+      <List_Header/>
       <View style={styles.body}>
         <View style={styles.avatarContainer}>
           <Text style={styles.avatar}>img</Text>
@@ -47,6 +49,7 @@ function ProfileScreen({route}) {
         </View>
       </View>
     </View>
+    
   );
 };
 
