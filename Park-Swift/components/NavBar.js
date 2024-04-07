@@ -14,6 +14,7 @@ import HamburgerMenu from '../screens/hamburgerMenu';
 import { Modal, TouchableOpacity} from 'react-native-paper';
 import FilterScreen from '../screens/filter';
 import { useNavigation } from '@react-navigation/native';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -97,6 +98,9 @@ const NavBar = ({ route }) => {
                 title:"",
             }}/>
             <Tab.Screen name="FilterScreen" component={FilterScreen} initialParams={{userId : userId}} options={{
+                tabBarVisible:false,
+            }}/>
+            <Tab.Screen name="EditProfile" component={EditProfileScreen} initialParams={{userId : userId}} options={{
                 tabBarVisible:false,
             }}/>
         </Tab.Navigator>

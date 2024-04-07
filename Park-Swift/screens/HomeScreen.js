@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableWithoutFeedback,Keyboard } from 'react-native';
 import SortingButton from '../components/SortingButton2';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
@@ -11,6 +11,8 @@ function HomeScreen() {
     // adding currentTile and search bar components
   
     return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
+                          accessible={false}>
       <View style={{position:"fixed",}}>
          <MenuSearchBar/>
         <View style={{ alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
@@ -21,6 +23,7 @@ function HomeScreen() {
             <ListingCard />
         </View>
       </View>
+      </TouchableWithoutFeedback>
    );
 };
 

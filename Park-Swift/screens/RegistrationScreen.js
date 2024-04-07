@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
+import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, set } from 'firebase/database';
 import { database } from '../services/config';
 import { registerUser } from '../firebaseFunctions/firebase';
 const auth = getAuth();
+
 
 export default function RegistrationScreen({navigation}) {
     const [fullName, setFullName] = useState('')
@@ -33,10 +34,8 @@ export default function RegistrationScreen({navigation}) {
 
 
     return (
+        <KeyboardAwareScrollView>
         <View style={styles.container}>
-            <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
-                keyboardShouldPersistTaps="always">
                 <Image
                     style={styles.logo}
                     //source={require('../../../assets/icon.png')}
@@ -87,8 +86,8 @@ export default function RegistrationScreen({navigation}) {
                 <View style={styles.footerView}>
                     <Text style={styles.footerText}>Already got an account? <Text onPress={onFooterLinkPress} style={styles.footerLink}>Log in</Text></Text>
                 </View>
-            </KeyboardAwareScrollView>
         </View>
+        </KeyboardAwareScrollView>
     )
 }
 

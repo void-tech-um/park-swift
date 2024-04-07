@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback,Keyboard } from 'react-native';
 import MapView, { UrlTile, Marker } from 'react-native-maps';
-import MenuSearchBar from './search';
+import MenuSearchBar from './search'
 
 const MapScreen = () => {
   const markers = [
@@ -11,6 +11,8 @@ const MapScreen = () => {
   ];
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
+                          accessible={false}>
     <View>
       <MenuSearchBar/>
       <MapView style={styles.map}>
@@ -27,6 +29,7 @@ const MapScreen = () => {
         ))}
       </MapView>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 

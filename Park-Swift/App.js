@@ -12,6 +12,7 @@ import RegistrationScreen from './screens/RegistrationScreen.js';
 //import { ref, set } from 'firebase/database';
 
 import postScreen from './screens/postScreen';
+import EditProfileScreen from './screens/EditProfileScreen.js';
 
 
 const Stack = createStackNavigator();
@@ -30,6 +31,7 @@ function App() {
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false}}/>
         <Stack.Screen name="ThankYou" component={ThankYouScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
