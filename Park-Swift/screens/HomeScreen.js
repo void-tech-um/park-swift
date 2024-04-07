@@ -9,7 +9,9 @@ import MenuSearchBar from './search';
 
 function HomeScreen() {
     // adding currentTile and search bar components
-  
+    posts = getPostByStartDate("2024-03-01")
+    alert(posts)
+    alert(posts.price)
     return (
       <View style={{position:"fixed",}}>
          <MenuSearchBar/>

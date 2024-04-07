@@ -4,7 +4,7 @@ import { ImageBackground, StyleSheet, Text, View, TouchableOpacity, Image } from
 
 
 //listing card component that displays the listing
-const ListingCard = () => {
+const ListingCard = ({post}) => {
     //take in data from backend
     
     return (

@@ -118,3 +118,19 @@ export function getUser(userId) {
             }
         });
 }
+
+// Get post info chornologically from database based on Start Date
+export function getPostByStartDate(firstDate) {
+    const postRef = ref(database, 'posts/');
+    orderByChild(postRef, 'firstDate').on('value', (snapshot) => {
+        const posts = [];
+        snapshot.forEach((childSnapshot) => {
+            const post = childSnapshot.val();
+            posts.push(post);
+        
+        });
+        return posts;
+    }, (error) => {
+        console.error('Error fetching posts:', error);
+    });
+}
