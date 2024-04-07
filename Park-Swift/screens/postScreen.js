@@ -7,6 +7,7 @@ import ListSpaceButton from '../components/ListSpaceButton';
 import { createPost } from '../firebaseFunctions/firebase';
 import { useState } from 'react';
 import List_Header from '../components/List_Header';
+import {PropsWithChildren} from 'react';
 
 
 function CreatePost({ navigation, route }) {
@@ -15,6 +16,7 @@ function CreatePost({ navigation, route }) {
   const [price, setPrice] = React.useState('');
   const [rentalPeriod, setRentalPeriod] = React.useState('hour');
   const [isNegotiable, setIsNegotiable] = React.useState(null);
+  const [sizeOfCar, setSize] = React.useState('sedan');
   const [selectedDates, setSelectedDates] = React.useState({});
   const [firstDate, setFirstDate] = useState(null);
   const [lastDate, setLastDate] = useState(null);
@@ -50,7 +52,7 @@ function CreatePost({ navigation, route }) {
 
  const onPostPress = () => {
   //  alert(userId);
-   createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate)
+   createPost(userId, location, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate)
      .then(() => {
       navigation.navigate('ThankYou');
      })
@@ -82,28 +84,92 @@ function CreatePost({ navigation, route }) {
             />
           </View>
 
-          <Text style={styles.headerText}>Price</Text>
-          <View style={styles.inputWithIcon}>
-            <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
-            <TextInput
-              style={[styles.inputRounded, styles.inputPrice]}
-              keyboardType="numeric"
-              placeholder="0.00"
-              value={price}
-              onChangeText={setPrice}
-            />
-            <Text style={styles.slash}>/</Text>
+          <Text style={styles.centeredHeaderText}>Available Dates</Text>
+          <Calendar
+            style={styles.calendarStyle}
+            onDayPress={(day) => handleDayPress(day)}
+            markedDates={selectedDates}
+          />
+        </View>
 
+        <View style={styles.container}>
+  <View style={styles.priceAndNegotiable}>
+    {/* Price Container */}
+    <View style={styles.priceContainer}>
+      <Text style={styles.headerText}>Price</Text>
+      <View style={styles.inputWithIcon}>
+        <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
+        <TextInput
+          style={[styles.inputRounded, styles.inputPrice]}
+          keyboardType="numeric"
+          placeholder="0.00"
+          value={price}
+          onChangeText={setPrice}
+        />
+        <Text style={styles.slash}>/</Text>
+        <RNPickerSelect
+          onValueChange={(value) => setRentalPeriod(value)}
+          items={[
+            { label: 'Hour', value: 'hour' },
+            { label: 'Day', value: 'day' },
+            { label: 'Week', value: 'week' },
+            { label: 'Month', value: 'month' },
+          ]}
+          style={pickerSelectStyles}
+          value={rentalPeriod}
+          useNativeAndroidPickerStyle={false}
+          placeholder={{}}
+          Icon={() => {
+            return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+          }}
+        />
+      </View>
+    </View>
+    {/* Negotiable Container */}
+    <View style={styles.negotiableContainer}>
+      <Text style={styles.headerText}>Negotiable?</Text>
+      <View style={styles.negotiableOptions}>
+        <TouchableOpacity
+          style={[styles.option, isNegotiable ? styles.selectedOption : null]}
+          onPress={() => setIsNegotiable(true)}>
+          <View style={[styles.circle, styles.lightGreyCircle]}>
+            {isNegotiable && (
+              <MaterialCommunityIcons name="check" size={24} color="black" />
+            )}
+          </View>
+          <Text style={styles.optionText}>Yes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.option, !isNegotiable ? styles.selectedOption : null]}
+          onPress={() => setIsNegotiable(false)}>
+          <View style={[styles.circle, styles.lightGreyCircle]}>
+            {!isNegotiable && (
+              <MaterialCommunityIcons name="check" size={24} color="black" />
+            )}
+          </View>
+          <Text style={styles.optionText}>No</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</View>
+
+
+          <Text style={styles.headerText}>Size</Text>
+          <View style={styles.inputWithIcon}>
             <RNPickerSelect
-              onValueChange={(value) => setRentalPeriod(value)}
+              onValueChange={(value) => setSize(value)}
               items={[
-                { label: 'Hour', value: 'hour' },
-                { label: 'Day', value: 'day' },
-                { label: 'Week', value: 'week' },
-                { label: 'Month', value: 'month' },
+                { label: 'Sedan', value: 'sedan' },
+                { label: 'SUV', value: 'suv' },
+                { label: 'Minivan', value: 'minivan' },
+                { label: 'Full-bed Truck', value: 'fullbedtruck' },
+                { label: 'Half-bed Truck', value: 'halfbedtruck' },
+                { label: 'RV', value: 'rv' },
+                { label: 'Camper Van', value: 'campervan' },
               ]}
               style={pickerSelectStyles}
-              value={rentalPeriod}
+              value={sizeOfCar}
               useNativeAndroidPickerStyle={false}
               placeholder={{}}
               Icon={() => {
@@ -112,45 +178,13 @@ function CreatePost({ navigation, route }) {
             />
           </View>
 
-          <Text style={styles.headerText}>Negotiable?</Text>
-          <View style={styles.negotiableContainer}>
-            <TouchableOpacity
-              style={styles.option}
-              onPress={() => setIsNegotiable(true)}>
-              <View style={[styles.circle, styles.lightGreyCircle]}>
-                {isNegotiable === true && (
-                  <MaterialCommunityIcons name="check" size={24} color="black" />
-                )}
-              </View>
-              <Text style={styles.optionText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.option, styles.noOption]}
-              onPress={() => setIsNegotiable(false)}>
-              <View style={[styles.circle, styles.lightGreyCircle]}>
-                {isNegotiable === false && (
-                  <MaterialCommunityIcons name="check" size={24} color="black" />
-                )}
-              </View>
-              <Text style={styles.optionText}>No</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.headerText}>Description</Text>
-<View style={styles.inputWithIcon}>
-  <TextInput
-    style={[styles.inputRounded, styles.inputDescription]}
-    placeholder="Describe your space"
-    multiline
-    numberOfLines={4} // Adjust based on your needs
-  />
-</View>
-
-          <Text style={styles.centeredHeaderText}>Available Dates</Text>
-          <Calendar
-            style={styles.calendarStyle}
-            onDayPress={(day) => handleDayPress(day)}
-            markedDates={selectedDates}
+        <Text style={styles.headerText}>Additional Notes</Text>
+        <View style={styles.inputWithIcon}>
+          <TextInput
+            style={[styles.inputRounded, styles.inputDescription]}
+            placeholder="Example: Please enter & exit the spot quietly."
+            multiline
+            numberOfLines={4} // Adjust based on your needs
           />
         </View>
 
@@ -195,7 +229,7 @@ const styles = StyleSheet.create({
    fontSize: 20,
    color: 'black',
    fontWeight: 'bold',
-   marginTop: 15,
+   marginTop: 20,
  },
  inputWithIcon: {
    flexDirection: 'row',
@@ -222,11 +256,15 @@ const styles = StyleSheet.create({
  inputPrice: {
    marginRight: 10,
    flex: 0,
-   width: 160,
+   width: 125,
    height: 45,
    marginTop: 6,
-   paddingLeft: 45,
+   paddingLeft: 40,
  },
+ priceContainer: {
+  flex: 1,
+  marginRight: 10,
+},
  slash: {
    fontSize: 40,
    color: 'black',
@@ -235,6 +273,12 @@ const styles = StyleSheet.create({
  negotiableContainer: {
    flexDirection: 'row',
    marginTop: 15,
+ },
+ priceAndNegotiable: {
+  flexDirection: 'row',
+  flex: 1,
+  marginTop: 15,
+  flexWrap: "wrap",
  },
  option: {
    flexDirection: 'row',
