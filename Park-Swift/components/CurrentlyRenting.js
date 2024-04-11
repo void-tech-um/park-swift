@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 
+const windowHeight = Dimensions.get('window').height;
 
 //import the relevant variables and stuff
 
@@ -22,18 +24,16 @@ const CurrentlyRentingCard = () => {
 
 
 const styles = StyleSheet.create({
-   container: {
-       height: '13%',
-       width: '95%',
-       backgroundColor: '#BEBEBE',
-       flexDirection: 'row',
-       alignItems: 'center',
-       justifyContent: 'space-between',
-       padding: 12,
-       position: 'absolute',
-       top: '20%',
-       alignSelf: 'center',
-   },
+    container: {
+        height: windowHeight * 0.13, // 13% of the window's height
+        width: '95%',
+        backgroundColor: '#BEBEBE',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 12,
+        alignSelf: 'center',
+    },
    titleContainer: {
        flexDirection: 'column',
    },
