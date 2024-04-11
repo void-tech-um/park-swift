@@ -1,7 +1,7 @@
 // firebaseFunctions.js
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, onValue, push,get } from 'firebase/database';
+import { ref, set, onValue, push, get, orderByChild, query} from 'firebase/database';
 import { database } from '../services/config';
 
 const auth = getAuth();
@@ -78,20 +78,32 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
 // Get user's posts  
 export function getUserPosts(userID) {
     const userPostsRef = ref(database, 'users/' + userID + '/posts/');
-    return new Promise((resolve, reject) => {
-        onValue(userPostsRef, (snapshot) => {
+    return get(userPostsRef).then((snapshot) => {
+        const posts = [];
+        snapshot.forEach((childSnapshot) => {
+            const post = childSnapshot.val();
+            posts.push(post);
+        });
+        return posts;
+    });
+}
+
+// Get all posts from database
+export function getAllPosts() {
+    const postRef = ref(database, 'posts/');
+    return get(postRef)
+        .then((snapshot) => {
             const posts = [];
             snapshot.forEach((childSnapshot) => {
                 const post = childSnapshot.val();
                 posts.push(post);
             });
-            resolve(posts);
-        }).catch((error) => {
-            reject(error);
+            return posts;
+        })
+        .catch((error) => {
+            console.error('Error fetching posts:', error);
         });
-    });
 }
-
 // Get one post based on postID
 export function getPost(postID) {
     const postRef = ref(database, 'posts/' + postID);
@@ -120,17 +132,20 @@ export function getUser(userId) {
 }
 
 // Get post info chornologically from database based on Start Date
-export function getPostByStartDate(firstDate) {
-    const postRef = ref(database, 'posts/');
-    orderByChild(postRef, 'firstDate').on('value', (snapshot) => {
-        const posts = [];
-        snapshot.forEach((childSnapshot) => {
-            const post = childSnapshot.val();
-            posts.push(post);
-        
-        });
-        return posts;
-    }, (error) => {
-        console.error('Error fetching posts:', error);
-    });
-}
+// export function getPostByStartDate() {
+//     const postRef = ref(database, 'posts/');
+//     const orderedRef = query(postRef, orderByChild('firstDate'));
+
+//     return get(orderedRef)
+//         .then((snapshot) => {
+//             const posts = [];
+//             snapshot.forEach((childSnapshot) => {
+//                 const post = childSnapshot.val();
+//                 posts.push(post);
+//             });
+//             return posts;
+//         })
+//         .catch((error) => {
+//             console.error('Error fetching posts:', error);
+//         });
+// }

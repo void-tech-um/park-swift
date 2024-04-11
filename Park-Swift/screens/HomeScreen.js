@@ -5,13 +5,23 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
 import MenuSearchBar from './search';
+import { useState, useEffect } from 'react';
+import {getAllPosts, getPostByStartDate, getUserPosts} from '../firebaseFunctions/firebase';
 
 
-function HomeScreen() {
-    // adding currentTile and search bar components
-    posts = getPostByStartDate("2024-03-01")
-    alert(posts)
-    alert(posts.price)
+function HomeScreen({route}) {
+  const [posts, setPosts] = useState([]); // Add this line
+  const userId = route.params.userId;
+
+  useEffect(() => {
+      async function fetchPosts() {
+          const posts = await getAllPosts();
+          setPosts(posts); // Update the posts state variable
+      }
+      fetchPosts();
+  }, []); // Add this line
+  alert(posts[0].firstDate);
+
     return (
       <View style={{position:"fixed",}}>
          <MenuSearchBar/>
@@ -22,6 +32,7 @@ function HomeScreen() {
             <SortingButton />
             <ListingCard />
         </View>
+        <Text>{posts[0].firstDate} </Text>
       </View>
    );
 };
