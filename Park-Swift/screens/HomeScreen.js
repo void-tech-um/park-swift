@@ -62,10 +62,11 @@ const HomeScreen = () => {
   const listingCardHeight = windowHeight * 0.2; // replace 0.2 with the actual percentage
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
-                          accessible={false}>
       <View style={{ flex: 1 }}>
-        <MenuSearchBar />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
+                          accessible={false}>
+          <MenuSearchBar />
+        </TouchableWithoutFeedback>
         <CurrentlyRentingCard />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
           <Text style={{ ...styles.listingsNearYouText, color: 'black' }}>Listings Near You</Text>
@@ -88,7 +89,6 @@ const HomeScreen = () => {
           ))}
         </ScrollView>
       </View>
-  </TouchableWithoutFeedback>
   );
 };
 
