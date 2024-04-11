@@ -91,7 +91,7 @@ const NavBar = ({ route }) => {
                 title:"",
             }}/>
             <Tab.Screen name="Listing" component={Listing} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
+                tabBarVisible: false,
                 headerStyle: {backgroundColor: '#033566'
                             ,height:'12%',} ,
                 title:"",
