@@ -5,6 +5,10 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
 import MenuSearchBar from './search';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Dimensions } from 'react-native';
+
+const windowHeight = Dimensions.get('window').height;
 
 const listingsData = [
   {
@@ -53,64 +57,39 @@ const listingsData = [
   },
 ]
 
+const HomeScreen = () => {
+  const insets = useSafeAreaInsets();
+  const listingCardHeight = windowHeight * 0.2; // replace 0.2 with the actual percentage
 
-function HomeScreen() {
-    // adding currentTile and search bar components
-  
-    return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
                           accessible={false}>
-      <View style={{position:"fixed",}}>
-         <MenuSearchBar/>
-        <View style={{ alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
-          <CurrentlyRentingCard />
-            {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
-            <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-            <SortingButton />
-            <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-              <SortingButton />
-            </View>
-            <ScrollView 
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            >
-              <React.Fragment>
-              {listingsData.map((listing) => (
-                <ListingCard
-                  address={listing.address}
-                  date={listing.date}
-                  startTime={listing.startTime}
-                  endTime={listing.endTime}
-                  image={listing.image}
-                  ppHour={listing.ppHour}
-                  listingURL={listing.listingURL}
-                />
-              ))}
-              </React.Fragment>
-          </ScrollView>
-
-          {/* <SafeAreaView>
-          <FlatList
-            data={listingsData}
-            keyExtractor={listing => listing.id}
-            contentContainerStyle={styles.listingCards}
-            numColumns={1} // Set to 1 column
-            renderItem={({ listing }) => (
-              <ListingCard
-                // address={listing.address}
-                // date={listing.date}
-                // startTime={listing.startTime}
-                // endTime={listing.endTime}
-                // image={listing.gitURL}
-                // launchURL={listing.launchURL}
-              />
-            )}
-          />
-        </SafeAreaView> */}
-
+      <View style={{ flex: 1 }}>
+        <MenuSearchBar />
+        <CurrentlyRentingCard />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+          <Text style={{ ...styles.listingsNearYouText, color: 'black' }}>Listings Near You</Text>
+          <SortingButton />
+        </View>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} 
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          {listingsData.map((listing) => (
+            <ListingCard
+              key={listing.id}
+              address={listing.address}
+              date={listing.date}
+              startTime={listing.startTime}
+              endTime={listing.endTime}
+              image={listing.image}
+              ppHour={listing.ppHour}
+              listingURL={listing.listingURL}
+            />
+          ))}
+        </ScrollView>
       </View>
-      </TouchableWithoutFeedback>
-   );
+  </TouchableWithoutFeedback>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -128,9 +107,9 @@ const styles = StyleSheet.create({
   listingsNearYouText: {
     fontWeight: 'bold',
     color: 'black',
-    marginTop: 180, // Add a little space above the text if needed
+    marginTop: 10, // Add a little space above the text if needed
     fontSize: 25,
-    marginLeft: -220,
+    marginLeft: 0,
   },
   // No additional or complex styling to affect layout
 });
