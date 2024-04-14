@@ -4,6 +4,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import HamburgerMenu from './hamburgerMenu.js';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {Searchbar} from 'react-native-paper';
+import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 
 const MenuSearchBar = () => {
@@ -21,7 +22,6 @@ const MenuSearchBar = () => {
     const [searchQuery, setSearchQuery] = React.useState('');
     return (
         <View style = {styles_searchbar.container}>
-
           <TouchableOpacity style={styles_searchbar.iconContainer}>
             <MaterialCommunityIcons name="menu" color={'white'} size={36} onPress={toggleMenu}/>
           </TouchableOpacity>
