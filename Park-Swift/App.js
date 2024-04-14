@@ -8,6 +8,7 @@ import ThankYouScreen from './screens/confirmation.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
+var punycode = require('punycode');
 //import { app, analytics, auth, database } from './services/config';
 //import { ref, set } from 'firebase/database';
 

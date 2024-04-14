@@ -130,6 +130,22 @@ export function getUser(userId) {
             }
         });
 }
+export function filterByFirstDate(firstDate) {
+    const postRef = ref(database, 'posts/');
+    const orderedRef = query(postRef, orderByChild('firstDate'));
+    return get(orderedRef)
+       .then((snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                posts.push(post);
+            });
+            return posts;
+        })
+       .catch((error) => {
+            console.error('Error fetching posts:', error);
+        });
+}
 
 // Get post info chornologically from database based on Start Date
 // export function getPostByStartDate() {

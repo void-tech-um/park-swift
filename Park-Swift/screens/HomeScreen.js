@@ -15,7 +15,7 @@ function HomeScreen({route}) {
 
   useEffect(() => {
       async function fetchPosts() {
-          const posts = await getAllPosts();
+          const posts = await filterByFirstDate("2024-04-01");
           setPosts(posts); // Update the posts state variable
       }
       fetchPosts();
