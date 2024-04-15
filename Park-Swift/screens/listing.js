@@ -7,7 +7,7 @@ const Listing = () => {
     const [myPost, setMyPost] = useState(null);
 
     useEffect(() => {
-        getPost('-NtTXKQDyThU0CC3KLd_')
+        getPost('-NuLDKLjCtlKetwDvobU')
             .then((postData) => {
                 setMyPost(postData);
             })

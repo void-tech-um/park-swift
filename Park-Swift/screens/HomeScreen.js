@@ -6,11 +6,12 @@ import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
-import {getAllPosts, getPostByStartDate, getUserPosts} from '../firebaseFunctions/firebase';
+import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate} from '../firebaseFunctions/firebase';
 
 
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); // Add this line
+  const [myPost, setMyPost] = useState(null);
   const userId = route.params.userId;
 
   useEffect(() => {
@@ -19,8 +20,21 @@ function HomeScreen({route}) {
           setPosts(posts); // Update the posts state variable
       }
       fetchPosts();
+      getPost('-NuLDKLjCtlKetwDvobU')
+            .then((postData) => {
+                setMyPost(postData);
+            })
+            .catch((error) => {
+                console.error('Error fetching post:', error);
+            });
   }, []); // Add this line
-  alert(posts[0].firstDate);
+
+  if (!myPost || !posts) {
+    return <Text>Loading...</Text>;
+  }
+
+  console.log(posts);
+  console.log(posts);
 
     return (
       <View style={{position:"fixed",}}>
@@ -32,7 +46,7 @@ function HomeScreen({route}) {
             <SortingButton />
             <ListingCard />
         </View>
-        <Text>{posts[0].firstDate} </Text>
+        {/*<Text>{posts[0].firstDate} </Text>*/}
       </View>
    );
 };

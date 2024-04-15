@@ -1,7 +1,7 @@
 // firebaseFunctions.js
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, onValue, push, get, orderByChild, query} from 'firebase/database';
+import { ref, set, onValue, push, get, orderByChild, query, equalTo} from 'firebase/database';
 import { database } from '../services/config';
 
 const auth = getAuth();
@@ -88,6 +88,28 @@ export function getUserPosts(userID) {
     });
 }
 
+
+export function filterByFirstDate(firstDate) {
+    alert("Function called!")
+    const postRef = ref(database, 'posts/');
+    const orderedRef = query(postRef, orderByChild('firstDate'));
+    alert(orderedRef)
+    return get(orderedRef)
+       .then((snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                alert("In return")
+                posts.push(post);
+            });
+            return posts;
+        })
+       .catch((error) => {
+            console.error('Error fetching posts:', error);
+        });
+}
+
+
 // Get all posts from database
 export function getAllPosts() {
     const postRef = ref(database, 'posts/');
@@ -128,22 +150,6 @@ export function getUser(userId) {
             } else {
                 throw new Error('User does not exist');
             }
-        });
-}
-export function filterByFirstDate(firstDate) {
-    const postRef = ref(database, 'posts/');
-    const orderedRef = query(postRef, orderByChild('firstDate'));
-    return get(orderedRef)
-       .then((snapshot) => {
-            const posts = [];
-            snapshot.forEach((childSnapshot) => {
-                const post = childSnapshot.val();
-                posts.push(post);
-            });
-            return posts;
-        })
-       .catch((error) => {
-            console.error('Error fetching posts:', error);
         });
 }
 
