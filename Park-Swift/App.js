@@ -13,6 +13,7 @@ import Listing from './screens/listing.js';
 //import { ref, set } from 'firebase/database';
 
 import postScreen from './screens/postScreen';
+import FilterScreen from './screens/filter.js';
 
 
 const Stack = createStackNavigator();
@@ -31,7 +32,8 @@ function App() {
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
         <Stack.Screen name="ThankYou" component={ThankYouScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
-        {/* <Stack.Screen name="Listing" component={Listing} options={{ headerShown: false }}/> */}
+        <Stack.Screen name="Listing" component={Listing} options={{ headerShown: false }}/>
+        <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

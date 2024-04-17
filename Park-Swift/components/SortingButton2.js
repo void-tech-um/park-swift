@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
+import FilterScreen from '../screens/filter';
+
 
 
 
 const SortingButton = () => {
+    const navigation = useNavigation();
+
+
     const handlePress = () => {
       // Placeholder for future functionality
       console.log('Button pressed');
+      navigation.navigate('FilterScreen', { FilterScreen });
     };
   
     return (
