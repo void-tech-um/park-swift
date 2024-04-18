@@ -6,7 +6,7 @@ import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import SearchBar from '../screens/search.js';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
-import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate} from '../firebaseFunctions/firebase';
+import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebase';
 
 
 function HomeScreen({route}) {
@@ -16,7 +16,7 @@ function HomeScreen({route}) {
 
   useEffect(() => {
       async function fetchPosts() {
-          const posts = await filterByFirstDate("2024-04-01");
+          const posts = await filterByPrice(5, 20);
           setPosts(posts); // Update the posts state variable
       }
       fetchPosts();
@@ -33,7 +33,6 @@ function HomeScreen({route}) {
     return <Text>Loading...</Text>;
   }
 
-  console.log(posts);
   console.log(posts);
 
     return (

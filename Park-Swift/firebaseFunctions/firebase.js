@@ -1,7 +1,7 @@
 // firebaseFunctions.js
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, onValue, push, get, orderByChild, query, equalTo} from 'firebase/database';
+import { ref, set, onValue, push, get, orderByChild, query, equalTo, startAt, endAt} from 'firebase/database';
 import { database } from '../services/config';
 
 const auth = getAuth();
@@ -88,23 +88,95 @@ export function getUserPosts(userID) {
     });
 }
 
-
+// finds all posts with the same firstDate
 export function filterByFirstDate(firstDate) {
-    alert("Function called!")
     const postRef = ref(database, 'posts/');
-    const orderedRef = query(postRef, orderByChild('firstDate'));
-    alert(orderedRef)
+    const orderedRef = query(postRef, orderByChild('firstDate'), equalTo(firstDate));
     return get(orderedRef)
        .then((snapshot) => {
             const posts = [];
             snapshot.forEach((childSnapshot) => {
                 const post = childSnapshot.val();
-                alert("In return")
                 posts.push(post);
             });
             return posts;
         })
        .catch((error) => {
+            console.error('Error fetching posts:', error);
+        });
+}
+
+// finds all posts with the same lastDate
+export function filterByLastDate(lastDate) {
+    const postRef = ref(database, 'posts/');
+    const orderedRef = query(postRef, orderByChild('lastDate'), equalTo(lastDate));
+    return get(orderedRef)
+       .then((snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                posts.push(post);
+            });
+            return posts;
+        })
+       .catch((error) => {
+            console.error('Error fetching posts:', error);
+        });
+}
+
+// finds all posts with the same firstDate and lastDate
+export function filterByDates(firstDate, lastDate) {
+    const postRef = ref(database, 'posts/');
+    const orderedRef = query(postRef, orderByChild('firstDate'), equalTo(firstDate));
+
+    return get(orderedRef)
+       .then((snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                if (post.lastDate === lastDate) {
+                    posts.push(post);
+                }
+            });
+            return posts;
+        })
+       .catch((error) => {
+            console.error('Error fetching posts:', error);
+        });
+}
+
+// finds all posts with the same location
+export function filterByLocation(location) {
+    const postRef = ref(database, 'posts/');
+    const orderedRef = query(postRef, orderByChild('location'), equalTo(location));
+    return get(orderedRef)
+       .then((snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                posts.push(post);
+            });
+            return posts;
+        })
+       .catch((error) => {
+            console.error('Error fetching posts:', error);
+        });
+}
+
+// finds all posts within a price range
+export function filterByPrice(minPrice, maxPrice) {
+    const postRef = ref(database, 'posts/');
+    const priceRangeRef = query(postRef, orderByChild('price'), startAt(minPrice));
+    return get(priceRangeRef)
+        .then((snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                const post = childSnapshot.val();
+                posts.push(post);
+            });
+            return posts;
+        })
+        .catch((error) => {
             console.error('Error fetching posts:', error);
         });
 }
