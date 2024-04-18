@@ -8,8 +8,9 @@ import ThankYouScreen from './screens/confirmation.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
-//import { app, analytics, auth, database } from './services/config';
-//import { ref, set } from 'firebase/database';
+
+// import { app, analytics, auth, database } from './services/config';
+// import { ref, set } from 'firebase/database';
 
 import postScreen from './screens/postScreen';
 import EditProfileScreen from './screens/EditProfileScreen.js';
@@ -19,10 +20,10 @@ const Stack = createStackNavigator();
 
 const Tab = createMaterialTopTabNavigator();
 
-function App() {
+function App({route}){
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
-
+  
   return (
     <NavigationContainer>
       <Stack.Navigator>

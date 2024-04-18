@@ -7,24 +7,35 @@ import {getUser}  from '../firebaseFunctions/firebase';
 import List_Header from '../components/List_Header';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { Button } from 'react-native-paper';
+import { database } from '../services/config';
 
 function ProfileScreen({navigation,route}) {
 
-  const onPostPress = () => {
-        navigation.navigate('EditProfile');
+const userid = route.params.userId;
+const onPostPress = async () => {
+    try {
+        navigation.navigate('EditProfile', { userId: userid});
+    } catch (error) {
+        console.error('Error fetching user:', error);
     }
+}
 
   const [myUser, setMyUser] = useState(null);
   const userId = route.params.userId;
-  useEffect(() => {
-    getUser(userId)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getUser(userId)
         .then((userData) => {
           setMyUser(userData);
         })
         .catch((error) => {
-            console.error('Error fetching profile:', error);
+          console.error('Error fetching profile:', error);
         });
-  }, [userId]);
+    }, [userId])
+  );
 
   if (!myUser) {
     return <Text>Loading...</Text>;
@@ -34,9 +45,11 @@ function ProfileScreen({navigation,route}) {
     <View style={styles.container}>
       <List_Header/>
       <View style={styles.body}>
-        <TouchableOpacity onPress={() => onPostPress()}> 
-          <Text style={styles.textStyle}>Edit Profile</Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onPostPress} style={styles.button}>
+          <Text style={styles.buttonText}>Edit Profile</Text>
         </TouchableOpacity>
+      </View>
         <View style={styles.avatarContainer}>
           <Text style={styles.avatar}>img</Text>
         </View>
@@ -124,8 +137,15 @@ const styles = StyleSheet.create({
   },
   textStyle:{
     bottom: "120%",
-    color: "#3399FF"
+    color: "#3399FF",
+    fontWeight:"bold",
   },
+  buttonContainer:{
+    bottom:20,
+  },
+  buttonText:{
+    color:"#3399FF"
+  }
 });
 
 export default ProfileScreen;
