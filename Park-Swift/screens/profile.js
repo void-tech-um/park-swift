@@ -1,12 +1,19 @@
-import React from 'react';
+import * as React from 'react';
 import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebase';
 import List_Header from '../components/List_Header';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 
-function ProfileScreen({route}) {
+function ProfileScreen({navigation,route}) {
+
+  const onPostPress = () => {
+        navigation.navigate('EditProfile');
+    }
+
   const [myUser, setMyUser] = useState(null);
   const userId = route.params.userId;
   useEffect(() => {
@@ -27,6 +34,9 @@ function ProfileScreen({route}) {
     <View style={styles.container}>
       <List_Header/>
       <View style={styles.body}>
+        <TouchableOpacity onPress={() => onPostPress()}> 
+          <Text style={styles.textStyle}>Edit Profile</Text>
+        </TouchableOpacity>
         <View style={styles.avatarContainer}>
           <Text style={styles.avatar}>img</Text>
         </View>
@@ -111,6 +121,10 @@ const styles = StyleSheet.create({
   bioText:{
     fontSize: 20,
     color:'#666666',
+  },
+  textStyle:{
+    bottom: "120%",
+    color: "#3399FF"
   },
 });
 

@@ -14,7 +14,7 @@ import Listing from './screens/listing.js';
 
 import postScreen from './screens/postScreen';
 import FilterScreen from './screens/filter.js';
-
+import EditProfileScreen from './screens/EditProfileScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +34,7 @@ function App() {
         <Stack.Screen name="ThankYou" component={ThankYouScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
         <Stack.Screen name="Listing" component={Listing} options={{ headerShown: false }}/>
         <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

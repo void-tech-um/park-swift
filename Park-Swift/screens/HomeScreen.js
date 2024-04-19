@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, FlatList, SafeAreaView, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import SortingButton from '../components/SortingButton2';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
@@ -62,28 +62,33 @@ const HomeScreen = () => {
   const listingCardHeight = windowHeight * 0.2; // replace 0.2 with the actual percentage
 
   return (
-    <View style={{ flex: 1 }}>
-      <MenuSearchBar />
-      <CurrentlyRentingCard />
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
-        <Text style={{ ...styles.listingsNearYouText, color: 'black' }}>Listings Near You</Text>
-        <SortingButton />
+      <View style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
+                          accessible={false}>
+          <MenuSearchBar />
+        </TouchableWithoutFeedback>
+        <CurrentlyRentingCard />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+          <Text style={{ ...styles.listingsNearYouText, color: 'black' }}>Listings Near You</Text>
+          <SortingButton />
+        </View>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} 
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          {listingsData.map((listing) => (
+            <ListingCard
+              key={listing.id}
+              address={listing.address}
+              date={listing.date}
+              startTime={listing.startTime}
+              endTime={listing.endTime}
+              image={listing.image}
+              ppHour={listing.ppHour}
+              listingURL={listing.listingURL}
+            />
+          ))}
+        </ScrollView>
       </View>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }}>
-        {listingsData.map((listing) => (
-          <ListingCard
-            key={listing.id}
-            address={listing.address}
-            date={listing.date}
-            startTime={listing.startTime}
-            endTime={listing.endTime}
-            image={listing.image}
-            ppHour={listing.ppHour}
-            listingURL={listing.listingURL}
-          />
-        ))}
-      </ScrollView>
-    </View>
   );
 };
 
