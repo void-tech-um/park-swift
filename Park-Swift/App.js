@@ -20,10 +20,10 @@ const Stack = createStackNavigator();
 
 const Tab = createMaterialTopTabNavigator();
 
-function App() {
+function App({route}){
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
-
+  
   return (
     <NavigationContainer>
       <Stack.Navigator>

@@ -11,20 +11,70 @@ import List_Header from '../components/List_Header';
 import { set } from 'firebase/database';
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { database } from '../firebaseFunctions/firebase';
+import { setUser } from '../firebaseFunctions/firebase';
+const auth=getAuth();
 
 
 function EditProfileScreen({onPress,route}) {
   const [myUser, setMyUser] = useState(null);
   const [email, setEmail] = React.useState(null);
   const [name,setName]=React.useState(null);
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const navigation = useNavigation();
 
-    const handlePress = () => {
-        // Navigate to the "ThankYou" screen
-        onPress();
+  //   const handlePress = () => {
+  //       onAuthStateChanged(auth, (user) => {
+  //         if (user) {
+  //           const uid = user.uid;
+  //           const userRef = database.ref(`users/${uid}`);
+  //           userRef.update({
+  //               fullName: name,
+  //               email: email
+  //           }).then(() => {
+  //               // Data updated successfully
+  //               console.log('User data updated successfully');
+  //               // Navigate to another screen or perform any other action
+  //               navigation.navigate('Profile'); // Example navigation to profile screen
+  //           }).catch((error) => {
+  //               // An error occurred while updating data
+  //               console.error('Error updating user data:', error);
+  //           });
+  //       } else {
+  //           // User is signed out
+  //           // Handle signed out state if needed
+  //       }
+  //   });
         
-  };
+  // };
+
+// Inside EditProfileScreen component
+const handlePress = () => {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is signed in, update user data
+            const uid = user.uid;
+            // Call setUser function to update user data
+            setUser(uid, { fullName: name, email: email })
+                .then(() => {
+                    // Data updated successfully
+                    console.log('User data updated successfully');
+                    // Navigate to another screen or perform any other action
+                    navigation.navigate('Profile'); // Example navigation to profile screen
+                })
+                .catch((error) => {
+                    // An error occurred while updating data
+                    console.error('Error updating user data:', error);
+                });
+        } else {
+            // User is signed out
+            // Handle signed out state if needed
+        }
+    });
+};
+  
   
   const userId = route.params.userId;
   useEffect(() => {
@@ -37,7 +87,7 @@ function EditProfileScreen({onPress,route}) {
         .catch((error) => {
             console.error('Error fetching profile:', error);
         });
-  }, [userId]);
+  }, [userId, isUpdated]);
 
   if (!myUser) {
     return <Text>Loading...</Text>;
@@ -79,18 +129,6 @@ function EditProfileScreen({onPress,route}) {
         />
         </View>
         
-        <View>
-          <Text style={styles.email}>Email</Text>
-        </View>
-        <View
-          style={styles.input}>
-          <TextInput
-          editable
-          onChangeText={setEmail}
-          value={email}
-          style={{padding: 10}}
-        />
-        </View>
         <View style={styles.container}>
             <TouchableOpacity style={styles.button} onPress={handlePress}>
                 <Text style={styles.buttonText}>Save</Text>

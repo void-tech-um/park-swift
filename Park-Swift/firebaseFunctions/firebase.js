@@ -118,3 +118,10 @@ export function getUser(userId) {
             }
         });
 }
+
+const setUser = (userId, userData) => {
+    const userRef = ref(database, `users/${userId}`);
+    return set(userRef, userData);
+};
+
+export { setUser };
