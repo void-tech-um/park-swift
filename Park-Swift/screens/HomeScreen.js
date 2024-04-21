@@ -16,7 +16,7 @@ function HomeScreen({route}) {
 
   useEffect(() => {
       async function fetchPosts() {
-          const posts = await filterByPrice(5, 20);
+          const posts = await filterByPrice(1, 20);
           setPosts(posts); // Update the posts state variable
       }
       fetchPosts();

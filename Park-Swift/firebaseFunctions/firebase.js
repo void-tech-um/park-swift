@@ -55,7 +55,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
         userID: userID,
         location: location,
         rentalPeriod: rentalPeriod, 
-        price: price,
+        price: Number(price),
         // description:description,
         negotiable: negotiable,
         firstDate : firstDate,
@@ -166,7 +166,7 @@ export function filterByLocation(location) {
 // finds all posts within a price range
 export function filterByPrice(minPrice, maxPrice) {
     const postRef = ref(database, 'posts/');
-    const priceRangeRef = query(postRef, orderByChild('price'), startAt(minPrice));
+    const priceRangeRef = query(postRef, orderByChild('price'), startAt(minPrice), endAt(maxPrice));
     return get(priceRangeRef)
         .then((snapshot) => {
             const posts = [];

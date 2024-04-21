@@ -89,7 +89,7 @@ function CreatePost({ navigation, route }) {
               style={[styles.inputRounded, styles.inputPrice]}
               keyboardType="numeric"
               placeholder="0.00"
-              value={Number(price)}
+              value={price}
               onChangeText={setPrice}
             />
             <Text style={styles.slash}>/</Text>
