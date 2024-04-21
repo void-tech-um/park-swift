@@ -81,7 +81,6 @@ const NavBar = ({ route }) => {
                             ,height:'12%',} ,
                 title:"",
             }}/>
-
             <Tab.Screen name="Profile" component={ProfileScreen} initialParams={{userId : userId}} options={{
                 tabBarLabel: 'Map',
                 tabBarIcon: ({ color, size }) => (
@@ -90,18 +89,6 @@ const NavBar = ({ route }) => {
                 headerStyle: {backgroundColor: '#033566'
                                 ,height:'12%',} ,
                 title:"",
-            }}/>
-            <Tab.Screen name="Listing" component={Listing} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
-                headerStyle: {backgroundColor: '#033566'
-                            ,height:'12%',} ,
-                title:"",
-            }}/>
-            <Tab.Screen name="FilterScreen" component={FilterScreen} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
-            }}/>
-            <Tab.Screen name="EditProfile" component={EditProfileScreen} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
             }}/>
         </Tab.Navigator>
     </>
