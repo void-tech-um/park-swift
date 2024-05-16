@@ -73,7 +73,7 @@ function HomeScreen({route}) {
           setPosts(posts); // Update the posts state variable
       }
       fetchPosts();
-      getPost('-NuLDKLjCtlKetwDvobU')
+      getPost('9YCofto5I1dUh2M2lbho')
             .then((postData) => {
                 setMyPost(postData);
             })
