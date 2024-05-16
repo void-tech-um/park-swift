@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, FlatList, SafeAreaView } from 'react-native';
 import SortingButton from '../components/SortingButton2';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
@@ -7,12 +7,65 @@ import SearchBar from '../screens/search.js';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
 import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Dimensions } from 'react-native';
 
+
+const windowHeight = Dimensions.get('window').height;
+
+const listingsData = [
+  {
+      id: 1,
+      address: "505 S State",
+      date: "01/01/24",
+      startTime: "12pm",
+      endTime: "3pm",
+      image: "/images/landscape.jpg",
+      ppHour: "500",
+      listingURL: "/",
+
+  },
+  {
+    id: 2,
+    address: "505 S State",
+    date: "01/01/24",
+    startTime: "12pm",
+    endTime: "3pm",
+    image: "/images/landscape.jpg",
+    ppHour: "500",
+    listingURL: "/",
+
+  },
+  {
+    id: 3,
+    address: "505 S State",
+    date: "01/01/24",
+    startTime: "12pm",
+    endTime: "3pm",
+    image: "/images/landscape.jpg",
+    ppHour: "500",
+    listingURL: "/",
+
+  },
+  {
+    id: 4,
+    address: "505 S State",
+    date: "01/01/24",
+    startTime: "12pm",
+    endTime: "3pm",
+    image: "/images/landscape.jpg",
+    ppHour: "500",
+    listingURL: "/",
+
+  },
+]
 
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); // Add this line
   const [myPost, setMyPost] = useState(null);
   const userId = route.params.userId;
+  const insets = useSafeAreaInsets();
+  const listingCardHeight = windowHeight * 0.2; // replace 0.2 with the actual percentage
 
   useEffect(() => {
       async function fetchPosts() {
@@ -35,19 +88,35 @@ function HomeScreen({route}) {
 
   console.log(posts);
 
-    return (
-      <View style={{position:"fixed",}}>
-         <MenuSearchBar/>
-        <View style={{ alignItems: 'center', justifyContent: 'center', top:'-10px', }}>
-          <CurrentlyRentingCard />
-            {/* Place the "Listings Near You" text right below the CurrentlyRentingCard component */}
-            <Text style={styles.listingsNearYouText}>Listings Near You</Text>
-            <SortingButton />
-            <ListingCard />
+  return (
+      <View style={{ flex: 1 }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} 
+                          accessible={false}>
+          <MenuSearchBar />
+        </TouchableWithoutFeedback>
+        <CurrentlyRentingCard />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
+          <Text style={{ ...styles.listingsNearYouText, color: 'black' }}>Listings Near You</Text>
+          <SortingButton />
         </View>
-        {/*<Text>{posts[0].firstDate} </Text>*/}
+        <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} 
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          {listingsData.map((listing) => (
+            <ListingCard
+              key={listing.id}
+              address={listing.address}
+              date={listing.date}
+              startTime={listing.startTime}
+              endTime={listing.endTime}
+              image={listing.image}
+              ppHour={listing.ppHour}
+              listingURL={listing.listingURL}
+            />
+          ))}
+        </ScrollView>
       </View>
-   );
+  );
 };
 
 const styles = StyleSheet.create({
@@ -65,9 +134,9 @@ const styles = StyleSheet.create({
   listingsNearYouText: {
     fontWeight: 'bold',
     color: 'black',
-    marginTop: 180, // Add a little space above the text if needed
+    marginTop: 10, // Add a little space above the text if needed
     fontSize: 25,
-    marginLeft: -220,
+    marginLeft: 0,
   },
   // No additional or complex styling to affect layout
 });

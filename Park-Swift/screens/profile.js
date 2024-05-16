@@ -1,23 +1,41 @@
-import React from 'react';
+import * as React from 'react';
 import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebaseFirestore';
 import List_Header from '../components/List_Header';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { Button } from 'react-native-paper';
+import { database } from '../services/config';
 
-function ProfileScreen({route}) {
+function ProfileScreen({navigation,route}) {
+
+const userid = route.params.userId;
+const onPostPress = async () => {
+    try {
+        navigation.navigate('EditProfile', { userId: userid});
+    } catch (error) {
+        console.error('Error fetching user:', error);
+    }
+}
+
   const [myUser, setMyUser] = useState(null);
   const userId = route.params.userId;
-  useEffect(() => {
-    getUser(userId)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getUser(userId)
         .then((userData) => {
           setMyUser(userData);
         })
         .catch((error) => {
-            console.error('Error fetching profile:', error);
+          console.error('Error fetching profile:', error);
         });
-  }, [userId]);
+    }, [userId])
+  );
 
   if (!myUser) {
     return <Text>Loading...</Text>;
@@ -27,6 +45,11 @@ function ProfileScreen({route}) {
     <View style={styles.container}>
       <List_Header/>
       <View style={styles.body}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onPostPress} style={styles.button}>
+          <Text style={styles.buttonText}>Edit Profile</Text>
+        </TouchableOpacity>
+      </View>
         <View style={styles.avatarContainer}>
           <Text style={styles.avatar}>img</Text>
         </View>
@@ -112,6 +135,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color:'#666666',
   },
+  textStyle:{
+    bottom: "120%",
+    color: "#3399FF",
+    fontWeight:"bold",
+  },
+  buttonContainer:{
+    bottom:20,
+  },
+  buttonText:{
+    color:"#3399FF"
+  }
 });
 
 export default ProfileScreen;

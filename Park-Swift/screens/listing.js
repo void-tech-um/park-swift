@@ -2,12 +2,20 @@ import React, { useState, useEffect} from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import {getPost}  from '../firebaseFunctions/firebaseFirestore';
+import { useNavigation } from '@react-navigation/native';
 
 const Listing = () => {
+
+    const navigation = useNavigation();
+
+    const handleBackPress = () => {
+        navigation.goBack();
+    };
+
     const [myPost, setMyPost] = useState(null);
 
     useEffect(() => {
-        getPost('-NuLDKLjCtlKetwDvobU')
+        getPost('-NuuQuhygM1wQ_FZZVyz')
             .then((postData) => {
                 setMyPost(postData);
             })
@@ -30,7 +38,7 @@ const Listing = () => {
       {/* Listing Heading */}
       <View style={styles.topHeader}></View>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => alert("Back")}>
+        <TouchableOpacity onPress={handleBackPress}>
           <Ionicons name="arrow-back" size={40} color="black" />
         </TouchableOpacity>
         <Text style = {styles.listingHeading}>{myPost.location}</Text>

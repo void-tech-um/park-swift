@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation } from '@react-navigation/native';
+import FilterScreen from '../screens/filter';
+
 
 
 
 const SortingButton = () => {
+    const navigation = useNavigation();
+
+
     const handlePress = () => {
       // Placeholder for future functionality
       console.log('Button pressed');
+      navigation.navigate('FilterScreen', { FilterScreen });
     };
   
     return (
@@ -27,8 +34,7 @@ const SortingButton = () => {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: '-58%',
-      marginRight: '-60%',
+      alignSelf: 'flex-end',
     },
     button: {
       backgroundColor: '#D9D9D9',
