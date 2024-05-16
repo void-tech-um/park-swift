@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {getPost}  from '../firebaseFunctions/firebase';
+import {getPost}  from '../firebaseFunctions/firebaseFirestore';
 
 const Listing = () => {
     const [myPost, setMyPost] = useState(null);

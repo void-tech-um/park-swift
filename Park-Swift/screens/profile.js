@@ -3,7 +3,7 @@ import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
-import {getUser}  from '../firebaseFunctions/firebase';
+import {getUser}  from '../firebaseFunctions/firebaseFirestore';
 import List_Header from '../components/List_Header';
 
 function ProfileScreen({route}) {

@@ -2,7 +2,8 @@
 
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { ref, set, onValue, push, get, orderByChild, query, equalTo, startAt, endAt} from 'firebase/database';
-import { database } from '../services/config';
+import { database } from '../services/configRealtime';
+
 
 const auth = getAuth();
 
@@ -55,7 +56,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
         userID: userID,
         location: location,
         rentalPeriod: rentalPeriod, 
-        price: Number(price),
+        price: price,
         // description:description,
         negotiable: negotiable,
         firstDate : firstDate,
@@ -224,22 +225,3 @@ export function getUser(userId) {
             }
         });
 }
-
-// Get post info chornologically from database based on Start Date
-// export function getPostByStartDate() {
-//     const postRef = ref(database, 'posts/');
-//     const orderedRef = query(postRef, orderByChild('firstDate'));
-
-//     return get(orderedRef)
-//         .then((snapshot) => {
-//             const posts = [];
-//             snapshot.forEach((childSnapshot) => {
-//                 const post = childSnapshot.val();
-//                 posts.push(post);
-//             });
-//             return posts;
-//         })
-//         .catch((error) => {
-//             console.error('Error fetching posts:', error);
-//         });
-// }

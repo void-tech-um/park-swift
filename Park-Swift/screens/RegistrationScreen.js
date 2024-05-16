@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { ref, set } from 'firebase/database';
-import { database } from '../services/config';
-import { registerUser } from '../firebaseFunctions/firebase';
-const auth = getAuth();
+import { registerUser } from '../firebaseFunctions/firebaseFirestore';
+
 
 export default function RegistrationScreen({navigation}) {
     const [fullName, setFullName] = useState('')
