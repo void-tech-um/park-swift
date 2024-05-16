@@ -6,10 +6,7 @@ import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebaseFirestore';
 import List_Header from '../components/List_Header';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-import { Button } from 'react-native-paper';
-import { database } from '../services/config';
 
 function ProfileScreen({navigation,route}) {
 
