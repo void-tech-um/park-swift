@@ -13,47 +13,43 @@ const windowHeight = Dimensions.get('window').height;
 const listingsData = [
   {
       id: 1,
-      address: "505 S State",
-      date: "01/01/24",
-      startTime: "12pm",
-      endTime: "3pm",
-      image: "/images/landscape.jpg",
-      ppHour: "500",
+      address: "419 S State St, Ann Arbor",
+      ppHour: "$10.50 /hr",
+      date: "11/19/2023",
+      startTime: "12:00PM",
+      endTime: "3:00PM",
+      image: ('/images/landscape.jpg'),
       listingURL: "/",
-
   },
   {
     id: 2,
-    address: "505 S State",
-    date: "01/01/24",
-    startTime: "12pm",
-    endTime: "3pm",
-    image: "/images/landscape.jpg",
-    ppHour: "500",
+    address: "419 S State St, Ann Arbor",
+    ppHour: "$10.50 /hr",
+    date: "11/19/2023",
+    startTime: "12:00PM",
+    endTime: "3:00PM",
+    image: ('/images/landscape.jpg'),
     listingURL: "/",
-
   },
   {
     id: 3,
-    address: "505 S State",
-    date: "01/01/24",
-    startTime: "12pm",
-    endTime: "3pm",
-    image: "/images/landscape.jpg",
-    ppHour: "500",
+    address: "419 S State St, Ann Arbor",
+    ppHour: "$10.50 /hr",
+    date: "11/19/2023",
+    startTime: "12:00PM",
+    endTime: "3:00PM",
+    image: ('/images/landscape.jpg'),
     listingURL: "/",
-
   },
   {
     id: 4,
-    address: "505 S State",
-    date: "01/01/24",
-    startTime: "12pm",
-    endTime: "3pm",
-    image: "/images/landscape.jpg",
-    ppHour: "500",
+    address: "419 S State St, Ann Arbor",
+    ppHour: "$10.50 /hr",
+    date: "11/19/2023",
+    startTime: "12:00PM",
+    endTime: "3:00PM",
+    image: ('/images/landscape.jpg'),
     listingURL: "/",
-
   },
 ]
 
@@ -68,10 +64,10 @@ const HomeScreen = () => {
           <MenuSearchBar />
         </TouchableWithoutFeedback>
         <CurrentlyRentingCard />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10 }}>
-          <Text style={{ ...styles.listingsNearYouText, color: 'black' }}>Listings Near You</Text>
-          <SortingButton />
-        </View>
+        <View style={styles.headerContainer}>
+        <Text style={styles.listingsNearYouText}>Listings For You</Text>
+        <SortingButton />
+      </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} 
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}>
@@ -104,12 +100,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: 15,
+  },
   listingsNearYouText: {
     fontWeight: 'bold',
-    color: 'black',
-    marginTop: 10, // Add a little space above the text if needed
     fontSize: 25,
-    marginLeft: 0,
+    color: 'black',
   },
   // No additional or complex styling to affect layout
 });

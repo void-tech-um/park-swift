@@ -1,130 +1,124 @@
 import * as React from "react";
-
-import { ImageBackground, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
 import Listing from "../screens/listing";
 
 //listing card component that displays the listing
-const ListingCard = ({address, date, startTime, endTime, image, ppHour, listingURL}) => {
-    //take in data from backend
-
+const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listingURL }) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
         navigation.navigate('Listing', { Listing });
     };
-    
+
     return (
         <View style={styles.container}>
-            <Image
-                    source={{uri: 'https://d9lvjui2ux1xa.cloudfront.net/img/topic/header_images/parking-spaces-lg.jpg'}}
-                    style={styles.image}
-            />
-            <View style={styles.content}>
-                <Text style={styles.address}>{address}</Text>
-                <Text style={styles.description}>time away from you</Text>
-                <Text style={styles.description}>{date}</Text>
-                <Text style={styles.description}>{startTime} - {endTime}</Text>
-                <TouchableOpacity onPress={handleSeeMorePress}>
-                    <View style={styles.buttonBox}>
-                        <Text style={styles.buttonText}>See More</Text>   
+            <View style={styles.contentContainer}>
+                <View style={styles.topSection}>
+                    <Text style={styles.address}>{address}</Text>
+                </View>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={{uri: 'https://d9lvjui2ux1xa.cloudfront.net/img/topic/header_images/parking-spaces-lg.jpg'}}
+                        style={styles.image}
+                    />
+                </View>
+                <View style={styles.bottomSection}>
+                    <View style={styles.content}>
+                        <Text style={styles.price}>{ppHour}</Text>
+                        <Text style={styles.description}>10 minutes away</Text>
+                        <Text style={styles.description}>{date}</Text>
+                        <Text style={styles.description}>{startTime} - {endTime}</Text>
                     </View>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={handleSeeMorePress} style={styles.button}>
+                        <Text style={styles.buttonText}>→</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.banner}>
-                <Text style={styles.bannerText}>{ppHour}</Text>
-            </View>
-
-            {/* <View style={styles.bannerContainer}>
-                
-            </View> */}
-            
-            
-            
-            {/* <View style={styles.imageContainer}>
-                <Image
-                    source={{uri: 'https://d9lvjui2ux1xa.cloudfront.net/img/topic/header_images/parking-spaces-lg.jpg'}}
-                    style={styles.image}
-                />
-            </View> */}
-            {/* //update and display specific info variables
-            //1. price per hour
-            //2. address
-            //3. date
-            //4. start time
-            //5. end time
-            //contact button */}
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        height: "25%",
-        width: "80%",
-        backgroundColor: "#D9D9D9",
-        marginBottom: "5%",
-        marginLeft: "3.5%",
+        backgroundColor: "#052658",
+        borderRadius: 20,
+        marginVertical: 7,
+        marginHorizontal: 20,
+        overflow: 'hidden',
+        width: '90%',
+        height: 165,
+        position: 'relative',
+        flexDirection: 'row',
     },
-    banner: {
-        alignItems: "center",
-        flexGrow: 1,
-        height: "100%",
-        width: "33%",
-        backgroundColor: "#888888",
+    contentContainer: {
+        flex: 1,
+        overflow: 'hidden',
+        position: 'relative',
     },
-    bannerText: {
-        alignItems: "center",
+    topSection: {
+        backgroundColor: '#EEEBDB',
         padding: 10,
-        justifyContent: "center",
-        color: "white",
-        fontSize: 16,
-        alignItems: "stretch",
+        alignItems: 'center',
+        zIndex: 1, // Ensure this is above the image
     },
-    buttonText: {
-        alignItems: "center",
-        padding: 10,
-        justifyContent: "center",
-        color: "white",
-        fontSize: 16,
-        fontWeight: 'bold',
-        alignItems: "stretch",
-    },
-    buttonBox: {
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 2,
-        marginTop: 20,
-        borderRadius: 30, // Adjust to make it more oval-shaped
-        backgroundColor: '#464646',
+    imageContainer: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        width: 110,
+        zIndex: 0, // Ensure this is below the top section
+        overflow: 'hidden',
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
     },
     image: {
-        flexGrow: 1,
-        width: '33%',
+        width: '100%',
         height: '100%',
-        resizeMode: 'cover', // or 'cover' depending on requirement
-        //borderRadius: 8,
-        //marginRight: "5%",
+        resizeMode: 'cover',
+    },
+    bottomSection: {
+        flexDirection: "row",
+        padding: 10,
+        backgroundColor: "#052658",
+        flex: 1,
+        marginLeft: 110,
     },
     content: {
-        display: "flex",
-        flexDirection: "column",
-        padding: "3%",
-        flexGrow: 2,
-        width: "50%",
+        flex: 1,
+        paddingHorizontal: 14,
+        justifyContent: "center",
     },
     address: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: 'bold',
-        marginBottom: 8,
+        color: '#000000',
+        textAlign: 'center',
+    },
+    price: {
+        fontSize: 24,
+        fontWeight: '600',
+        color: '#FED869',
     },
     description: {
-        
+        fontSize: 14,
+        color: '#EEEBDB',
+    },
+    button: {
+        backgroundColor: '#0653A1',
+        borderRadius: 17,
+        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 55,
+        height: 55,
+        alignSelf: 'center',
+        marginRight: 15,
+    },
+    buttonText: {
+        color: '#FFFFF0',
+        fontSize: 25,
     },
 });
 
