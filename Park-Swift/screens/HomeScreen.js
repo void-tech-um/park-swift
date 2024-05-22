@@ -7,6 +7,7 @@ import MenuSearchBar from './search';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
 import listingsData from '../components/listingsData';
+import CustomText from '../components/CustomText';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -21,7 +22,9 @@ const HomeScreen = () => {
       </TouchableWithoutFeedback>
       <CurrentlyRentingCard />
       <View style={styles.headerContainer}>
-        <Text style={styles.listingsNearYouText}>Listings For You</Text>
+        <CustomText style={styles.listingsNearYouText} fontFamily="NotoSansTaiTham-Bold">
+          Listings For You
+        </CustomText>
         <SortingButton />
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>

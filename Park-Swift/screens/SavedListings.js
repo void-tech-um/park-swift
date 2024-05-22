@@ -4,6 +4,7 @@ import SearchbarComponent from './searchBar';
 import List_Header from '../components/List_Header';
 import ListingCard from '../components/ListingCard';
 import listingsData from '../components/listingsData';
+import { StyleSheet } from 'react-native';
 
 const SavedListings = () => {
   return (
@@ -11,16 +12,14 @@ const SavedListings = () => {
       <List_Header />
       <View style={{ flexDirection: 'row', flex: 0.7 }}>
         <View style={{ justifyContent: "center" }}>
-          <Text style={{ fontSize: 28, textAlign: 'center', fontWeight: "bold" }}>
+        <Text style={styles.savedListingsText}>
             Saved Listings
-          </Text>
+        </Text>
         </View>
       </View>
-      <View style={{ justifyContent: 'center', flex: 0.5 }}>
         <SearchbarComponent />
-      </View>
-      <View style={{ flex: 0.2 }}></View>
       <View style={{ flex: 5 }}>
+        
         <ScrollView>
           {listingsData.map((listing) => (
             <ListingCard
@@ -40,4 +39,13 @@ const SavedListings = () => {
   );
 };
 
+const styles = StyleSheet.create({
+    savedListingsText: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        marginLeft: 20,    
+    },
+  });
+
+  
 export default SavedListings;
