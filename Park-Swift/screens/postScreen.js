@@ -4,7 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
-import { createPost } from '../firebaseFunctions/firebase';
+import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import { useState } from 'react';
 import List_Header from '../components/List_Header';
 

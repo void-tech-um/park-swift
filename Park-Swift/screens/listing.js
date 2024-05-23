@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {getPost}  from '../firebaseFunctions/firebase';
+import {getPost}  from '../firebaseFunctions/firebaseFirestore';
 import { useNavigation } from '@react-navigation/native';
 
 const Listing = () => {
@@ -15,7 +15,7 @@ const Listing = () => {
     const [myPost, setMyPost] = useState(null);
 
     useEffect(() => {
-        getPost('-NuuQuhygM1wQ_FZZVyz')
+        getPost('9YCofto5I1dUh2M2lbho')
             .then((postData) => {
                 setMyPost(postData);
             })

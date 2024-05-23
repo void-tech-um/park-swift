@@ -3,13 +3,10 @@ import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
-import {getUser}  from '../firebaseFunctions/firebase';
+import {getUser}  from '../firebaseFunctions/firebaseFirestore';
 import List_Header from '../components/List_Header';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-import { Button } from 'react-native-paper';
-import { database } from '../services/config';
 
 function ProfileScreen({navigation,route}) {
 
