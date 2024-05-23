@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook from React Navigation
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import FilterScreen from '../screens/filter';
 
 
 
 const SortingButton = () => {
+
+  // Initialize navigation object
+  const navigation = useNavigation();
+
     const handlePress = () => {
-      // Placeholder for future functionality
-      console.log('Button pressed');
+      // Navigate to another screen when the button is pressed
+      navigation.navigate(FilterScreen);
     };
-  
+
     return (
         <View style={styles.container}>
           <TouchableOpacity onPress={handlePress} style={styles.button}>
@@ -21,7 +27,7 @@ const SortingButton = () => {
         </View>
     );
   };
-  
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
