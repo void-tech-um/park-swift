@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   listingsNearYouText: {
-    fontWeight: 'bold',
     fontSize: 25,
     color: 'black',
   },
