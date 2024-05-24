@@ -7,7 +7,7 @@ import { View, Text, StyleSheet,TextInput, TouchableOpacity,
   Keyboard } from 'react-native';
 import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebaseFirestore';
-import List_Header from '../components/List_Header';
+import ListHeader from '../components/ListHeader';
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -97,7 +97,7 @@ const handlePress = () => {
   return (
     <KeyboardAwareScrollView>
     <View style={styles.container}>
-      <List_Header/>
+      <ListHeader/>
       <View style={styles.body}>
         <View style={styles.avatarContainer}>
           <Text style={styles.avatar}>img</Text>

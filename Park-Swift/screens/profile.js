@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SearchBar } from 'react-native-screens';
 import { useState, useEffect } from 'react';
 import {getUser}  from '../firebaseFunctions/firebaseFirestore';
-import List_Header from '../components/List_Header';
+import ListHeader from '../components/ListHeader';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -40,7 +40,7 @@ const onPostPress = async () => {
 
   return (
     <View style={styles.container}>
-      <List_Header/>
+      <ListHeader/>
       <View style={styles.body}>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={onPostPress} style={styles.button}>

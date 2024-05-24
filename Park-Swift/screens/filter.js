@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Import Icon from the library
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
-import List_Header from '../components/List_Header';
+import ListHeader from '../components/ListHeader';
 
 const FilterScreen = () => {
 
@@ -13,7 +13,7 @@ const FilterScreen = () => {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.headerContainer}>
-                <List_Header />
+                <ListHeader />
             </View>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>

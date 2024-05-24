@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { View, Text} from 'react-native';
 import SearchBar from './search';
-import List_Header from '../components/List_Header';
+import ListHeader from '../components/ListHeader';
 
 function MessagesScreen() {
     return (
       <View style={{position:'fixed',}}>
-        <List_Header/>
+        <ListHeader/>
         <Text>Message Screen</Text>
       </View>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import SearchbarComponent from './searchBar';
-import List_Header from '../components/List_Header';
+import ListHeader from '../components/ListHeader';
 import ListingCard from '../components/ListingCard';
 import listingsData from '../components/listingsData';
 import { StyleSheet } from 'react-native';
@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native';
 const SavedListings = () => {
   return (
     <View style={{ flexDirection: 'column', flex: 6.4 }}>
-      <List_Header />
+      <ListHeader />
       <View style={{ flexDirection: 'row', flex: 0.7 }}>
         <View style={{ justifyContent: "center" }}>
         <Text style={styles.savedListingsText}>
