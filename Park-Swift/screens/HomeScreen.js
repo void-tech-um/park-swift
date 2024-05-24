@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from 'react-native';
-import SortingButton from '../components/SortingButton2';
+import SortingButton from '../components/SortingButton';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './search';
