@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import FilterScreen from '../screens/filter';
+import FilterScreen from '../screens/FilterScreen';
 
 const SortingButton = () => {
     const navigation = useNavigation();

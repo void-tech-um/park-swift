@@ -12,7 +12,7 @@ import { StyleSheet } from 'react-native';
 import Listing from '../screens/listing';
 import HamburgerMenu from '../components/HamburgerMenu.js';
 import { Modal, TouchableOpacity} from 'react-native-paper';
-import FilterScreen from '../screens/filter';
+import FilterScreen from '../screens/FilterScreen.js';
 import { useNavigation } from '@react-navigation/native';
 import EditProfileScreen from '../screens/EditProfileScreen';
 
