@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {Searchbar} from 'react-native-paper';
 
 
-const List_Header = () => {
+const ListHeader = () => {
 
     const [searchText, setSearchText] = useState('');
     const handleSearch = (text) => {
@@ -43,4 +43,4 @@ const List_Header = () => {
         },
       });
 
-export default List_Header;
+export default ListHeader;

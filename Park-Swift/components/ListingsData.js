@@ -41,4 +41,4 @@ const ListingsData = [
   },
 ];
 
-export default listingsData;
+export default ListingsData;
