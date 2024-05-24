@@ -10,7 +10,7 @@ import postScreen from '../screens/postScreen';
 import SavedListings from '../screens/SavedListings';
 import { StyleSheet } from 'react-native';
 import Listing from '../screens/listing';
-import HamburgerMenu from '../screens/hamburgerMenu';
+import HamburgerMenu from '../components/HamburgerMenu.js';
 import { Modal, TouchableOpacity} from 'react-native-paper';
 import FilterScreen from '../screens/filter';
 import { useNavigation } from '@react-navigation/native';
