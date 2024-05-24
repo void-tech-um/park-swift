@@ -9,7 +9,7 @@ import View from "react-native";
 import postScreen from '../screens/postScreen';
 import SavedListings from '../screens/SavedListings';
 import { StyleSheet } from 'react-native';
-import Listing from '../screens/listing';
+import ListingScreen from '../screens/ListingScreen.js';
 import HamburgerMenu from '../components/HamburgerMenu.js';
 import { Modal, TouchableOpacity} from 'react-native-paper';
 import FilterScreen from '../screens/FilterScreen.js';

@@ -1,14 +1,14 @@
 import * as React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Listing from "../screens/listing";
+import ListingScreen from "../screens/ListingScreen";
 
 //listing card component that displays the listing
 const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listingURL }) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
-        navigation.navigate('Listing', { Listing });
+        navigation.navigate('ListingScreen', { ListingScreen });
     };
 
     return (

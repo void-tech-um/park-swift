@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import {getPost}  from '../firebaseFunctions/firebaseFirestore';
 import { useNavigation } from '@react-navigation/native';
 
-const Listing = () => {
+const ListingScreen = () => {
 
     const navigation = useNavigation();
 
@@ -132,4 +132,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Listing;
+export default ListingScreen;
