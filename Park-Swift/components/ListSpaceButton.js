@@ -1,7 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import ThankYouScreen from "../screens/confirmation";
 
 export default function ListSpaceButton({onPress}) {
     const navigation = useNavigation();
