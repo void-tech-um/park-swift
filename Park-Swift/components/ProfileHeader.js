@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons'; 
-import HamburgerMenu from '../components/HamburgerMenu.js';
+import HamburgerMenu from './HamburgerMenu.js';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {Searchbar} from 'react-native-paper';
 
 
-const Profile_Header = () => {
+const ProfileHeader = () => {
 
     const [searchText, setSearchText] = useState('');
     const handleSearch = (text) => {
@@ -47,4 +47,4 @@ const Profile_Header = () => {
         },
       });
 
-export default Profile_Header;
+export default ProfileHeader;
