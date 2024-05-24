@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
-import listingsData from '../components/listingsData';
+import ListingsData from '../components/ListingsData';
 import CustomText from '../components/CustomText';
 
 
@@ -55,7 +55,7 @@ function HomeScreen({route}) {
         <SortingButton />
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
-        {listingsData.map((listing) => (
+        {ListingsData.map((listing) => (
           <ListingCard
             key={listing.id}
             address={listing.address}
@@ -68,7 +68,7 @@ function HomeScreen({route}) {
           />
         ))}
       </ScrollView>
-      <SavedListings listingsData={listingsData} />
+      <SavedListings ListingsData={ListingsData} />
     </View>
   );
 };

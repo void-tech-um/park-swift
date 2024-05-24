@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from 'react-native';
 import SearchbarComponent from './searchBar';
 import ListHeader from '../components/ListHeader';
 import ListingCard from '../components/ListingCard';
-import listingsData from '../components/listingsData';
+import ListingsData from '../components/ListingsData';
 import { StyleSheet } from 'react-native';
 
 const SavedListings = () => {
@@ -21,7 +21,7 @@ const SavedListings = () => {
       <View style={{ flex: 5 }}>
         
         <ScrollView>
-          {listingsData.map((listing) => (
+          {ListingsData.map((listing) => (
             <ListingCard
               key={listing.id}
               address={listing.address}

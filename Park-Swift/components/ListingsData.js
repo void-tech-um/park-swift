@@ -1,4 +1,4 @@
-const listingsData = [
+const ListingsData = [
   {
       id: 1,
       address: "419 S State St, Ann Arbor",
