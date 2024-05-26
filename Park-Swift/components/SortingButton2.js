@@ -4,9 +4,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import FilterScreen from '../screens/filter';
 
-
-
-
 const SortingButton = () => {
     const navigation = useNavigation();
 
