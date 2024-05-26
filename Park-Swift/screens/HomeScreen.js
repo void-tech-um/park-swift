@@ -14,49 +14,6 @@ import CustomText from '../components/CustomText';
 
 const windowHeight = Dimensions.get('window').height;
 
-const listingsData = [
-  {
-      id: 1,
-      address: "419 S State St, Ann Arbor",
-      ppHour: "$10.50 /hr",
-      date: "11/19/2023",
-      startTime: "12:00PM",
-      endTime: "3:00PM",
-      image: ('/images/landscape.jpg'),
-      listingURL: "/",
-  },
-  {
-    id: 2,
-    address: "419 S State St, Ann Arbor",
-    ppHour: "$10.50 /hr",
-    date: "11/19/2023",
-    startTime: "12:00PM",
-    endTime: "3:00PM",
-    image: ('/images/landscape.jpg'),
-    listingURL: "/",
-  },
-  {
-    id: 3,
-    address: "419 S State St, Ann Arbor",
-    ppHour: "$10.50 /hr",
-    date: "11/19/2023",
-    startTime: "12:00PM",
-    endTime: "3:00PM",
-    image: ('/images/landscape.jpg'),
-    listingURL: "/",
-  },
-  {
-    id: 4,
-    address: "419 S State St, Ann Arbor",
-    ppHour: "$10.50 /hr",
-    date: "11/19/2023",
-    startTime: "12:00PM",
-    endTime: "3:00PM",
-    image: ('/images/landscape.jpg'),
-    listingURL: "/",
-  },
-]
-
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); // Add this line
   const [myPost, setMyPost] = useState(null);
