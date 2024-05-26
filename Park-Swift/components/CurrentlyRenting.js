@@ -25,43 +25,38 @@ const CurrentlyRentingCard = () => {
 
 const styles = StyleSheet.create({
     container: {
-        height: windowHeight * 0.13, // 13% of the window's height
-        width: '95%',
-        backgroundColor: '#BEBEBE',
+        height: windowHeight * 0.11, 
+        width: '100%',
+        backgroundColor: '#EEEBDB',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         padding: 12,
-        alignSelf: 'center',
     },
    titleContainer: {
-       flexDirection: 'column',
+    marginLeft: 27,
    },
    title: {
-       fontSize: 25,
+       fontSize: 20,
        fontWeight: 'bold',
        color: 'black',
    },
    addressContainer: {
-       backgroundColor: '#404040',
-       padding: 10,
-       borderRadius: 10,
-       width: '65%',
-       height: '75%',
-       flexDirection: 'column',
+       backgroundColor: '#0653A1',
        alignItems: 'center',
        justifyContent: 'center',
+       borderRadius: 17,
+       width: '55%',
+       height: '80%',
+       marginLeft: 40,
    },
    address: {
        color: 'white',
-       fontSize: 17,
-       fontWeight: 'bold',
+       fontSize: 18,
        textAlign: 'center',
    },
    moreInfo: {
        color: 'white',
-       fontSize: 17,
-       marginTop: 5,
+       fontSize: 12,
        textAlign: 'center',
    },
 });
