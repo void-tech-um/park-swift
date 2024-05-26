@@ -4,16 +4,86 @@ import SortingButton from '../components/SortingButton2';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './search';
+import { useState, useEffect } from 'react';
+import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
 import listingsData from '../components/listingsData';
 import CustomText from '../components/CustomText';
 
+
 const windowHeight = Dimensions.get('window').height;
 
-const HomeScreen = () => {
+const listingsData = [
+  {
+      id: 1,
+      address: "419 S State St, Ann Arbor",
+      ppHour: "$10.50 /hr",
+      date: "11/19/2023",
+      startTime: "12:00PM",
+      endTime: "3:00PM",
+      image: ('/images/landscape.jpg'),
+      listingURL: "/",
+  },
+  {
+    id: 2,
+    address: "419 S State St, Ann Arbor",
+    ppHour: "$10.50 /hr",
+    date: "11/19/2023",
+    startTime: "12:00PM",
+    endTime: "3:00PM",
+    image: ('/images/landscape.jpg'),
+    listingURL: "/",
+  },
+  {
+    id: 3,
+    address: "419 S State St, Ann Arbor",
+    ppHour: "$10.50 /hr",
+    date: "11/19/2023",
+    startTime: "12:00PM",
+    endTime: "3:00PM",
+    image: ('/images/landscape.jpg'),
+    listingURL: "/",
+  },
+  {
+    id: 4,
+    address: "419 S State St, Ann Arbor",
+    ppHour: "$10.50 /hr",
+    date: "11/19/2023",
+    startTime: "12:00PM",
+    endTime: "3:00PM",
+    image: ('/images/landscape.jpg'),
+    listingURL: "/",
+  },
+]
+
+function HomeScreen({route}) {
+  const [posts, setPosts] = useState([]); // Add this line
+  const [myPost, setMyPost] = useState(null);
+  const userId = route.params.userId;
   const insets = useSafeAreaInsets();
   const listingCardHeight = windowHeight * 0.2;
+
+  useEffect(() => {
+      async function fetchPosts() {
+          const posts = await filterByPrice(1, 20);
+          setPosts(posts); // Update the posts state variable
+      }
+      fetchPosts();
+      getPost('9YCofto5I1dUh2M2lbho')
+            .then((postData) => {
+                setMyPost(postData);
+            })
+            .catch((error) => {
+                console.error('Error fetching post:', error);
+            });
+  }, []); // Add this line
+
+  if (!myPost || !posts) {
+    return <Text>Loading...</Text>;
+  }
+
+  console.log(posts);
 
   return (
     <View style={{ flex: 1 }}>

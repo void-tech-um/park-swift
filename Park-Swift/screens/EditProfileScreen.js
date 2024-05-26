@@ -6,15 +6,14 @@ import { View, Text, StyleSheet,TextInput, TouchableOpacity,
   Button,
   Keyboard } from 'react-native';
 import { useState, useEffect } from 'react';
-import {getUser}  from '../firebaseFunctions/firebase';
+import {getUser}  from '../firebaseFunctions/firebaseFirestore';
 import List_Header from '../components/List_Header';
-import { set } from 'firebase/database';
 import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { database } from '../firebaseFunctions/firebase';
-import { setUser } from '../firebaseFunctions/firebase';
-const auth=getAuth();
+import { database } from '../firebaseFunctions/firebaseFirestore';
+import { setUser } from '../firebaseFunctions/firebaseFirestore';
+const auth = getAuth();
 
 
 function EditProfileScreen({onPress,route}) {

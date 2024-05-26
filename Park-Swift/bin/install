@@ -19,3 +19,5 @@ npm install react-native-keyboard-aware-scroll-view
 npm install --save firebase
 
 npm install axios
+
+npm install firebase@10.11.0 --save
