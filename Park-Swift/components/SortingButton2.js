@@ -21,8 +21,8 @@ const SortingButton = () => {
         <View style={styles.container}>
           <TouchableOpacity onPress={handlePress} style={styles.button}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={styles.buttonText}>Sort By     </Text>
-              <Icon name="tune" size={20} color="black" />
+              <Icon name="tune" size={20} color="white" />
+              <Text style={styles.buttonText}>  Filter & Sort</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -31,23 +31,19 @@ const SortingButton = () => {
   
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      alignSelf: 'flex-end',
     },
     button: {
-      backgroundColor: '#D9D9D9',
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 19,
-      borderWidth: 1,
-      borderColor: 'black',
+      backgroundColor: '#0653A1',
+      paddingVertical: 12,
+      paddingHorizontal: 25,
+      borderRadius: 17,
+      marginRight: 2.5,
     },
     buttonText: {
-      color: 'black',
-      fontSize: 18,
-      fontWeight: 'bold',
+      color: 'white',
+      fontSize: 14,
     },
   });
   
