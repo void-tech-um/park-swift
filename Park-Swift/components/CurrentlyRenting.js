@@ -53,11 +53,14 @@ const styles = StyleSheet.create({
        color: 'white',
        fontSize: 18,
        textAlign: 'center',
+       fontFamily: "NotoSansTaiTham-Regular"
    },
    moreInfo: {
        color: 'white',
        fontSize: 12,
        textAlign: 'center',
+       marginTop: -8,
+       fontFamily: "NotoSansTaiTham-Regular"
    },
 });
 

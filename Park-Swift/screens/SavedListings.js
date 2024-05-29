@@ -31,6 +31,8 @@ const SavedListings = () => {
               image={listing.image}
               ppHour={listing.ppHour}
               listingURL={listing.listingURL}
+              isAvailable={listing.id !== 2 && listing.id !== 3}
+              showSavedIcon={true}
             />
           ))}
         </ScrollView>
@@ -43,7 +45,8 @@ const styles = StyleSheet.create({
     savedListingsText: {
         fontSize: 28,
         fontWeight: 'bold',
-        marginLeft: 20,    
+        marginLeft: 20,
+        fontFamily: 'NotoSansTaiTham-Bold',
     },
   });
 

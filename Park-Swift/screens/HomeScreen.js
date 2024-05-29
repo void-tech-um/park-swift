@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 23,
     marginBottom: 15,
   },
   listingsNearYouText: {
     fontSize: 25,
-    color: 'black',
+    letterSpacing: -0.5,
   },
 });
 

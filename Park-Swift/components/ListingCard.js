@@ -2,9 +2,12 @@ import * as React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Listing from "../screens/listing";
-
+import UnavailableBadge from "../components/Unavailable.js";
+import SavedIcon from '../assets/Vector.png'; 
+import Car from '../assets/car.png'; 
+import arrow from '../assets/arrow.png'; 
 //listing card component that displays the listing
-const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listingURL }) => {
+const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
@@ -16,10 +19,16 @@ const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listing
             <View style={styles.contentContainer}>
                 <View style={styles.topSection}>
                     <Text style={styles.address}>{address}</Text>
+                    {showSavedIcon && (
+                        <Image
+                            source={SavedIcon}
+                            style={styles.savedIcon}
+                        />
+                    )}
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={{uri: 'https://d9lvjui2ux1xa.cloudfront.net/img/topic/header_images/parking-spaces-lg.jpg'}}
+                        source={ Car }
                         style={styles.image}
                     />
                 </View>
@@ -30,9 +39,15 @@ const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listing
                         <Text style={styles.description}>{date}</Text>
                         <Text style={styles.description}>{startTime} - {endTime}</Text>
                     </View>
-                    <TouchableOpacity onPress={handleSeeMorePress} style={styles.button}>
-                        <Text style={styles.buttonText}>→</Text>
-                    </TouchableOpacity>
+                    {!isAvailable && <UnavailableBadge style={styles.unavailableBadge} />}
+                    {isAvailable && (
+                         <TouchableOpacity onPress={handleSeeMorePress}>
+                            <Image
+                                source={arrow}
+                                style={styles.button}
+                            />
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         </View>
@@ -58,7 +73,7 @@ const styles = StyleSheet.create({
     },
     topSection: {
         backgroundColor: '#EEEBDB',
-        padding: 10,
+        padding: 9,
         alignItems: 'center',
         zIndex: 1, // Ensure this is above the image
     },
@@ -78,17 +93,27 @@ const styles = StyleSheet.create({
         height: '100%',
         resizeMode: 'cover',
     },
+    savedIcon: {
+        position: 'absolute',
+        left: 15,
+        top: 18.5,
+        width: 30, 
+        height: 45, 
+        zIndex: 2, 
+    },
     bottomSection: {
         flexDirection: "row",
         padding: 10,
         backgroundColor: "#052658",
         flex: 1,
         marginLeft: 110,
+        position: 'relative', // Added to ensure children with absolute positioning are relative to this section
     },
     content: {
         flex: 1,
         paddingHorizontal: 14,
-        justifyContent: "center",
+        justifyContent: "flex-start",
+        marginTop: 12.5,
     },
     address: {
         fontSize: 14,
@@ -108,17 +133,17 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#0653A1',
         borderRadius: 17,
-        padding: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 55,
+        width: 60,
         height: 55,
-        alignSelf: 'center',
         marginRight: 15,
+        marginTop: 28.5,
     },
-    buttonText: {
-        color: '#FFFFF0',
-        fontSize: 25,
+    unavailableBadge: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
     },
 });
 
