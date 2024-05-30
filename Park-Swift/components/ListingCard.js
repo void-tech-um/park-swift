@@ -37,7 +37,9 @@ const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listing
                         <Text style={styles.price}>{ppHour}</Text>
                         <Text style={styles.description}>10 minutes away</Text>
                         <Text style={styles.description}>{date}</Text>
-                        <Text style={styles.description}>{startTime} - {endTime}</Text>
+                        {startTime && endTime && (
+                            <Text style={styles.description}>{startTime} - {endTime}</Text>
+                        )}
                     </View>
                     {!isAvailable && <UnavailableBadge style={styles.unavailableBadge} />}
                     {isAvailable && (
