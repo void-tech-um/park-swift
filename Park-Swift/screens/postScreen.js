@@ -230,12 +230,12 @@ const styles = StyleSheet.create({
    color: 'black',
    fontWeight: 'bold',
    marginTop: 20,
+   marginBottom: 10,
  },
  inputWithIcon: {
    flexDirection: 'row',
    alignItems: 'center',
-   marginTop: 20,
-  
+   marginTop: 10,
  },
  iconInsideInput: {
    position: 'absolute',
@@ -256,9 +256,8 @@ const styles = StyleSheet.create({
  inputPrice: {
    marginRight: 10,
    flex: 0,
-   width: 125,
+   width: 100,
    height: 45,
-   marginTop: 6,
    paddingLeft: 40,
  },
  priceContainer: {
@@ -271,8 +270,8 @@ const styles = StyleSheet.create({
    marginHorizontal: 5,
  },
  negotiableContainer: {
-   flexDirection: 'row',
-   marginTop: 15,
+   flexDirection: 'column',
+   flexWrap: 'wrap',
  },
  priceAndNegotiable: {
   flexDirection: 'row',
@@ -297,6 +296,7 @@ const styles = StyleSheet.create({
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#f0f0f0',
+   margin: 5,
  },
  optionText: {
    fontSize: 16,
@@ -336,9 +336,7 @@ const pickerSelectStyles = StyleSheet.create({
    backgroundColor: '#f0f0f0',
    height: 45,
    marginTop: 6,
-   width: 125,
- 
-  
+   width: 100,
  },
  inputAndroid: {
    fontSize: 16,
