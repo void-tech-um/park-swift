@@ -8,7 +8,7 @@ import ThankYouScreen from './screens/confirmation.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
-import Listing from './screens/listing.js';
+import Listing from './screens/ListingScreen.js';
 //import { app, analytics, auth, database } from './services/config';
 //import { ref, set } from 'firebase/database';
 

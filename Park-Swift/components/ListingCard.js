@@ -1,17 +1,16 @@
-import * as React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import Listing from "../screens/listing";
-import UnavailableBadge from "../components/Unavailable.js";
+import React from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import arrow from '../assets/arrow.png'; 
 import SavedIcon from '../assets/Vector.png'; 
 import Car from '../assets/car.png'; 
-import arrow from '../assets/arrow.png'; 
-//listing card component that displays the listing
-const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
+import UnavailableBadge from '../components/Unavailable'; 
+
+const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
-        navigation.navigate('Listing', { Listing });
+        navigation.navigate('Listing', { id, address, ppHour, listingURL });
     };
 
     return (
@@ -28,7 +27,7 @@ const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listing
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={ Car }
+                        source={Car}
                         style={styles.image}
                     />
                 </View>
@@ -41,9 +40,9 @@ const ListingCard = ({ address, date, startTime, endTime, image, ppHour, listing
                             <Text style={styles.description}>{startTime} - {endTime}</Text>
                         )}
                     </View>
-                    {!isAvailable && <UnavailableBadge style={styles.unavailableBadge} />}
+                    {!isAvailable && <UnavailableBadge />}
                     {isAvailable && (
-                         <TouchableOpacity onPress={handleSeeMorePress}>
+                        <TouchableOpacity onPress={handleSeeMorePress}>
                             <Image
                                 source={arrow}
                                 style={styles.button}
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#EEEBDB',
         padding: 9,
         alignItems: 'center',
-        zIndex: 1, // Ensure this is above the image
+        zIndex: 1,
     },
     imageContainer: {
         position: 'absolute',
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
         width: 110,
-        zIndex: 0, // Ensure this is below the top section
+        zIndex: 0,
         overflow: 'hidden',
         borderTopLeftRadius: 20,
         borderBottomLeftRadius: 20,
@@ -99,9 +98,9 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 15,
         top: 18.5,
-        width: 30, 
-        height: 45, 
-        zIndex: 2, 
+        width: 30,
+        height: 45,
+        zIndex: 2,
     },
     bottomSection: {
         flexDirection: "row",
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#052658",
         flex: 1,
         marginLeft: 110,
-        position: 'relative', // Added to ensure children with absolute positioning are relative to this section
+        position: 'relative',
     },
     content: {
         flex: 1,

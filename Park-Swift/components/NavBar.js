@@ -2,19 +2,10 @@ import React,{useState} from 'react';
 import { createBottomTabNavigator, createDrawerNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
-import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/profile';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import View from "react-native";
 import postScreen from '../screens/postScreen';
 import SavedListings from '../screens/SavedListings';
-import { StyleSheet } from 'react-native';
-import Listing from '../screens/listing';
-import HamburgerMenu from '../screens/hamburgerMenu';
-import { Modal, TouchableOpacity} from 'react-native-paper';
-import FilterScreen from '../screens/filter';
-import { useNavigation } from '@react-navigation/native';
-import EditProfileScreen from '../screens/EditProfileScreen';
 
 
 const Tab = createBottomTabNavigator();

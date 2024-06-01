@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import HamburgerMenu from './hamburgerMenu.js';
 
-const MenuSearchBar = () => {
+const MenuSearchBar = ({ showSearchBar = true }) => {
     const [isMenuVisible, setMenuVisible] = useState(false);
 
     const toggleMenu = () => {
@@ -19,14 +19,16 @@ const MenuSearchBar = () => {
                 <MaterialCommunityIcons name="menu" color={'white'} size={48} onPress={toggleMenu} />
             </TouchableOpacity>
             <HamburgerMenu isVisible={isMenuVisible} onClose={toggleMenu} />
-            <Searchbar
-                placeholder="Search Address"
-                onChangeText={setSearchQuery}
-                value={searchQuery}
-                style={styles_searchbar.input}
-                inputStyle={styles_searchbar.inputText}
-                placeholderTextColor="#A3A3A3"
-            />
+            {showSearchBar && (
+                <Searchbar
+                    placeholder="Search Address"
+                    onChangeText={setSearchQuery}
+                    value={searchQuery}
+                    style={styles_searchbar.input}
+                    inputStyle={styles_searchbar.inputText}
+                    placeholderTextColor="#A3A3A3"
+                />
+            )}
         </View>
     );
 };
