@@ -13,6 +13,12 @@ import {PropsWithChildren} from 'react';
 function CreatePost({ navigation, route }) {
   const userId = route.params.userId;
   const [location, setLocation] = React.useState('');
+  const [startTimeHour, setStartTimeHour] = React.useState('');
+  const [startTimeMinute, setStartTimeMinute] = React.useState('');
+  const [startTimePeriod, setStartTimePeriod] = React.useState('AM');
+  const [endTimeHour, setEndTimeHour] = React.useState('');
+  const [endTimeMinute, setEndTimeMinute] = React.useState('');
+  const [endTimePeriod, setEndTimePeriod] = React.useState('PM');
   const [price, setPrice] = React.useState('');
   const [rentalPeriod, setRentalPeriod] = React.useState('hour');
   const [isNegotiable, setIsNegotiable] = React.useState(null);
@@ -35,6 +41,7 @@ function CreatePost({ navigation, route }) {
       }
     }
   };
+  
   const fillDatesBetween = (startDate, endDate) => {
     let start = new Date(startDate);
     let end = new Date(endDate);
@@ -52,7 +59,7 @@ function CreatePost({ navigation, route }) {
 
  const onPostPress = () => {
   //  alert(userId);
-   createPost(userId, location, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate)
+   createPost(userId, location, startTime, endTime, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate)
      .then(() => {
       navigation.navigate('ThankYou');
      })
@@ -84,12 +91,88 @@ function CreatePost({ navigation, route }) {
             />
           </View>
 
+          
+            <Text style={styles.headerText}>Start Time</Text>
+            <View style={styles.timeButtonContainer}>
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  style={[styles.timeInputRounded, styles.inputTime]}
+                  keyboardType="numeric"
+                  placeholder="10"
+                  value={startTimeHour}
+                  onChangeText={setStartTimeHour}
+                />
+                <Text style={styles.slash}>:</Text>
+                <TextInput
+                  style={[styles.timeInputRounded, styles.inputTime]}
+                  keyboardType="numeric"
+                  placeholder="30"
+                  value={startTimeMinute}
+                  onChangeText={setStartTimeMinute}
+                />
+              </View>
+              <View style={styles.inputWithIcon}>
+            <RNPickerSelect
+              onValueChange={(value) => setStartTimePeriod(value)}
+              items={[
+                { label: 'AM', value: 'am' },
+                { label: 'PM', value: 'pm' },
+              ]}
+              style={pickerSelectStyles}
+              value={startTimePeriod}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => {
+                return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+              }}
+            />
+          </View>
+                <Text style={styles.slash}> -</Text>
+          
+            </View>
+            <Text style={styles.headerText}>End Time</Text>
+
+            <View style={styles.inputWithIcon}>
+              <TextInput
+                style={[styles.timeInputRounded, styles.inputTime]}
+                keyboardType="numeric"
+                placeholder="3"
+                value={endTimeHour}
+                onChangeText={setEndTimeHour}
+              />
+              <Text style={styles.slash}>:</Text>
+              <TextInput
+                style={[styles.timeInputRounded, styles.inputTime]}
+                keyboardType="numeric"
+                placeholder="30"
+                value={endTimeMinute}
+                onChangeText={setEndTimeMinute}
+              />
+              <View style={styles.inputWithIcon}>
+            <RNPickerSelect
+              onValueChange={(value) => setEndTimePeriod(value)}
+              items={[
+                { label: 'AM', value: 'am' },
+                { label: 'PM', value: 'pm' },
+              ]}
+              style={pickerSelectStyles}
+              value={endTimePeriod}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => {
+                return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+              }}
+            />
+            </View>
+            </View>
+
           <Text style={styles.centeredHeaderText}>Available Dates</Text>
           <Calendar
             style={styles.calendarStyle}
-            onDayPress={(day) => handleDayPress(day)}
-            markedDates={selectedDates}
+            onDayPress={handleDayPress}
+      markedDates={selectedDates}
           />
+        
         </View>
 
         <View style={styles.container}>
@@ -235,7 +318,6 @@ const styles = StyleSheet.create({
  inputWithIcon: {
    flexDirection: 'row',
    alignItems: 'center',
-   marginTop: 10,
  },
  iconInsideInput: {
    position: 'absolute',
@@ -253,6 +335,28 @@ const styles = StyleSheet.create({
    paddingLeft: 45,
    borderColor: 'transparent',
  },
+ timeInputRounded: {
+  borderWidth: 1,
+  borderRadius: 20,
+  padding: 10,
+  backgroundColor: '#f0f0f0',
+  fontSize: 16,
+  flex: 1,
+  height: 50,
+  paddingLeft: 15,
+  borderColor: 'transparent',
+},
+ timeButtonContainer: {
+  flexDirection: 'row',
+  flex: 1,
+  flexWrap: "wrap",
+ },
+ inputTime: {
+  flex: 0,
+  width: 60,
+  height: 45,
+  marginRight: 5,
+},
  inputPrice: {
    marginRight: 10,
    flex: 0,
@@ -307,7 +411,7 @@ const styles = StyleSheet.create({
    fontSize: 20,
    color: 'black',
    fontWeight: 'bold',
-   marginTop: 15,
+   marginTop: 35,
    textAlign: 'center',
  },
  calendarStyle: {
