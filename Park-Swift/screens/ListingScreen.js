@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
 import User from '../assets/Jerry.png';
@@ -314,4 +313,3 @@ const styles = StyleSheet.create({
 });
 
 export default Listing;
-

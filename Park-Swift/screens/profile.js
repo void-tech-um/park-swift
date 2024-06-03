@@ -1,9 +1,8 @@
 import * as React from 'react';
-import StarRating from '../components/StarRating';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import { getUser } from '../firebaseFunctions/firebaseFirestore';
-import List_Header from '../components/List_Header';
+import MenuSearchBar from './search';
 import { useFocusEffect } from '@react-navigation/native';
 
 function ProfileScreen({ navigation, route }) {
@@ -38,7 +37,7 @@ function ProfileScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <List_Header />
+            <MenuSearchBar showSearchBar={false} />
             <View style={styles.body}>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity onPress={onPostPress} style={styles.button}>
@@ -50,9 +49,6 @@ function ProfileScreen({ navigation, route }) {
                 </View>
                 <View style={styles.nameContainer}>
                     <Text style={styles.name}>{myUser.fullname}</Text>
-                </View>
-                <View style={styles.star}>
-                    <StarRating />
                 </View>
                 <View style={styles.infoContainer}>
                     <Text style={styles.bioText}>Hello, I am your name</Text>
@@ -124,10 +120,6 @@ const styles = StyleSheet.create({
     },
     infoText: {
         fontSize: 24,
-    },
-    star: {
-        marginTop: 20,
-        marginBottom: 10,
     },
     bioText: {
         fontSize: 20,

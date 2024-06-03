@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import SearchbarComponent from './searchBar';
-import List_Header from '../components/List_Header';
+import MenuSearchBar from './search';
 import ListingCard from '../components/ListingCard';
 import listingsData from '../components/listingsData';
 
 const SavedListings = () => {
   return (
+    
     <View style={styles.container}>
-      <List_Header />
+      <MenuSearchBar showSearchBar={false} />
       <View style={styles.headerRow}>
         <View style={styles.headerContent}>
           <Text style={styles.savedListingsText}>
