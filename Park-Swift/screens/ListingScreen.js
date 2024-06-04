@@ -13,7 +13,7 @@ import MenuSearchBar from './search';
 
 const Listing = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, id, myUser } = route.params;
+    const { address, ppHour, myUser } = route.params;
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -136,7 +136,6 @@ const Listing = ({ route }) => {
         </TouchableWithoutFeedback>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
