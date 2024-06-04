@@ -1,21 +1,29 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { database } from '../services/configFirestore';
 
-const db = database;
 const auth = getAuth();
 
+export const updateUser = async (user) => {
+    try {
+        await setDoc(doc(database, 'users', user.id), user, { merge: true });
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+};
 
-export function registerUser(email, password, fullName) {
+export function registerUser(email, password, firstName, lastName) {
     return createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const uid = userCredential.user.uid
+            const uid = userCredential.user.uid;
             const data = {
                 id: uid,
                 email,
-                fullName,
+                firstName,
+                lastName,
             };
-            const userDocRef = doc(db, 'users', uid);
+            const userDocRef = doc(database, 'users', uid);
             return setDoc(userDocRef, data)
                 .then(() => userCredential);
         });
@@ -25,7 +33,7 @@ export function loginUser(email, password) {
     return signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const uid = userCredential.user.uid;
-            const userDocRef = doc(db, 'users', uid);
+            const userDocRef = doc(database, 'users', uid);
             return getDoc(userDocRef)
                 .then((docSnapshot) => {
                     if (!docSnapshot.exists()) {
@@ -41,7 +49,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
     if (!location || !rentalPeriod || !price || negotiable == null || !firstDate || !lastDate) {
         alert('All parameters must be provided');
     }
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     const postData = {
         userID: userID,
         location: location,
@@ -54,7 +62,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
     };
     return addDoc(postsCollectionRef, postData)
         .then((docRef) => {
-            const userPostsDocRef = doc(db, 'users', userID, 'posts', docRef.id);
+            const userPostsDocRef = doc(database, 'users', userID, 'posts', docRef.id);
             return setDoc(userPostsDocRef, { id: docRef.id });
         })
         .catch((error) => {
@@ -64,7 +72,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
 }
 
 export function getUserPosts(userID) {
-    const userPostsCollectionRef = collection(db, 'users', userID, 'posts');
+    const userPostsCollectionRef = collection(database, 'users', userID, 'posts');
     return getDocs(userPostsCollectionRef)
         .then((querySnapshot) => {
             const posts = [];
@@ -76,7 +84,7 @@ export function getUserPosts(userID) {
 }
 
 export function filterByFirstDate(firstDate) {
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     const q = query(postsCollectionRef, where('firstDate', '==', firstDate));
     return getDocs(q)
         .then((querySnapshot) => {
@@ -89,7 +97,7 @@ export function filterByFirstDate(firstDate) {
 }
 
 export function filterByLastDate(lastDate) {
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     const q = query(postsCollectionRef, where('lastDate', '==', lastDate));
     return getDocs(q)
         .then((querySnapshot) => {
@@ -102,7 +110,7 @@ export function filterByLastDate(lastDate) {
 }
 
 export function filterByDates(firstDate, lastDate) {
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     const q = query(postsCollectionRef, where('firstDate', '==', firstDate), where('lastDate', '==', lastDate));
     return getDocs(q)
         .then((querySnapshot) => {
@@ -115,7 +123,7 @@ export function filterByDates(firstDate, lastDate) {
 }
 
 export function filterByLocation(location) {
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     const q = query(postsCollectionRef, where('location', '==', location));
     return getDocs(q)
         .then((querySnapshot) => {
@@ -128,7 +136,7 @@ export function filterByLocation(location) {
 }
 
 export function filterByPrice(minPrice, maxPrice) {
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     const q = query(postsCollectionRef, where('price', '>=', minPrice), where('price', '<=', maxPrice));
     return getDocs(q)
         .then((querySnapshot) => {
@@ -141,7 +149,7 @@ export function filterByPrice(minPrice, maxPrice) {
 }
 
 export function getAllPosts() {
-    const postsCollectionRef = collection(db, 'posts');
+    const postsCollectionRef = collection(database, 'posts');
     return getDocs(postsCollectionRef)
         .then((querySnapshot) => {
             const posts = [];
@@ -153,7 +161,7 @@ export function getAllPosts() {
 }
 
 export function getPost(postID) {
-    const postDocRef = doc(db, 'posts', postID);
+    const postDocRef = doc(database, 'posts', postID);
     return getDoc(postDocRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) {
@@ -165,7 +173,7 @@ export function getPost(postID) {
 }
 
 export function getUser(userId) {
-    const userDocRef = doc(db, 'users', userId);
+    const userDocRef = doc(database, 'users', userId);
     return getDoc(userDocRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) {
