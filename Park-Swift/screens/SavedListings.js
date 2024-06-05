@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import SearchbarComponent from './searchBar';
+import SearchbarComponent from '../components/SearchBar';
 import ListHeader from '../components/ListHeader';
 import ListingCard from '../components/ListingCard';
 import ListingsData from '../components/ListingsData';

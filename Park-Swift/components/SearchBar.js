@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Searchbar } from 'react-native-paper';
 
-const SearchbarComponent = () => {
+const SearchBar = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
 
   return (
@@ -24,4 +24,4 @@ const styles = {
   },
 };
 
-export default SearchbarComponent;
+export default SearchBar;
