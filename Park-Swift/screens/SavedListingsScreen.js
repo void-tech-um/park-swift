@@ -6,7 +6,7 @@ import ListingCard from '../components/ListingCard';
 import ListingsData from '../components/ListingsData';
 import { StyleSheet } from 'react-native';
 
-const SavedListings = () => {
+const SavedListingsScreen = () => {
   return (
     <View style={{ flexDirection: 'column', flex: 6.4 }}>
       <ListHeader />
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   });
 
   
-export default SavedListings;
+export default SavedListingsScreen;

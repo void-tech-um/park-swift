@@ -7,7 +7,7 @@ import MenuSearchBar from '../components/MenuSearchBar';
 import { useState, useEffect } from 'react';
 import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import SavedListings from './SavedListings';
+import SavedListingsScreen from './SavedListingsScreen';
 import ListingsData from '../components/ListingsData';
 import CustomText from '../components/CustomText';
 
@@ -68,7 +68,7 @@ function HomeScreen({route}) {
           />
         ))}
       </ScrollView>
-      <SavedListings ListingsData={ListingsData} />
+      <SavedListingsScreen ListingsData={ListingsData} />
     </View>
   );
 };
