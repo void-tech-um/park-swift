@@ -3,11 +3,11 @@ import { createBottomTabNavigator, createDrawerNavigator } from "@react-navigati
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import MessagesScreen from '../screens/MessagesScreen';
-import ProfileScreen from '../screens/profile';
+import ProfileScreen from '../screens/ProfileScreen.js';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
 import postScreen from '../screens/postScreen';
-import SavedListings from '../screens/SavedListings';
+import SavedListingsScreen from '../screens/SavedListingsScreen.js';
 import { StyleSheet } from 'react-native';
 import ListingScreen from '../screens/ListingScreen.js';
 import HamburgerMenu from '../components/HamburgerMenu.js';
@@ -54,7 +54,7 @@ const NavBar = ({ route }) => {
                             height:'12%',},
                 title:"",
             }}/>
-            <Tab.Screen name="SavedListings" component={SavedListings} initialParams={{userId : userId}}options={{
+            <Tab.Screen name="SavedListingsScreen" component={SavedListingsScreen} initialParams={{userId : userId}}options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="bookmark-multiple-outline" color={'white'} size={32} />

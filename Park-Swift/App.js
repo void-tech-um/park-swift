@@ -4,16 +4,16 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import ThankYouScreen from './screens/confirmation.js';
+import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
-import Listing from './screens/listing.js';
+import ListingScreen from './screens/ListingScreen.js';
 //import { app, analytics, auth, database } from './services/config';
 //import { ref, set } from 'firebase/database';
 
 import postScreen from './screens/postScreen';
-import FilterScreen from './screens/filter.js';
+import FilterScreen from './screens/FilterScreen.js';
 import EditProfileScreen from './screens/EditProfileScreen.js';
 
 const Stack = createStackNavigator();
@@ -31,8 +31,8 @@ function App({route}){
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
-        <Stack.Screen name="ThankYou" component={ThankYouScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
-        <Stack.Screen name="Listing" component={Listing} options={{ headerShown: false }}/>
+        <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
+        <Stack.Screen name="ListingScreen" component={ListingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
       </Stack.Navigator>

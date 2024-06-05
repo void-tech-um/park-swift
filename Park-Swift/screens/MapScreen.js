@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback,Keyboard } from 'react-native';
 import MapView, { UrlTile, Marker } from 'react-native-maps';
-import MenuSearchBar from './search'
+import MenuSearchBar from '../components/MenuSearchBar';
 
 const MapScreen = () => {
   const markers = [

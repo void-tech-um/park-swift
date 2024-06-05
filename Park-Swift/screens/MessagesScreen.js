@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text} from 'react-native';
-import SearchBar from './search';
+import SearchBar from '../components/SearchBar';
 import ListHeader from '../components/ListHeader';
 
 function MessagesScreen() {
