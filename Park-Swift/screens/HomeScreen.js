@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView,
 import SortingButton from '../components/SortingButton';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
-import MenuSearchBar from './search';
+import MenuSearchBar from '../components/MenuSearchBar';
 import { useState, useEffect } from 'react';
 import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
