@@ -43,7 +43,7 @@ function HomeScreen({route}) {
   console.log(posts);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <MenuSearchBar />
       </TouchableWithoutFeedback>
@@ -76,19 +76,19 @@ function HomeScreen({route}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: '#ffffff',
   },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 23,
     marginBottom: 15,
   },
   listingsNearYouText: {
     fontSize: 25,
-    color: 'black',
+    letterSpacing: -0.5,
   },
 });
 

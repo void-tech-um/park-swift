@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FilterScreen from '../screens/filter';
-
+import Filter from '../assets/Filter.png';
 const SortingButton = () => {
     const navigation = useNavigation();
 
@@ -15,33 +14,27 @@ const SortingButton = () => {
     };
   
     return (
-        <View style={styles.container}>
-          <TouchableOpacity onPress={handlePress} style={styles.button}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name="tune" size={20} color="white" />
-              <Text style={styles.buttonText}>  Filter & Sort</Text>
-            </View>
+      <View style={styles.container}>
+          <TouchableOpacity onPress={handlePress}>
+              <Image
+                  source={Filter}
+                  style={styles.filterImage}
+              />
           </TouchableOpacity>
-        </View>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    container: {
+      </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    button: {
-      backgroundColor: '#0653A1',
-      paddingVertical: 12,
-      paddingHorizontal: 25,
-      borderRadius: 17,
+  },
+  filterImage: {
+      width: 153, 
+      height: 41, 
       marginRight: 2.5,
-    },
-    buttonText: {
-      color: 'white',
-      fontSize: 14,
-    },
-  });
-  
-  export default SortingButton;
+  },
+});
+
+export default SortingButton;
