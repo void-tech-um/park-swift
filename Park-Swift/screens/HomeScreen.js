@@ -15,7 +15,7 @@ import CustomText from '../components/CustomText';
 const windowHeight = Dimensions.get('window').height;
 
 function HomeScreen({route}) {
-  const [posts, setPosts] = useState([]); // Add this line
+  const [posts, setPosts] = useState([]); 
   const [myPost, setMyPost] = useState(null);
   const userId = route.params.userId;
   const insets = useSafeAreaInsets();
@@ -54,7 +54,7 @@ function HomeScreen({route}) {
         </CustomText>
         <SortingButton />
       </View>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + listingCardHeight }} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
+      <ScrollView>
         {listingsData.map((listing) => (
           <ListingCard
             key={listing.id}

@@ -1,11 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from '@react-navigation/stack';
 import { Image, Text, StyleSheet } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
-import ProfileScreen from '../screens/profile';
-import postScreen from '../screens/postScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import PostScreen from '../screens/postScreen';
 import SavedListings from '../screens/SavedListings';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 import HomeIcon from '../assets/home.png';
 import HomeIconColor from '../assets/home_color.png';
@@ -18,6 +20,18 @@ import BookmarksIconColor from '../assets/bookmarks_color.png';
 import PlusIcon from '../assets/Plus.png';
 
 const Tab = createBottomTabNavigator();
+const ProfileStack = createStackNavigator();
+
+const ProfileStackScreen = ({ route }) => {
+    const userId = route.params.userId;
+
+    return (
+        <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+            <ProfileStack.Screen name="Profile" component={ProfileScreen} initialParams={{ userId }} />
+            <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} initialParams={{ userId }} />
+        </ProfileStack.Navigator>
+    );
+};
 
 const NavBar = ({ route }) => {
     const userId = route.params.userId;
@@ -63,7 +77,7 @@ const NavBar = ({ route }) => {
                         <Text style={{ color: focused ? '#FED869' : 'white' }}>Home</Text>
                     ),
                     tabBarIcon: ({ focused }) => (
-                        <Image source={focused ? HomeIconColor : HomeIcon} style={{ width: 40, height: 40 ,}} />
+                        <Image source={focused ? HomeIconColor : HomeIcon} style={{ width: 40, height: 40 }} />
                     ),
                 }}
             />
@@ -82,7 +96,7 @@ const NavBar = ({ route }) => {
             />
             <Tab.Screen
                 name="List Your Space"
-                component={postScreen}
+                component={PostScreen}
                 initialParams={{ userId: userId }}
                 options={{
                     tabBarLabel: ({ focused }) => (
@@ -108,7 +122,7 @@ const NavBar = ({ route }) => {
             />
             <Tab.Screen
                 name="Profile"
-                component={ProfileScreen}
+                component={ProfileStackScreen}
                 initialParams={{ userId: userId }}
                 options={{
                     tabBarLabel: ({ focused }) => (
@@ -126,7 +140,7 @@ const NavBar = ({ route }) => {
 const styles = StyleSheet.create({
     listLabel: {
         marginBottom: -10,
-        marginTop:10, 
+        marginTop: 10,
     },
 });
 
