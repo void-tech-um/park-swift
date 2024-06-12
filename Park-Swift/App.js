@@ -12,7 +12,7 @@ import ListingScreen from './screens/ListingScreen.js';
 //import { app, analytics, auth, database } from './services/config';
 //import { ref, set } from 'firebase/database';
 
-import postScreen from './screens/postScreen';
+import postScreen from './screens/PostScreen.js';
 import FilterScreen from './screens/FilterScreen.js';
 import EditProfileScreen from './screens/EditProfileScreen.js';
 

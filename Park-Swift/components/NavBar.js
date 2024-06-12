@@ -6,7 +6,7 @@ import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen.js';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import View from "react-native";
-import postScreen from '../screens/postScreen';
+import postScreen from '../screens/PostScreen.js';
 import SavedListingsScreen from '../screens/SavedListingsScreen.js';
 import { StyleSheet } from 'react-native';
 import ListingScreen from '../screens/ListingScreen.js';

@@ -9,7 +9,7 @@ import { useState } from 'react';
 import ListHeader from '../components/ListHeader';
 
 
-function CreatePost({ navigation, route }) {
+function PostScreen({ navigation, route }) {
   const userId = route.params.userId;
   const [location, setLocation] = React.useState('');
   const [price, setPrice] = React.useState('');
@@ -333,7 +333,7 @@ text: {
 },
 });
 
-export default CreatePost;
+export default PostScreen;
 
 
 
