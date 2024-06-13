@@ -13,15 +13,14 @@ export const updateUser = async (user) => {
     }
 };
 
-export function registerUser(email, password, firstName, lastName) {
+export function registerUser(email, password, fullName) {
     return createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-            const uid = userCredential.user.uid;
+            const uid = userCredential.user.uid
             const data = {
                 id: uid,
                 email,
-                firstName,
-                lastName,
+                fullName,
             };
             const userDocRef = doc(database, 'users', uid);
             return setDoc(userDocRef, data)
