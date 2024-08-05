@@ -1,60 +1,150 @@
-import * as React from "react";
+import React from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import arrow from '../assets/arrow.png'; 
+import SavedIcon from '../assets/Vector.png'; 
+import Car from '../assets/car.png'; 
+import UnavailableBadge from '../components/Unavailable'; 
 
-import { ImageBackground, StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
+    const navigation = useNavigation();
 
+    const handleSeeMorePress = () => {
+        navigation.navigate('Listing', { id, address, ppHour, listingURL });
+    };
 
-//listing card component that displays the listing
-const ListingCard = () => {
-    //take in data from backend
-    
     return (
         <View style={styles.container}>
-            {/* //update and display specific info variables
-            //1. price per hour
-            //2. address
-            //3. date
-            //4. start time
-            //5. end time
-            //contact button */}
-            <TouchableOpacity>
-                <Text style={styles.button}>Hi</Text>
-            </TouchableOpacity>
+            <View style={styles.contentContainer}>
+                <View style={styles.topSection}>
+                    <Text style={styles.address}>{address}</Text>
+                    {showSavedIcon && (
+                        <Image
+                            source={SavedIcon}
+                            style={styles.savedIcon}
+                        />
+                    )}
+                </View>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={Car}
+                        style={styles.image}
+                    />
+                </View>
+                <View style={styles.bottomSection}>
+                    <View style={styles.content}>
+                        <Text style={styles.price}>{ppHour}</Text>
+                        <Text style={styles.description}>10 minutes away</Text>
+                        <Text style={styles.description}>{date}</Text>
+                        {startTime && endTime && (
+                            <Text style={styles.description}>{startTime} - {endTime}</Text>
+                        )}
+                    </View>
+                    {!isAvailable && <UnavailableBadge />}
+                    {isAvailable && (
+                        <TouchableOpacity onPress={handleSeeMorePress}>
+                            <Image
+                                source={arrow}
+                                style={styles.button}
+                            />
+                        </TouchableOpacity>
+                    )}
+                </View>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        display: "flex",
-        flexDirection: "row",
-        height: "33%",
-        width: "100%",
-        backgroundColor: "white",
-        alignItems: "center",
+        backgroundColor: "#052658",
+        borderRadius: 20,
+        marginVertical: 7,
+        marginHorizontal: 20,
+        overflow: 'hidden',
+        width: '90%',
+        height: 165,
+        position: 'relative',
+        flexDirection: 'row',
+    },
+    contentContainer: {
+        flex: 1,
+        overflow: 'hidden',
+        position: 'relative',
+    },
+    topSection: {
+        backgroundColor: '#EEEBDB',
+        padding: 9,
+        alignItems: 'center',
+        zIndex: 1,
+    },
+    imageContainer: {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        width: 110,
+        zIndex: 0,
+        overflow: 'hidden',
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
     },
     image: {
-        height: "33%",
-        width: "100%",
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
     },
-    infoContainer: {
-        height: "33%",
-        width: "100%",
-        backgroundColor: "gray",
+    savedIcon: {
+        position: 'absolute',
+        left: 15,
+        top: 18.5,
+        width: 30,
+        height: 45,
+        zIndex: 2,
     },
-    bannerContainer: {
-        height: "33%",
-        width: "100%",
+    bottomSection: {
+        flexDirection: "row",
+        padding: 10,
+        backgroundColor: "#052658",
+        flex: 1,
+        marginLeft: 110,
+        position: 'relative',
+    },
+    content: {
+        flex: 1,
+        paddingHorizontal: 14,
+        justifyContent: "flex-start",
+        marginTop: 12.5,
     },
     address: {
-
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#000000',
+        textAlign: 'center',
+    },
+    price: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#FED869',
+    },
+    description: {
+        fontSize: 14,
+        color: '#EEEBDB',
     },
     button: {
-        alignItems: "center",
-        padding: 10,
-        justifyContent: "center",
+        backgroundColor: '#0653A1',
+        borderRadius: 17,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 60,
+        height: 55,
+        marginRight: 15,
+        marginTop: 28.5,
     },
-    banner: {
-
+    unavailableBadge: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
     },
 });
 

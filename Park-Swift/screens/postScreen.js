@@ -4,10 +4,11 @@ import { Calendar } from 'react-native-calendars';
 import RNPickerSelect from 'react-native-picker-select';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
-import { createPost } from '../firebaseFunctions/firebase';
+import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import { useState } from 'react';
 import List_Header from '../components/List_Header';
 import {PropsWithChildren} from 'react';
+import MenuSearchBar from './search';
 
 
 function CreatePost({ navigation, route }) {
@@ -71,7 +72,7 @@ function CreatePost({ navigation, route }) {
  
   return (
     <View>
-      <List_Header/>
+    <MenuSearchBar showSearchBar={false} />
     <View style={styles.container}>
       <View style={styles.titleRow}>
         <MaterialCommunityIcons name="arrow-left" size={24} color="black" />

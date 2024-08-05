@@ -1,9 +1,5 @@
 import * as React from 'react';
 import { Searchbar } from 'react-native-paper';
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import { useState } from 'react';
-
-
 const SearchbarComponent = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
 
@@ -12,9 +8,29 @@ const SearchbarComponent = () => {
       placeholder="Search"
       onChangeText={setSearchQuery}
       value={searchQuery}
-      style = {{marginTop: 30, backgroundColor: 'white', width: 375, alignSelf: 'center'}}
+      style={styles.searchbar}
+      inputStyle={styles.inputText}
+      placeholderTextColor="#A3A3A3"
     />
   );
+};
+
+const styles = {
+  searchbar: {
+    marginBottom: 15, 
+    marginTop: -6,
+    backgroundColor: '#D9D9D9',
+    width: 385,
+    height: 45,
+    alignSelf: 'center',
+    borderRadius: 17,  
+  },
+  inputText: {
+      fontSize: 16,
+      marginVertical: -3,
+      fontFamily: "NotoSansTaiTham-Regular",
+  },
+  
 };
 
 export default SearchbarComponent;

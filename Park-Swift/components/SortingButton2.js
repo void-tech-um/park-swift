@@ -1,48 +1,40 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-
-
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import FilterScreen from '../screens/filter';
+import Filter from '../assets/Filter.png';
 const SortingButton = () => {
+    const navigation = useNavigation();
+
+
     const handlePress = () => {
       // Placeholder for future functionality
       console.log('Button pressed');
+      navigation.navigate('FilterScreen', { FilterScreen });
     };
   
     return (
-        <View style={styles.container}>
-          <TouchableOpacity onPress={handlePress} style={styles.button}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={styles.buttonText}>Sort By     </Text>
-              <Icon name="tune" size={20} color="black" />
-            </View>
+      <View style={styles.container}>
+          <TouchableOpacity onPress={handlePress}>
+              <Image
+                  source={Filter}
+                  style={styles.filterImage}
+              />
           </TouchableOpacity>
-        </View>
-    );
-  };
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
+      </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: '-58%',
-      marginRight: '-60%',
-    },
-    button: {
-      backgroundColor: '#D9D9D9',
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 19,
-      borderWidth: 1,
-      borderColor: 'black',
-    },
-    buttonText: {
-      color: 'black',
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-  });
-  
-  export default SortingButton;
+  },
+  filterImage: {
+      width: 153, 
+      height: 41, 
+      marginRight: 2.5,
+  },
+});
+
+export default SortingButton;

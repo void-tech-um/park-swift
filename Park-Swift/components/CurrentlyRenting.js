@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Dimensions } from 'react-native';
 
+const windowHeight = Dimensions.get('window').height;
 
 //import the relevant variables and stuff
 
@@ -22,47 +24,43 @@ const CurrentlyRentingCard = () => {
 
 
 const styles = StyleSheet.create({
-   container: {
-       height: '13%',
-       width: '95%',
-       backgroundColor: '#BEBEBE',
-       flexDirection: 'row',
-       alignItems: 'center',
-       justifyContent: 'space-between',
-       padding: 12,
-       position: 'absolute',
-       top: '20%',
-       alignSelf: 'center',
-   },
+    container: {
+        height: windowHeight * 0.11, 
+        width: '100%',
+        backgroundColor: '#EEEBDB',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 12,
+    },
    titleContainer: {
-       flexDirection: 'column',
+    marginLeft: 27,
    },
    title: {
-       fontSize: 25,
+       fontSize: 20,
        fontWeight: 'bold',
        color: 'black',
    },
    addressContainer: {
-       backgroundColor: '#404040',
-       padding: 10,
-       borderRadius: 10,
-       width: '65%',
-       height: '75%',
-       flexDirection: 'column',
+       backgroundColor: '#0653A1',
        alignItems: 'center',
        justifyContent: 'center',
+       borderRadius: 17,
+       width: '55%',
+       height: '80%',
+       marginLeft: 40,
    },
    address: {
        color: 'white',
-       fontSize: 17,
-       fontWeight: 'bold',
+       fontSize: 18,
        textAlign: 'center',
+       fontFamily: "NotoSansTaiTham-Regular"
    },
    moreInfo: {
        color: 'white',
-       fontSize: 17,
-       marginTop: 5,
+       fontSize: 12,
        textAlign: 'center',
+       marginTop: -8,
+       fontFamily: "NotoSansTaiTham-Regular"
    },
 });
 

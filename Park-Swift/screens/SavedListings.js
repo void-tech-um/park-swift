@@ -1,40 +1,66 @@
 import React from 'react';
-import { View,Text, ScrollView } from 'react-native';
-import {IconButton, List } from 'react-native-paper';
+import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import SearchbarComponent from './searchBar';
-import ProfileCard from './profileCard';
-import List_Header from '../components/List_Header';
-
+import MenuSearchBar from './search';
+import ListingCard from '../components/ListingCard';
+import listingsData from '../components/listingsData';
 
 const SavedListings = () => {
-    return(
-        <View style={{flexDirection: 'column', flex: 6.4}}>
-            <List_Header/>
-            <View style={{flexDirection: 'row', flex: 0.7}}>
-                <View style={{justifyContent: "center"}} >
-                    <IconButton icon="arrow-left" size={40} iconColor={"black"}></IconButton>
-                </View>
-                <View style={{justifyContent: "center"}}>
-                    <Text style={{fontSize: 27, textAlign: 'center', fontWeight: "bold"}}>
-                        Saved Listings
-                    </Text>
-                </View>
-            </View>
-
-            <View style={{justifyContent: 'center', flex: 0.5}}><SearchbarComponent/></View>
-            <View style = {{flex: 0.2}} ></View>
-            
-            <View style={{flex: 5}}>
-            <ScrollView>
-                <View><ProfileCard /></View>
-                <View><ProfileCard /></View>
-                <View><ProfileCard /></View>
-                <View><ProfileCard /></View>
-            </ScrollView>
-            </View>
+  return (
+    
+    <View style={styles.container}>
+      <MenuSearchBar showSearchBar={false} />
+      <View style={styles.headerRow}>
+        <View style={styles.headerContent}>
+          <Text style={styles.savedListingsText}>
+            Saved Listings
+          </Text>
         </View>
-    );
+      </View>
+      <SearchbarComponent />
+      <View style={styles.listingsContainer}>
+        <ScrollView>
+          {listingsData.map((listing) => (
+            <ListingCard
+              key={listing.id}
+              address={listing.address}
+              date={listing.date}
+              startTime={listing.startTime}
+              endTime={listing.endTime}
+              image={listing.image}
+              ppHour={listing.ppHour}
+              listingURL={listing.listingURL}
+              isAvailable={listing.id !== 2 && listing.id !== 3}
+              showSavedIcon={true}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </View>
+  );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    flex: 0.7,
+  },
+  headerContent: {
+    justifyContent: "center",
+  },
+  savedListingsText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginLeft: 20,
+    fontFamily: 'NotoSansTaiTham-Bold',
+  },
+  listingsContainer: {
+    flex: 5,
+  },
+});
 
 export default SavedListings;

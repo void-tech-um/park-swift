@@ -1,108 +1,147 @@
-import React,{useState} from 'react';
-import { createBottomTabNavigator, createDrawerNavigator } from "@react-navigation/bottom-tabs";
+import React from 'react';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from '@react-navigation/stack';
+import { Image, Text, StyleSheet } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
-import MessagesScreen from '../screens/MessagesScreen';
-import ProfileScreen from '../screens/profile';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import View from "react-native";
-import postScreen from '../screens/postScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import PostScreen from '../screens/postScreen';
 import SavedListings from '../screens/SavedListings';
-import { StyleSheet } from 'react-native';
-import Listing from '../screens/listing';
-import HamburgerMenu from '../screens/hamburgerMenu';
-import { Modal, TouchableOpacity} from 'react-native-paper';
-import FilterScreen from '../screens/filter';
-import { useNavigation } from '@react-navigation/native';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
+import HomeIcon from '../assets/home.png';
+import HomeIconColor from '../assets/home_color.png';
+import MapIcon from '../assets/map.png';
+import MapIconColor from '../assets/map_color.png';
+import UserIcon from '../assets/user.png';
+import UserIconColor from '../assets/user_color.png';
+import BookmarksIcon from '../assets/bookmarks.png';
+import BookmarksIconColor from '../assets/bookmarks_color.png';
+import PlusIcon from '../assets/Plus.png';
 
 const Tab = createBottomTabNavigator();
+const ProfileStack = createStackNavigator();
 
-const NavBar = ({ route }) => {
-
+const ProfileStackScreen = ({ route }) => {
     const userId = route.params.userId;
 
-    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    return (
+        <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
+            <ProfileStack.Screen name="Profile" component={ProfileScreen} initialParams={{ userId }} />
+            <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} initialParams={{ userId }} />
+        </ProfileStack.Navigator>
+    );
+};
 
-    return(
-        <>
+const NavBar = ({ route }) => {
+    const userId = route.params.userId;
+
+    return (
         <Tab.Navigator
             initialRouteName="Home"
             screenOptions={({ route }) => ({
-                headerSearchBarOption:{
-                    placeholder:"Hello",
-                },
-                headerShown:false,
-                tabBarShowLabel: false,
+                headerShown: false,
+                tabBarShowLabel: true,
                 tabBarStyle: {
-                height: "12%",
-                paddingHorizontal: 5,
-                paddingTop: 0,
-                backgroundColor: '#033566',
-                position: 'absolute',
-                // borderTopWidth: 0,
+                    height: '11.5%',
+                    paddingHorizontal: 10,
+                    paddingTop: 5,
+                    backgroundColor: '#052658',
+                    position: 'absolute',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderTopWidth: 0,
                 },
+                tabBarLabelStyle: {
+                    fontSize: 12,
+                    textAlign: 'center',
+                },
+                tabBarItemStyle: {
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                },
+                tabBarIconStyle: {
+                    alignItems: 'center',
+                    marginTop: 16,
+                },
+                tabBarActiveTintColor: '#FED869',
+                tabBarInactiveTintColor: 'white',
             })}
-            >
-            <Tab.Screen name="Home" component={HomeScreen} initialParams={{userId : userId}} options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="home-outline" color={'white'} size={36}/>
-                ),
-                headerStyle: {backgroundColor: '#033566', 
-                            height:'12%',},
-                title:"",
-            }}/>
-            <Tab.Screen name="SavedListings" component={SavedListings} initialParams={{userId : userId}}options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="bookmark-multiple-outline" color={'white'} size={32} />
-                ),
-                headerStyle: {backgroundColor: '#033566',
-                            height:'12%',},
-                title:"",
-            }} />
-            <Tab.Screen name="List Your Space" component={postScreen} initialParams={{userId : userId}} options={{
-                tabBarLabel: 'Home',
-                tabBarIcon:({color,size})=>(
-                <MaterialCommunityIcons name="plus-circle" color={'white'} size={60}/>
-            ),
-            headerStyle: {backgroundColor: '#033566',
-                            height:'12%',},
-            title:"", }}/>
-
-            <Tab.Screen name="Map" component={MapScreen} initialParams={{userId : userId}} options={{
-                tabBarLabel: 'Map',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="map-outline" color={'white'} size={33} />
-                ),
-                headerStyle: {backgroundColor: '#033566'
-                            ,height:'12%',} ,
-                title:"",
-            }}/>
-
-            <Tab.Screen name="Profile" component={ProfileScreen} initialParams={{userId : userId}} options={{
-                tabBarLabel: 'Map',
-                tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="account-circle-outline" color={'white'} size={33}/>
-                ),
-                headerStyle: {backgroundColor: '#033566'
-                                ,height:'12%',} ,
-                title:"",
-            }}/>
-            <Tab.Screen name="Listing" component={Listing} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
-                headerStyle: {backgroundColor: '#033566'
-                            ,height:'12%',} ,
-                title:"",
-            }}/>
-            <Tab.Screen name="FilterScreen" component={FilterScreen} initialParams={{userId : userId}} options={{
-                tabBarVisible:false,
-            }}/>
+        >
+            <Tab.Screen
+                name="Home"
+                component={HomeScreen}
+                initialParams={{ userId: userId }}
+                options={{
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#FED869' : 'white' }}>Home</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <Image source={focused ? HomeIconColor : HomeIcon} style={{ width: 40, height: 40 }} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="SavedListings"
+                component={SavedListings}
+                initialParams={{ userId: userId }}
+                options={{
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#FED869' : 'white' }}>Saved</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <Image source={focused ? BookmarksIconColor : BookmarksIcon} style={{ width: 40, height: 40 }} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="List Your Space"
+                component={PostScreen}
+                initialParams={{ userId: userId }}
+                options={{
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={[styles.listLabel, { color: focused ? '#FED869' : 'white' }]}>List</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <Image source={PlusIcon} style={{ width: 60, height: 60, tintColor: focused ? '#FED869' : 'white' }} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Map"
+                component={MapScreen}
+                initialParams={{ userId: userId }}
+                options={{
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#FED869' : 'white' }}>Map</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <Image source={focused ? MapIconColor : MapIcon} style={{ width: 40, height: 40 }} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={ProfileStackScreen}
+                initialParams={{ userId: userId }}
+                options={{
+                    tabBarLabel: ({ focused }) => (
+                        <Text style={{ color: focused ? '#FED869' : 'white' }}>Profile</Text>
+                    ),
+                    tabBarIcon: ({ focused }) => (
+                        <Image source={focused ? UserIconColor : UserIcon} style={{ width: 40, height: 40 }} />
+                    ),
+                }}
+            />
         </Tab.Navigator>
-    </>
     );
 }
 
+const styles = StyleSheet.create({
+    listLabel: {
+        marginBottom: -10,
+        marginTop: 10,
+    },
+});
 
 export default NavBar;

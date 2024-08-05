@@ -1,22 +1,17 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { ref, set } from 'firebase/database';
-import { database } from '../services/config';
-import { registerUser } from '../firebaseFunctions/firebase';
-const auth = getAuth();
+import { registerUser } from '../firebaseFunctions/firebaseFirestore';
+
 
 export default function RegistrationScreen({navigation}) {
     const [fullName, setFullName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-
     const onFooterLinkPress = () => {
         navigation.navigate('Login')
     }
-
     const onRegisterPress = () => { 
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
@@ -30,8 +25,6 @@ export default function RegistrationScreen({navigation}) {
                 alert(error)
             }); 
         }
-
-
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
@@ -91,14 +84,12 @@ export default function RegistrationScreen({navigation}) {
         </View>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center'
     },
     title: {
-
     },
     logo: {
         flex: 1,
