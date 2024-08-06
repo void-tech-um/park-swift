@@ -5,18 +5,19 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
-import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
+import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice, getListingCardInfo} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
 import listingsData from '../components/listingsData';
 import CustomText from '../components/CustomText';
+import { getDatabase, ref, onValue } from "firebase/database";
 
 
 const windowHeight = Dimensions.get('window').height;
 
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); 
-  const [myPost, setMyPost] = useState(null);
+  const [myPost, setMyPost] = useState([]);
   const userId = route.params.userId;
   const insets = useSafeAreaInsets();
   const listingCardHeight = windowHeight * 0.2;
@@ -27,13 +28,27 @@ function HomeScreen({route}) {
           setPosts(posts); // Update the posts state variable
       }
       fetchPosts();
-      getPost('9YCofto5I1dUh2M2lbho')
+
+      const database = getDatabase();
+      const postRef = ref(database, 'posts/');
+
+      onValue(postRef, (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          const childKey = childSnapshot.key;
+          const childData = childSnapshot.val();
+          
+          getPost(childKey)
             .then((postData) => {
                 setMyPost(postData);
             })
             .catch((error) => {
                 console.error('Error fetching post:', error);
             });
+        });
+      }, {
+        onlyOnce: true
+      });
+      
   }, []); // Add this line
 
   if (!myPost || !posts) {
