@@ -3,14 +3,14 @@ import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FilterScreen from '../screens/filter';
 import Filter from '../assets/Filter.png';
-const SortingButton = () => {
+const SortingButton = ({setDate,setTime,setMinPrice,setMaxPrice,setBeginDate,setEndDate}) => {
     const navigation = useNavigation();
 
 
     const handlePress = () => {
       // Placeholder for future functionality
       console.log('Button pressed');
-      navigation.navigate('FilterScreen', { FilterScreen });
+      navigation.navigate('FilterScreen', { setDate,setTime,setMinPrice,setMaxPrice,setBeginDate,setEndDate});
     };
   
     return (

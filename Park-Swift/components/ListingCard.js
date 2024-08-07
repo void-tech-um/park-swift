@@ -6,11 +6,11 @@ import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
-const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
+const ListingCard = ({ id, address, date, startTime, endTime, image, price,priceUnit,listingURL, isAvailable = true, showSavedIcon = false }) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
-        navigation.navigate('Listing', { id, address, ppHour, listingURL });
+        navigation.navigate('Listing', { id, address, price, listingURL });
     };
 
     return (
@@ -33,11 +33,11 @@ const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, lis
                 </View>
                 <View style={styles.bottomSection}>
                     <View style={styles.content}>
-                        <Text style={styles.price}>{ppHour}</Text>
+                        <Text style={styles.price}>${price} / {priceUnit}</Text>
                         <Text style={styles.description}>10 minutes away</Text>
                         <Text style={styles.description}>{date}</Text>
                         {startTime && endTime && (
-                            <Text style={styles.description}>{startTime} - {endTime}</Text>
+                            <Text style={styles.description}>From: {startTime} Until: {endTime}</Text>
                         )}
                     </View>
                     {!isAvailable && <UnavailableBadge />}

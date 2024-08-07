@@ -110,7 +110,7 @@ export function filterByLastDate(lastDate) {
 
 export function filterByDates(firstDate, lastDate) {
     const postsCollectionRef = collection(database, 'posts');
-    const q = query(postsCollectionRef, where('firstDate', '==', firstDate), where('lastDate', '==', lastDate));
+    const q = query(postsCollectionRef, where('firstDate', '>=', firstDate), where('lastDate', '<=', lastDate));
     return getDocs(q)
         .then((querySnapshot) => {
             const posts = [];
