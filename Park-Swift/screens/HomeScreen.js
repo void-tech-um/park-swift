@@ -10,48 +10,40 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
 import listingsData from '../components/listingsData';
 import CustomText from '../components/CustomText';
-import { getDatabase, ref, onValue } from "firebase/database";
+import { app } from "../services/configFirestore" 
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 
 const windowHeight = Dimensions.get('window').height;
 
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); 
-  const [myPost, setMyPost] = useState([]);
   const userId = route.params.userId;
   const insets = useSafeAreaInsets();
   const listingCardHeight = windowHeight * 0.2;
 
   useEffect(() => {
       async function fetchPosts() {
-          const posts = await filterByPrice(1, 20);
-          setPosts(posts); // Update the posts state variable
+        try {
+          // const posts = await filterByPrice(1, 20);
+          
+          const database = getFirestore(app);
+
+          const querySnapshot = await getDocs(collection(database, "posts"));
+
+          const postList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+          setPosts(postList);
+        }
+        catch (error) {
+          console.error("Error fetching posts:", error);
+        }
       }
       fetchPosts();
-
-      const database = getDatabase();
-      const postRef = ref(database, 'posts/');
-
-      onValue(postRef, (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-          const childKey = childSnapshot.key;
-          const childData = childSnapshot.val();
-          
-          getPost(childKey)
-            .then((postData) => {
-                setMyPost(postData);
-            })
-            .catch((error) => {
-                console.error('Error fetching post:', error);
-            });
-        });
-      }, {
-        onlyOnce: true
-      });
       
   }, []); // Add this line
 
-  if (!myPost || !posts) {
+  if (posts.length === 0) {
     return <Text>Loading...</Text>;
   }
 
@@ -70,20 +62,20 @@ function HomeScreen({route}) {
         <SortingButton />
       </View>
       <ScrollView>
-        {listingsData.map((listing) => (
+      {posts.map((post) => (
           <ListingCard
-            key={listing.id}
-            address={listing.address}
-            date={listing.date}
-            startTime={listing.startTime}
-            endTime={listing.endTime}
-            image={listing.image}
-            ppHour={listing.ppHour}
-            listingURL={listing.listingURL}
+            key={post.id}
+            address={post.address}
+            date={post.date}
+            startTime={post.startTime}
+            endTime={post.endTime}
+            image={post.image}
+            ppHour={post.ppHour}
+            listingURL={post.listingURL}
           />
         ))}
       </ScrollView>
-      <SavedListings listingsData={listingsData} />
+      <SavedListings listingsData={posts} />
     </View>
   );
 };

@@ -225,25 +225,3 @@ export function getUser(userId) {
             }
         });
 }
-
-const setUser = (userId, userData) => {
-    const userRef = ref(database, `users/${userId}`);
-    return set(userRef, userData);
-};
-
-export { setUser };
-
-// Get post and user info based on postID
-export function getListingCardInfo(postID) {
-    return getPost(postID)
-        .then(postData => {
-            return getUser(postData.userID)
-                .then(userData => {
-                    return { ...postData, user: userData };
-                });
-        })
-        .catch(error => {
-            console.error('Error fetching listing card info:', error);
-            throw error;
-        });
-}
