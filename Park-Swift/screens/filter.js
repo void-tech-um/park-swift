@@ -25,7 +25,7 @@ const FilterScreen = ({route}) => {
     const filterPress = () => {
         setMinPrice(minNumber);
         setMaxPrice(maxNumber);
-     
+        
         setBeginDate(firstDate);
         setEndDate(lastDate);
     }

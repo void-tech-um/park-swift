@@ -5,7 +5,7 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
-import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
+import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice, filter} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
 import listingsData from '../components/listingsData';
@@ -34,34 +34,12 @@ function HomeScreen({route}) {
   const listingCardHeight = windowHeight * 0.2;
 
   useEffect(() => {
+
+      // Filtering is done here
       async function fetchPosts() {
-          // const posts = await filterByPrice(minPrice,maxPrice);
-          // post = await filterByDates(beginDate,endDate);
-          // console.log(posts);
-          // console.log(minPrice,maxPrice)
-          // setPosts(posts); // Update the posts state variable
-
           try {
-            // Fetch posts filtered by dates
-            const postsByDates = await filterByDates(beginDate, endDate);
-            console.log('Posts filtered by dates:', postsByDates);
-    
-            // Fetch Posts filtered by price
-            const postsByPrice = await filterByPrice(minPrice,maxPrice);
-            console.log('Posts filtered by prices:', postsByPrice);
-            
-            function isSamePost(post1, post2) {
-              return post1.firstDate === post2.firstDate &&
-                     post1.lastDate === post2.lastDate &&
-                     post1.price === post2.price
-          }
-          
-          // Find the intersection of both filtered sets
-          const filteredPosts = postsByDates.filter(post1 => 
-              postsByPrice.some(post2 => isSamePost(post1, post2))
-          );
-          
-
+            const filteredPosts = await filter(minPrice,maxPrice, beginDate, endDate);
+             
             console.log('Filtered posts:', filteredPosts);
     
             // Update the posts state variable

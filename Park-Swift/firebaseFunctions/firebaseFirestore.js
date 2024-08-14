@@ -134,9 +134,28 @@ export function filterByLocation(location) {
         });
 }
 
-export function filterByPrice(minPrice, maxPrice) {
+//Changed the Filter Function
+export function filter(minPrice, maxPrice , firstDate, lastDate) {
     const postsCollectionRef = collection(database, 'posts');
-    const q = query(postsCollectionRef, where('price', '>=', minPrice), where('price', '<=', maxPrice));
+
+    let constraints = [];
+
+    if(minPrice !==null){
+        constraints.push(where('price', '>=', minPrice));
+    }
+    if(maxPrice !==null){
+        constraints.push(where('price', '<=', maxPrice));
+    }
+    // Conditionally add the date filters if provided
+    if (firstDate !== null) {
+        constraints.push(where('firstDate', '>=', firstDate));
+    }
+    if (lastDate !== null) {
+        constraints.push(where('lastDate', '<=', lastDate));
+    }
+
+    const q = query(postsCollectionRef, ...constraints);
+
     return getDocs(q)
         .then((querySnapshot) => {
             const posts = [];
