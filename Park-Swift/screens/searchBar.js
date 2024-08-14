@@ -20,7 +20,7 @@ const styles = {
     marginBottom: 15, 
     marginTop: -6,
     backgroundColor: '#D9D9D9',
-    width: 385,
+    width: '90%',
     height: 45,
     alignSelf: 'center',
     borderRadius: 17,  

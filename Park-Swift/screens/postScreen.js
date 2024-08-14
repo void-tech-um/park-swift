@@ -1,339 +1,411 @@
 import * as React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import RNPickerSelect from 'react-native-picker-select';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import ListSpaceButton from '../components/ListSpaceButton';
-import { createPost } from '../firebaseFunctions/firebaseFirestore';
-import { useState } from 'react';
 import MenuSearchBar from './search';
+import Dropdown from '../assets/Down.png';
 
+function CustomDropdown({ selectedValue, onValueChange, options }) {
+  const [modalVisible, setModalVisible] = React.useState(false);
 
-function CreatePost({ navigation, route }) {
-  const userId = route.params.userId;
-  const [location, setLocation] = React.useState('');
-  const [price, setPrice] = React.useState('');
-  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
-  const [isNegotiable, setIsNegotiable] = React.useState(null);
-  const [selectedDates, setSelectedDates] = React.useState({});
-  const [firstDate, setFirstDate] = useState(null);
-  const [lastDate, setLastDate] = useState(null);
- 
-  const handleDayPress = (day) => {
-    if (!firstDate || (firstDate && lastDate)) {
-      setFirstDate(day.dateString);
-      setLastDate(null); 
-      setSelectedDates({ [day.dateString]: { selected: true, selectedColor: 'grey' } });
-    } else if (firstDate && !lastDate) {
-      setLastDate(day.dateString);
-      if (new Date(day.dateString) < new Date(firstDate)) {
-        fillDatesBetween(day.dateString, firstDate); 
-      } else {
-        fillDatesBetween(firstDate, day.dateString);
-      }
-    }
-  };
-  const fillDatesBetween = (startDate, endDate) => {
-    let start = new Date(startDate);
-    let end = new Date(endDate);
-    end.setDate(end.getDate() + 1); 
-    const datesToMark = {};
-  
-    while (start < end) {
-      const dateString = start.toISOString().split('T')[0];
-      datesToMark[dateString] = { selected: true, selectedColor: 'grey' };
-      start.setDate(start.getDate() + 1);
-    }
-  
-    setSelectedDates(datesToMark);
+  const handleSelect = (value) => {
+    onValueChange(value);
+    setModalVisible(false);
   };
 
- const onPostPress = () => {
-  //  alert(userId);
-   createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate)
-     .then(() => {
-      navigation.navigate('ThankYou');
-     })
-     .catch((error) => {
-       console.error('Error creating post:', error);
-       // Handle the error here, e.g., show an error message to the user
-     });
-  }
- 
   return (
-    <View>
-    <MenuSearchBar showSearchBar={false} />
-    <View style={styles.container}>
-      <View style={styles.titleRow}>
-        <MaterialCommunityIcons name="arrow-left" size={24} color="black" />
-        <Text style={styles.title}>List Your Space</Text>
-      </View>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.main}>
-        <View>
-          <Text style={styles.headerText}>Location</Text>
-          <View style={styles.inputWithIcon}>
-            <MaterialCommunityIcons name="magnify" size={20} color="black" style={styles.iconInsideInput} />
-            <TextInput
-              style={[styles.inputRounded, styles.inputLocation]}
-              placeholder="Address"
-              value={location}
-              onChangeText={setLocation}
-            />
-          </View>
-
-          <Text style={styles.headerText}>Price</Text>
-          <View style={styles.inputWithIcon}>
-            <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
-            <TextInput
-              style={[styles.inputRounded, styles.inputPrice]}
-              keyboardType="numeric"
-              placeholder="0.00"
-              value={price}
-              onChangeText={setPrice}
-            />
-            <Text style={styles.slash}>/</Text>
-
-            <RNPickerSelect
-              onValueChange={(value) => setRentalPeriod(value)}
-              items={[
-                { label: 'Hour', value: 'hour' },
-                { label: 'Day', value: 'day' },
-                { label: 'Week', value: 'week' },
-                { label: 'Month', value: 'month' },
-              ]}
-              style={pickerSelectStyles}
-              value={rentalPeriod}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{}}
-              Icon={() => {
-                return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
-              }}
-            />
-          </View>
-
-          <Text style={styles.headerText}>Negotiable?</Text>
-          <View style={styles.negotiableContainer}>
-            <TouchableOpacity
-              style={styles.option}
-              onPress={() => setIsNegotiable(true)}>
-              <View style={[styles.circle, styles.lightGreyCircle]}>
-                {isNegotiable === true && (
-                  <MaterialCommunityIcons name="check" size={24} color="black" />
-                )}
-              </View>
-              <Text style={styles.optionText}>Yes</Text>
+    <View style={styles.dropdownContainer}>
+      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.dropdownButton}>
+        <Text style={styles.dropdownText}>{selectedValue}</Text>
+        <Image source={Dropdown} style={styles.dropdownImage} />
+      </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          {options.map((option) => (
+            <TouchableOpacity key={option} style={styles.modalOption} onPress={() => handleSelect(option)}>
+              <Text style={styles.modalOptionText}>{option}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.option, styles.noOption]}
-              onPress={() => setIsNegotiable(false)}>
-              <View style={[styles.circle, styles.lightGreyCircle]}>
-                {isNegotiable === false && (
-                  <MaterialCommunityIcons name="check" size={24} color="black" />
-                )}
-              </View>
-              <Text style={styles.optionText}>No</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.headerText}>Description</Text>
-<View style={styles.inputWithIcon}>
-  <TextInput
-    style={[styles.inputRounded, styles.inputDescription]}
-    placeholder="Describe your space"
-    multiline
-    numberOfLines={4} // Adjust based on your needs
-  />
-</View>
-
-          <Text style={styles.centeredHeaderText}>Available Dates</Text>
-          <Calendar
-            style={styles.calendarStyle}
-            onDayPress={(day) => handleDayPress(day)}
-            markedDates={selectedDates}
-          />
+          ))}
         </View>
-
-      <ListSpaceButton style={styles.button} onPress={() => onPostPress()} />
-
-      </View>
-      </ScrollView>
-    </View>
+      </Modal>
     </View>
   );
 }
 
+function CreatePost({ navigation, route }) {
+  const [location, setLocation] = React.useState('');
+  const [startTime, setStartTime] = React.useState({ hours: '', minutes: '' });
+  const [endTime, setEndTime] = React.useState({ hours: '', minutes: '' });
+  const [startPeriod, setStartPeriod] = React.useState('AM');
+  const [endPeriod, setEndPeriod] = React.useState('AM');
+  const [price, setPrice] = React.useState('');
+  const [size, setSize] = React.useState('');
+  const [tags, setTags] = React.useState([]);
+  const [notes, setNotes] = React.useState('');
+  const [selectedDates, setSelectedDates] = React.useState({});
+  const [showCalendar, setShowCalendar] = React.useState(false);
+
+  const handleDateSelect = (day) => {
+    const updatedSelectedDates = { ...selectedDates };
+    if (updatedSelectedDates[day.dateString]) {
+      delete updatedSelectedDates[day.dateString];
+    } else {
+      updatedSelectedDates[day.dateString] = { selected: true, selectedColor: '#0653A1' };
+    }
+    setSelectedDates(updatedSelectedDates);
+  };
+
+  const handleAddTag = () => {
+    setTags([...tags, 'New Tag']);
+  };
+
+  const handleRemoveTag = (index) => {
+    const newTags = [...tags];
+    newTags.splice(index, 1);
+    setTags(newTags);
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      <MenuSearchBar showSearchBar={false} />
+      <Text style={styles.title}>List Your Space</Text>
+      
+      <Text style={styles.subHeading}>Location</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="5678 Place Ave"
+        placeholderTextColor="#A8A8A8"
+        value={location}
+        onChangeText={setLocation}
+      />
+
+      <Text style={styles.subHeading}>Start Time</Text>
+      <View style={styles.timeContainer}>
+        <TextInput
+          style={styles.timeInput}
+          placeholder="1"
+          placeholderTextColor="#A8A8A8"
+          keyboardType="numeric"
+          value={startTime.hours}
+          onChangeText={(text) => setStartTime({ ...startTime, hours: text })}
+        />
+        <Text style={styles.colon}>:</Text>
+        <TextInput
+          style={styles.timeInput}
+          placeholder="00"
+          placeholderTextColor="#A8A8A8"
+          keyboardType="numeric"
+          value={startTime.minutes}
+          onChangeText={(text) => setStartTime({ ...startTime, minutes: text })}
+        />
+        <CustomDropdown
+          selectedValue={startPeriod}
+          onValueChange={setStartPeriod}
+          options={['AM', 'PM']}
+        />
+      </View>
+
+      <Text style={styles.subHeading}>End Time</Text>
+      <View style={styles.timeContainer}>
+        <TextInput
+          style={styles.timeInput}
+          placeholder="10"
+          placeholderTextColor="#A8A8A8"
+          keyboardType="numeric"
+          value={endTime.hours}
+          onChangeText={(text) => setEndTime({ ...endTime, hours: text })}
+        />
+        <Text style={styles.colon}>:</Text>
+        <TextInput
+          style={styles.timeInput}
+          placeholder="30"
+          placeholderTextColor="#A8A8A8"
+          keyboardType="numeric"
+          value={endTime.minutes}
+          onChangeText={(text) => setEndTime({ ...endTime, minutes: text })}
+        />
+        <CustomDropdown
+          selectedValue={endPeriod}
+          onValueChange={setEndPeriod}
+          options={['AM', 'PM']}
+        />
+      </View>
+
+      <Text style={styles.subHeading}>Available dates</Text>
+      <TouchableOpacity style={styles.calendarButton} onPress={() => setShowCalendar(!showCalendar)}>
+        <Text style={styles.calendarButtonText}>
+          {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
+        </Text>
+      </TouchableOpacity>
+      {showCalendar && (
+        <Calendar
+          style={styles.calendar}
+          theme={{
+            backgroundColor: '#ffffff',
+            calendarBackground: '#ffffff',
+            textSectionTitleColor: '#b6c1cd',
+            selectedDayBackgroundColor: '#0653A1',
+            selectedDayTextColor: '#ffffff',
+            todayTextColor: '#0653A1',
+            dayTextColor: '#2d4150',
+            textDisabledColor: '#d9e1e8',
+            dotColor: '#0653A1',
+            selectedDotColor: '#ffffff',
+            arrowColor: '#0653A1',
+            monthTextColor: '#0653A1',
+            indicatorColor: '#0653A1',
+            textDayFontFamily: 'NotoSansTaiTham-Regular',
+            textMonthFontFamily: 'NotoSansTaiTham-Bold',
+            textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
+          }}
+          onDayPress={handleDateSelect}
+          markedDates={selectedDates}
+        />
+      )}
+
+      <Text style={styles.subHeading}>Price</Text>
+      <View style={styles.priceContainer}>
+        <TextInput
+          style={styles.priceInput}
+          placeholder="$0.00"
+          placeholderTextColor="#A8A8A8"
+          keyboardType="numeric"
+          value={price}
+          onChangeText={setPrice}
+        />
+        <CustomDropdown
+          selectedValue="$ / sem-hr"
+          onValueChange={() => {}}
+          options={['$ / sem-hr', '$ / hour', '$ / day']}
+        />
+      </View>
+
+      <Text style={styles.subHeading}>Size</Text>
+      <CustomDropdown
+        selectedValue={size || "Select"}
+        onValueChange={setSize}
+        options={['Small', 'Medium', 'Large']}
+      />
+
+      <Text style={styles.subHeading}>Tags</Text>
+      <View style={styles.tagsContainer}>
+        {tags.map((tag, index) => (
+          <View key={index} style={styles.tag}>
+            <Text style={styles.tagText}>{tag}</Text>
+            <TouchableOpacity onPress={() => handleRemoveTag(index)}>
+              <Text style={styles.removeTagText}>×</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+        <TouchableOpacity style={styles.addTagButton} onPress={handleAddTag}>
+          <Text style={styles.addTagButtonText}>+ Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Text style={styles.subHeading}>Additional Notes</Text>
+      <TextInput
+        style={[styles.input, styles.notesInput]}
+        placeholder="Please remove your car on time."
+        placeholderTextColor="#A8A8A8"
+        multiline
+        value={notes}
+        onChangeText={setNotes}
+      />
+
+      <TouchableOpacity style={styles.listButton}>
+        <Text style={styles.listButtonText}>List</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+}
+
 const styles = StyleSheet.create({
- container: {
-  //  top:-120,
-  //  flex: 1,
-   padding: 10,
-  // paddingTop: 150,
-   backgroundColor: '#fff',
-  
- },
-
- inputDescription: {
-  marginRight: 10,
-  flex: 1,
-  height: 100, 
-  marginTop: 6,
-  paddingLeft: 10, 
-},
- titleRow: {
-   flexDirection: 'row',
-   alignItems: 'center',
-   marginBottom: 20,
- },
- title: {
-   fontSize: 30,
-   color: 'black',
-   fontWeight: 'bold',
-   marginLeft: 10,
- },
- headerText: {
-   fontSize: 20,
-   color: 'black',
-   fontWeight: 'bold',
-   marginTop: 15,
- },
- inputWithIcon: {
-   flexDirection: 'row',
-   alignItems: 'center',
-   marginTop: 20,
-  
- },
- iconInsideInput: {
-   position: 'absolute',
-   marginLeft: 15,
-   zIndex: 1,
- },
- inputRounded: {
-   borderWidth: 1,
-   borderRadius: 20,
-   padding: 10,
-   backgroundColor: '#f0f0f0',
-   fontSize: 16,
-   flex: 1,
-   height: 50,
-   paddingLeft: 45,
-   borderColor: 'transparent',
- },
- inputPrice: {
-   marginRight: 10,
-   flex: 0,
-   width: 160,
-   height: 45,
-   marginTop: 6,
-   paddingLeft: 45,
- },
- slash: {
-   fontSize: 40,
-   color: 'black',
-   marginHorizontal: 5,
- },
- negotiableContainer: {
-   flexDirection: 'row',
-   marginTop: 15,
- },
- option: {
-   flexDirection: 'row',
-   alignItems: 'center',
-   marginRight: 30,
- },
- noOption: {
-   marginLeft: 10,
- },
- circle: {
-   width: 24,
-   height: 24,
-   borderRadius: 12,
-   borderWidth: 1,
-   borderColor: 'transparent',
-   justifyContent: 'center',
-   alignItems: 'center',
-   backgroundColor: '#f0f0f0',
- },
- optionText: {
-   fontSize: 16,
-   color: 'black',
-   marginLeft: 5,
- },
- centeredHeaderText: {
-   fontSize: 20,
-   color: 'black',
-   fontWeight: 'bold',
-   marginTop: 15,
-   textAlign: 'center',
- },
- calendarStyle: {
- marginTop: 10,
- color: 'black',
- borderWidth: 1,
- borderColor: '#d3d3d3',
- justifyContent: 'center',
- },
- main:{
-  marginBottom:500,
- },
-});
-
-
-const pickerSelectStyles = StyleSheet.create({
- inputIOS: {
-   fontSize: 16,
-   paddingVertical: 10,
-   paddingHorizontal: 10,
-   borderWidth: 1,
-   borderColor: 'transparent',
-   borderRadius: 15,
-   color: 'black',
-   paddingRight: 30,
-   backgroundColor: '#f0f0f0',
-   height: 45,
-   marginTop: 6,
-   width: 125,
- 
-  
- },
- inputAndroid: {
-   fontSize: 16,
-   paddingHorizontal: 10,
-   paddingVertical: 8,
-   borderWidth: 0.5,
-   borderColor: 'transparent',
-   borderRadius: 8,
-   color: 'black',
-   paddingRight: 30,
-   backgroundColor: '#f0f0f0',
-   height: 45,
-   marginTop: -5,
-   width: 125,
- },
- iconContainer: {
-   top: '50%',
-   right: 0,
-   transform: [{ translateY: -10 }], 
- },
- button: {
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingVertical: 12,
-  paddingHorizontal: 32,
-  borderRadius: 4,
-  elevation: 3,
-  backgroundColor: 'black',
-},
-text: {
-  fontSize: 16,
-  lineHeight: 21,
-  fontWeight: 'bold',
-  letterSpacing: 0.25,
-  color: 'white',
-},
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontFamily: "NotoSansTaiTham-Bold",
+    fontSize: 29,
+    letterSpacing: -1,
+    marginTop: '6.3%',
+    marginLeft: '3.5%',
+    marginBottom: '3%',
+  },
+  subHeading: {
+    fontSize: 16,
+    marginLeft: '3.7%',
+    fontFamily: "NotoSansTaiTham-Regular",
+    marginTop: '2%',
+    marginBottom: '1%',
+  },
+  input: {
+    height: 40,
+    borderRadius: 17,
+    fontSize: 16,
+    color: '#000000',
+    fontFamily: "NotoSansTaiTham-Regular",
+    backgroundColor: '#E9E9E9',
+    paddingHorizontal: 14,
+    marginLeft: '3.5%',
+    marginRight: '3.5%',
+  },
+  timeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '3.5%',
+    marginRight: '3.5%',
+  },
+  timeInput: {
+    height: 40,
+    borderRadius: 17,
+    fontSize: 16,
+    color: '#000000',
+    fontFamily: "NotoSansTaiTham-Regular",
+    backgroundColor: '#E9E9E9',
+    textAlign: 'center',
+    width: 52,
+    marginRight: '0.5%',
+  },
+  colon: {
+    fontSize: 34,
+    color: '#000000',
+    fontFamily: "NotoSansTaiTham-Regular",
+    marginHorizontal: 5,
+  },
+  dropdownContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E9E9E9',
+    borderRadius: 17,
+    width: 75,
+    height: 40,
+    justifyContent: 'center',
+    marginLeft: '1.25%',
+  },
+  dropdownButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#000000',
+  },
+  dropdownImage: {
+    width: 15,
+    height: 9,
+    marginLeft: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalOption: {
+    backgroundColor: '#ffffff',
+    padding: 15,
+    margin: 5,
+    borderRadius: 10,
+    width: 100,
+    alignItems: 'center',
+  },
+  modalOptionText: {
+    fontSize: 16,
+    color: '#000000',
+  },
+  calendarButton: {
+    backgroundColor: '#E9E9E9',
+    borderRadius: 17,
+    height: 40,
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+    marginLeft: '3.5%',
+    marginRight: '3.5%',
+  },
+  calendarButtonText: {
+    fontSize: 16,
+    color: '#000000',
+  },
+  calendar: {
+    marginVertical: 20,
+    marginHorizontal: '3.5%',
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '3.5%',
+    marginRight: '3.5%',
+  },
+  priceInput: {
+    flex: 1,
+    height: 40,
+    borderRadius: 17,
+    fontSize: 16,
+    color: '#000000',
+    fontFamily: "NotoSansTaiTham-Regular",
+    backgroundColor: '#E9E9E9',
+    paddingHorizontal: 14,
+    marginRight: 10,
+  },
+  tagsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginLeft: '3.5%',
+    marginRight: '3.5%',
+  },
+  tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E9E9E9',
+    borderRadius: 17,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  tagText: {
+    fontSize: 16,
+    marginRight: 5,
+  },
+  removeTagText: {
+    fontSize: 18,
+    color: '#888',
+  },
+  addTagButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 17,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  addTagButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+  },
+  notesInput: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  listButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 17,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: '3.5%',
+    marginRight: '3.5%',
+    marginTop: '5%',
+    marginBottom: '5%',
+  },
+  listButtonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 export default CreatePost;
-
-
-

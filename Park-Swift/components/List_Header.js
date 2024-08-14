@@ -34,7 +34,7 @@ const List_Header = () => {
     const styles_searchbar = StyleSheet.create({
         container: {
           alignItems: 'left',
-          backgroundColor: '#033566', // Dark grey background
+          backgroundColor: '#000000', // Dark grey background
           padding: '3%',
           paddingTop:'12.5%',
         },

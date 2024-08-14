@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
 import SearchbarComponent from './searchBar';
 import MenuSearchBar from './search';
 import ListingCard from '../components/ListingCard';
@@ -7,7 +7,6 @@ import listingsData from '../components/listingsData';
 
 const SavedListings = () => {
   return (
-    
     <View style={styles.container}>
       <MenuSearchBar showSearchBar={false} />
       <View style={styles.headerRow}>
@@ -19,7 +18,7 @@ const SavedListings = () => {
       </View>
       <SearchbarComponent />
       <View style={styles.listingsContainer}>
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
           {listingsData.map((listing) => (
             <ListingCard
               key={listing.id}
@@ -60,6 +59,10 @@ const styles = StyleSheet.create({
   },
   listingsContainer: {
     flex: 5,
+  },
+  scrollViewContainer: {
+    alignItems: 'center',
+    paddingBottom: '28%',
   },
 });
 

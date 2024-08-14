@@ -1,39 +1,30 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, } from 'react-native';
 import SortingButton from '../components/SortingButton2';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
-import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import SavedListings from './SavedListings';
+import { getPost, filterByPrice } from '../firebaseFunctions/firebaseFirestore';
 import listingsData from '../components/listingsData';
-import CustomText from '../components/CustomText';
 
-
-const windowHeight = Dimensions.get('window').height;
-
-function HomeScreen({route}) {
-  const [posts, setPosts] = useState([]); 
+function HomeScreen({ route }) {
+  const [posts, setPosts] = useState([]);
   const [myPost, setMyPost] = useState(null);
-  const userId = route.params.userId;
-  const insets = useSafeAreaInsets();
-  const listingCardHeight = windowHeight * 0.2;
 
   useEffect(() => {
-      async function fetchPosts() {
-          const posts = await filterByPrice(1, 20);
-          setPosts(posts); // Update the posts state variable
-      }
-      fetchPosts();
-      getPost('9YCofto5I1dUh2M2lbho')
-            .then((postData) => {
-                setMyPost(postData);
-            })
-            .catch((error) => {
-                console.error('Error fetching post:', error);
-            });
+    async function fetchPosts() {
+      const posts = await filterByPrice(1, 20);
+      setPosts(posts); // Update the posts state variable
+    }
+    fetchPosts();
+    getPost('9YCofto5I1dUh2M2lbho')
+      .then((postData) => {
+        setMyPost(postData);
+      })
+      .catch((error) => {
+        console.error('Error fetching post:', error);
+      });
   }, []); // Add this line
 
   if (!myPost || !posts) {
@@ -49,12 +40,16 @@ function HomeScreen({route}) {
       </TouchableWithoutFeedback>
       <CurrentlyRentingCard />
       <View style={styles.headerContainer}>
-        <CustomText style={styles.listingsNearYouText} fontFamily="NotoSansTaiTham-Bold">
-          Listings For You
-        </CustomText>
-        <SortingButton />
+        <View style={styles.listingsHeaderContainer}>
+          <Text style={styles.listingsHeader}>Listings</Text>
+          <Text style={[styles.listingsHeader, styles.spacing]}>For</Text>
+          <Text style={styles.listingsHeader}>You</Text>
+        </View>
+        <View style={styles.ButtonContainer}>
+          <SortingButton />
+        </View>
       </View>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {listingsData.map((listing) => (
           <ListingCard
             key={listing.id}
@@ -68,10 +63,9 @@ function HomeScreen({route}) {
           />
         ))}
       </ScrollView>
-      <SavedListings listingsData={listingsData} />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -81,14 +75,28 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
     marginTop: 23,
     marginBottom: 15,
   },
-  listingsNearYouText: {
-    fontSize: 25,
+  listingsHeaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: '4.5%',
+  },
+  listingsHeader: {
+    fontSize: 24,
+    fontFamily: "NotoSansTaiTham-Bold",
     letterSpacing: -0.5,
+  },
+  spacing: {
+    marginHorizontal: 5, 
+  },
+  ButtonContainer: {
+    marginRight: '5%',
+  },
+  scrollViewContainer: {
+    paddingBottom: '28%', 
+    alignItems: 'center',
   },
 });
 

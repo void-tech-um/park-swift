@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
 import User from '../assets/profile.png';
@@ -10,6 +10,8 @@ import PrivateProperty from '../assets/PrivateProperty.png';
 import Save from '../assets/Save.png'; 
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from './search';
+
+const { width, height } = Dimensions.get('window');
 
 const Listing = ({ route }) => {
     const navigation = useNavigation();
@@ -37,103 +39,167 @@ const Listing = ({ route }) => {
     const fullName = myUser?.fullName || "First Last";
     const [firstName, lastName] = fullName.split(' ');
 
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <ScrollView style={styles.container}>
-                <MenuSearchBar showSearchBar={false} />
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={handleBackPress}>
-                        <Image
-                            source={Back}
-                            style={styles.Back}
-                        />
-                    </TouchableOpacity>
-                    <Text style={styles.listingHeading}>{displayAddress}</Text>
-                </View>
-                <View style={styles.carImagesContainer}>
-                    <Image
-                        source={CarImage}
-                        style={styles.CarImage}
-                    />
-                    <Image
-                        source={CarImage}
-                        style={styles.CarImage}
-                    />
-                </View>
-                <View style={styles.userInfoContainer}>
-                    <Image
-                        source={User}
-                        style={styles.UserImage}
-                    />
-                    <View style={styles.userInfoTextContainer}>
-                        <Text style={styles.listedUser}>Listed by {firstName} {lastName}</Text>
-                        <Text style={styles.listingDate}>Listing since 2024</Text>
-                    </View>
-                </View>
-                <View style={styles.iconRow}>
-                    <Image
-                        source={FitsAllModels}
-                        style={styles.modelIcon}
-                    />
-                    <Image
-                        source={PavedEntrance}
-                        style={styles.pavedIcon}
-                    />
-                </View>
-                <View style={styles.iconRow}>
-                    <Image
-                        source={WeatherProtected}
-                        style={styles.weatherIcon}
-                    />
-                    <Image
-                        source={PrivateProperty}
-                        style={styles.privacyIcon}
-                    />
-                </View>
+    const getImageMargins = () => {
+        if (width > 447) {
+            return {
+                firstImageMarginLeft: '-0.20%',
+                secondImageMarginLeft:'-5%',
+            };
+        }if ((width === 432 && height === 840)) {
+            return {
+                firstImageMarginLeft: '3.6%',
+                secondImageMarginLeft: '2.%',
+            };
+        }else if (width > 411){
+            return {
+                firstImageMarginLeft: '8.9%',
+                secondImageMarginLeft: '12.4%',
+            };
+        }else if(width > 392){
+            return {
+                firstImageMarginLeft: '14.%',
+                secondImageMarginLeft: '22.4%',
+            };
+        }
+        else{
+            return {
+                firstImageMarginLeft: '8%',
+                secondImageMarginLeft: '11%',
+            };
+        }
+    };
 
-                <View style={styles.listingInfoSection}>
-                    <Text style={styles.listingInfo}>Listing Information</Text>
-                    <Text style={styles.infoLabels}>Available from:</Text>
-                    <View style={styles.border}>
-                        <Text style={styles.dateText}>8/29/23 - 05/02/24</Text>
+    const backButtonMarginLeft = () => {
+        if(width > 447){
+            return 2.8;
+        }if ((width === 432 && height === 840)) {
+            return 2.5;
+        }else if(width > 411){
+            return 2.7;  
+        }else if(width > 392){
+            return 2.7;
+        }
+        else{
+            return 0;
+        }
+    };
+
+    const textContactSpacing = () => {
+        if(width > 447){
+            return -3;
+        }if ((width === 432 && height === 840)) {
+            return -1.8;
+        }else if(width > 411){
+            return 0;
+        }else if(width > 392){
+            return 1.6;
+        }else{
+            return 0;
+        }
+    };
+    const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
+    const backMarginLeft = backButtonMarginLeft();
+    const textSpacing = textContactSpacing();
+
+    return (
+        <View style={styles.container}>
+            <MenuSearchBar showSearchBar={false} />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                <ScrollView style={styles.container}>
+                    <View style={styles.header}>
+                        <TouchableOpacity onPress={handleBackPress}>
+                            <Image
+                                source={Back}
+                                style={[styles.Back, { marginLeft: backMarginLeft}]}
+                            />
+                        </TouchableOpacity>
+                        <Text style={styles.listingHeading}>{displayAddress}</Text>
                     </View>
-                    <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
-                    <View style={styles.border}>
-                        <Text style={styles.costText}>{formatCostText(ppHour)}</Text>
-                    </View>
-                    <Text style={styles.additionalNotes}>Additional Notes</Text>
-                    <View style={styles.bulletPointContainer}>
-                        <Text style={styles.bulletPoint}>•</Text>
-                        <Text style={styles.bulletText}>Please enter and exit the parking spot quietly</Text>
-                    </View>
-                    <View style={styles.bulletPointContainer}>
-                        <Text style={styles.bulletPoint}>•</Text>
-                        <Text style={styles.bulletText}>No other cars, go in and out as you please</Text>
-                    </View>
-                    <View style={styles.bulletPointContainer}>
-                        <Text style={styles.bulletPoint}>•</Text>
-                        <Text style={styles.bulletText}>Less than a mile from central campus and the big house.</Text>
-                    </View>
-                </View>
-                <View style={styles.contactBorder}>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHour))}</Text>
-                        <Text style={styles.negotiableText}>Negotiable</Text>
-                    </View>
-                    <TouchableOpacity>
-                        <View style={styles.contactButton}>
-                            <Text style={styles.contactText}>Contact</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
+                    <View style={styles.carImagesContainer}>
                         <Image
-                            source={Save}
-                            style={styles.saveIcon}
+                            source={CarImage}
+                            style={[styles.FirstImage, { marginLeft: firstImageMarginLeft }]}
                         />
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </TouchableWithoutFeedback>
+                        <Image
+                            source={CarImage}
+                            style={[styles.SecondImage, { marginLeft: secondImageMarginLeft }]}
+                        />
+                    </View>
+                    <View style={styles.userInfoContainer}>
+                        <Image
+                            source={User}
+                            style={styles.UserImage}
+                        />
+                        <View style={styles.userInfoTextContainer}>
+                            <Text style={styles.listedUser}>Listed by {firstName} {lastName}</Text>
+                            <Text style={styles.listingDate}>Listing since 2024</Text>
+                        </View>
+                    </View>
+                    <View style={styles.iconRow}>
+                        <Image
+                            source={FitsAllModels}
+                            style={styles.modelIcon}
+                        />
+                        <Image
+                            source={PavedEntrance}
+                            style={styles.pavedIcon}
+                        />
+                    </View>
+                    <View style={styles.iconRow}>
+                        <Image
+                            source={WeatherProtected}
+                            style={styles.weatherIcon}
+                        />
+                        <Image
+                            source={PrivateProperty}
+                            style={styles.privacyIcon}
+                        />
+                    </View>
+
+                    <View style={styles.listingInfoSection}>
+                        <Text style={styles.listingInfo}>Listing Information</Text>
+                        <Text style={styles.infoLabels}>Available from:</Text>
+                        <View style={styles.border}>
+                            <Text style={styles.dateText}>8/29/23 - 05/02/24</Text>
+                        </View>
+                        <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
+                        <View style={styles.border}>
+                            <Text style={styles.costText}>{formatCostText(ppHour)}</Text>
+                        </View>
+                        <Text style={styles.additionalNotes}>Additional Notes</Text>
+                        <View style={styles.bulletPointContainer}>
+                            <Text style={styles.bulletPoint}>•</Text>
+                            <Text style={styles.bulletText}>Please enter and exit the parking spot quietly</Text>
+                        </View>
+                        <View style={styles.bulletPointContainer}>
+                            <Text style={styles.bulletPoint}>•</Text>
+                            <Text style={styles.bulletText}>No other cars, go in and out as you please</Text>
+                        </View>
+                        <View style={styles.bulletPointContainer}>
+                            <Text style={styles.bulletPoint}>•</Text>
+                            <Text style={styles.bulletText}>Less than a mile from central campus and the big house.</Text>
+                        </View>
+                    </View>
+                    <View style={styles.contactBorder}>
+                        <View style={styles.textContainer}>
+                            <Text style={[styles.boldCostText, { marginLeft: textSpacing }]}>{removeSpaces(formatCostText(ppHour))}</Text>
+                            <Text style={[styles.negotiableText, { marginLeft: textSpacing }]}>Negotiable</Text>
+                        </View>
+                        <TouchableOpacity>
+                            <View style={styles.contactButton}>
+                                <Text style={styles.contactText}>Contact</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Image
+                                source={Save}
+                                style={styles.saveIcon}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            </TouchableWithoutFeedback>
+        </View>
     );
 };
 const styles = StyleSheet.create({
@@ -145,14 +211,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         padding: 15,
-        marginLeft: 2,
     },
     Back: {
         width: 45,
         height: 45,
+        marginTop: -5,
     },
     listingHeading: {
-        marginLeft: 25,
+        marginLeft: 22,
         fontSize: 28,
         fontFamily: "NotoSansTaiTham-Bold",
         letterSpacing: -1,
@@ -160,11 +226,16 @@ const styles = StyleSheet.create({
     carImagesContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
+        paddingHorizontal: -10,
     },
-    CarImage: {
+    FirstImage: {
         width: 200,
         height: 200,
-        marginLeft: 20,
+        marginTop: 7,
+    },
+    SecondImage: {
+        width: 200,
+        height: 200,
         marginTop: 7,
     },
     userInfoContainer: {
@@ -255,6 +326,7 @@ const styles = StyleSheet.create({
         marginLeft: 25,
         alignItems: 'flex-start',
         marginVertical: 5,
+        maxWidth: '90%',
     },
     bulletPoint: {
         fontSize: 25,
@@ -270,15 +342,15 @@ const styles = StyleSheet.create({
     },
     contactBorder: {
         flexDirection: 'row',
-        width: 390,
+        width: '92%',
         height: 75,
         borderRadius: 20,
         backgroundColor: '#EEEBDB',
         justifyContent: 'space-between',
         alignItems: 'center',
         alignSelf: 'center',
-        marginVertical: 20,
-        paddingHorizontal: 20,
+        marginVertical: '5%', 
+        paddingHorizontal: '4%',
     },
     textContainer: {
         flex: 1,
@@ -296,7 +368,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 20,
+        marginRight: '3.5%',
     },
     contactText:{
         color: "#ffffff",

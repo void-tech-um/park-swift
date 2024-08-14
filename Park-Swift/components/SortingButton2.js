@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   filterImage: {
       width: 153, 
       height: 41, 
-      marginRight: 2.5,
   },
 });
 
