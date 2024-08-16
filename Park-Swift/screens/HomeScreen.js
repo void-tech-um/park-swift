@@ -12,9 +12,19 @@ import listingsData from '../components/listingsData';
 import CustomText from '../components/CustomText';
 import { app } from "../services/configFirestore" 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
+import CarImage from '../assets/CarImage.png'; 
 
 
 const windowHeight = Dimensions.get('window').height;
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", { 
+      year: '2-digit', 
+      month: 'numeric', 
+      day: 'numeric' 
+  });
+}
 
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); 
@@ -26,13 +36,20 @@ function HomeScreen({route}) {
       async function fetchPosts() {
         try {
           // const posts = await filterByPrice(1, 20);
-          
           const database = getFirestore(app);
-
           const querySnapshot = await getDocs(collection(database, "posts"));
-
-          const postList = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-
+          const postList = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                address: data.location, 
+                date: `${formatDate(data.firstDate)} - ${formatDate(data.lastDate)}`, 
+                startTime: null, 
+                endTime: null, 
+                ppHour: `$${data.price} /${data.rentalPeriod}`,
+                // listingURL: `https://example.com/listing/${doc.id}`
+            };
+          });
           setPosts(postList);
         }
         catch (error) {
@@ -62,19 +79,22 @@ function HomeScreen({route}) {
         <SortingButton />
       </View>
       <ScrollView>
-      {posts.map((post) => (
+      {posts.map((post) => {
+        console.log('Post data:', post); // Log post data to see what is being passed
+        return (
           <ListingCard
             key={post.id}
-            address={post.address}
-            date={post.date}
+            address={post.address || 'No address available'}
+            date={post.date || 'No date available'}
             startTime={post.startTime}
             endTime={post.endTime}
-            image={post.image}
+            image={post.image || CarImage}
             ppHour={post.ppHour}
-            listingURL={post.listingURL}
+            listingURL={post.listingURL || '#'}
           />
-        ))}
-      </ScrollView>
+        );
+      })}
+</ScrollView>
       <SavedListings listingsData={posts} />
     </View>
   );

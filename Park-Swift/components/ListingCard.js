@@ -27,14 +27,14 @@ const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, lis
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={Car}
+                        source={{uri: image}}
                         style={styles.image}
                     />
                 </View>
                 <View style={styles.bottomSection}>
                     <View style={styles.content}>
                         <Text style={styles.price}>{ppHour}</Text>
-                        <Text style={styles.description}>10 minutes away</Text>
+                        <Text style={styles.description}>x minutes away</Text>
                         <Text style={styles.description}>{date}</Text>
                         {startTime && endTime && (
                             <Text style={styles.description}>{startTime} - {endTime}</Text>
