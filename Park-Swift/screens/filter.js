@@ -6,6 +6,8 @@ import MenuSearchBar from './search';
 import Back from '../assets/Back.png';
 import TabUp from '../assets/FilterUp.png';
 import TabDown from '../assets/FilterDown.png';
+import WhiteDropdown from '../assets/whitedropdown.png';
+import Location from '../assets/location.png';
 
 const FilterScreen = () => {
     const navigation = useNavigation();
@@ -45,15 +47,101 @@ const FilterScreen = () => {
         setSelectedTimeFrames(prev => ({...prev, [timeFrame]: !prev[timeFrame]}));
     };
 
-    const handleDateSelect = (day) => {
-        const updatedSelectedDates = {...selectedDates};
-        if (updatedSelectedDates[day.dateString]) {
-            delete updatedSelectedDates[day.dateString];
+    const handleDateSelect = (date) => {
+        const dateString = date.dateString;
+        let updatedSelectedDates = { ...selectedDates };
+    
+        if (Object.keys(updatedSelectedDates).length === 0) {
+            updatedSelectedDates[dateString] = {
+                selected: true,
+                startingDay: true,
+                endingDay: true,
+                color: 'rgba(6, 83, 161, 1)',
+                textColor: '#FFFFFF',
+                customStyles: {
+                    container: {
+                        backgroundColor: 'rgba(6, 83, 161, 1)',
+                    },
+                    text: {
+                        color: '#FFFFFF',
+                    },
+                },
+            };
+        } else if (Object.keys(updatedSelectedDates).length === 1) {
+            const firstDate = Object.keys(updatedSelectedDates)[0];
+            if (firstDate === dateString) {
+                updatedSelectedDates = {};
+            } else {
+                const [startDate, endDate] = [firstDate, dateString].sort();
+                updatedSelectedDates = {
+                    [startDate]: {
+                        startingDay: true,
+                        color: 'rgba(6, 83, 161, 1)',
+                        textColor: '#FFFFFF',
+                        customStyles: {
+                            container: {
+                                backgroundColor: 'rgba(6, 83, 161, 1)',
+                            },
+                            text: {
+                                color: '#FFFFFF',
+                            },
+                        },
+                    },
+                    [endDate]: {
+                        endingDay: true,
+                        color: 'rgba(6, 83, 161, 1)',
+                        textColor: '#FFFFFF',
+                        customStyles: {
+                            container: {
+                                backgroundColor: 'rgba(6, 83, 161, 1)',
+                            },
+                            text: {
+                                color: '#FFFFFF',
+                            },
+                        },
+                    },
+                };
+                let currentDate = new Date(startDate);
+                const lastDate = new Date(endDate);
+                currentDate.setDate(currentDate.getDate() + 1);
+                while (currentDate < lastDate) {
+                    const dateStr = currentDate.toISOString().split('T')[0];
+                    updatedSelectedDates[dateStr] = {
+                        color: 'rgba(6, 83, 161, 0.2)',
+                        customStyles: {
+                            container: {
+                                backgroundColor: 'rgba(6, 83, 161, 0.2)',
+                            },
+                            text: {
+                                color: '#FFFFFF',
+                            },
+                        },
+                    };
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+            }
         } else {
-            updatedSelectedDates[day.dateString] = {selected: true, selectedColor: '#0653A1'};
+            updatedSelectedDates = {
+                [dateString]: {
+                    selected: true,
+                    startingDay: true,
+                    endingDay: true,
+                    color: 'rgba(6, 83, 161, 1)',
+                    textColor: '#FFFFFF',
+                    customStyles: {
+                        container: {
+                            backgroundColor: 'rgba(6, 83, 161, 1)',
+                        },
+                        text: {
+                            color: '#FFFFFF',
+                        },
+                    },
+                },
+            };
         }
         setSelectedDates(updatedSelectedDates);
     };
+      
     
     const resetDateTimeFilter = () => {
         setSelectedDates({});
@@ -140,7 +228,6 @@ const FilterScreen = () => {
                   style={styles.modalSaveButton} 
                   onPress={() => {
                     onClose();
-                    // Here you can also handle the selectedTag as needed
                   }}
                 >
                   <Text style={styles.modalSaveButtonText}>Save Changes</Text>
@@ -155,7 +242,7 @@ const FilterScreen = () => {
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.header}>
                         <TouchableOpacity onPress={handleBackPress}>
                             <Image source={Back} style={styles.Back} />
@@ -203,7 +290,7 @@ const FilterScreen = () => {
                                 <View style={styles.inputContainer}>
                                     <Text style={styles.inputLabel}>Use current location</Text>
                                     <View style={styles.currentLocationContainer}>
-                                        
+                                        <Image source={Location} style={styles.locationIcon} />
                                         <Text style={styles.currentLocationText}>{currentLocation}</Text>
                                     </View>
                                 </View>
@@ -214,7 +301,7 @@ const FilterScreen = () => {
                                         <Text style={styles.rangeInputLabel}>Less than</Text>
                                         <TouchableOpacity style={styles.rangeDropdown}>
                                             <Text style={styles.rangeDropdownText}>{timeRange}</Text>
-                                          
+                                            <Image source={WhiteDropdown} style={styles.dropdownIcon} />
                                         </TouchableOpacity>
                                         <Text style={styles.rangeInputLabel}>away.</Text>
                                     </View>
@@ -225,7 +312,7 @@ const FilterScreen = () => {
                                         <Text style={styles.rangeInputLabel}>Less than</Text>
                                         <TouchableOpacity style={styles.rangeDropdown}>
                                             <Text style={styles.rangeDropdownText}>{mileRange}</Text>
-                                            
+                                            <Image source={WhiteDropdown} style={styles.dropdownIcon} />
                                         </TouchableOpacity>
                                         <Text style={styles.rangeInputLabel}>away.</Text>
                                     </View>
@@ -273,7 +360,7 @@ const FilterScreen = () => {
                                     <Text style={styles.pricePerLabel}>Per</Text>
                                     <TouchableOpacity style={styles.pricePerDropdown}>
                                         <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
-                                        
+                                        <Image source={WhiteDropdown} style={styles.dropdownIcon} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -295,47 +382,55 @@ const FilterScreen = () => {
                                     </TouchableOpacity>
                                 </View>
                                 <Text style={styles.dateFrameText}>Date Frame:</Text>
+                                <View style={styles.calendarContainer}>
                                 <Calendar
                                     style={styles.calendar}
-                                    theme={{
-                                        backgroundColor: '#ffffff',
-                                        calendarBackground: '#ffffff',
-                                        textSectionTitleColor: '#b6c1cd',
-                                        selectedDayBackgroundColor: '#0653A1',
-                                        selectedDayTextColor: '#ffffff',
-                                        todayTextColor: '#0653A1',
-                                        dayTextColor: '#2d4150',
-                                        textDisabledColor: '#d9e1e8',
-                                        dotColor: '#0653A1',
-                                        selectedDotColor: '#ffffff',
-                                        arrowColor: '#0653A1',
-                                        monthTextColor: '#0653A1',
-                                        indicatorColor: '#0653A1',
-                                        textDayFontFamily: 'NotoSansTaiTham-Regular',
-                                        textMonthFontFamily: 'NotoSansTaiTham-Bold',
-                                        textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
-                                    }}
                                     onDayPress={handleDateSelect}
                                     markedDates={selectedDates}
+                                    markingType={'period'} 
+                                    theme={{
+                                        textDayFontSize: 13, 
+                                        textMonthFontSize: 13,  
+                                        textDayHeaderFontSize: 13,  
+                                        textDayFontFamily: 'NotoSansTaiTham-Regular',  
+                                        textMonthFontFamily: 'NotoSansTaiTham-Bold',
+                                        textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
+
+                                        calendarBackground: 'white',  
+                                        textSectionTitleColor: 'black', 
+                                        dayTextColor: 'black', 
+                                        monthTextColor: 'black',  
+                                        todayTextColor: 'black',  
+                                        arrowColor: 'rgba(6, 83, 161, 1)',  
+                                        selectedDayTextColor: 'black',  
+                                      }}
                                 />
+                                </View>
                                 <Text style={styles.timeFrameText}>Time Frame:</Text>
-                                {timeFrames.map((timeFrame, index) => (
-                                    <TouchableOpacity 
-                                        key={index} 
-                                        style={styles.timeFrameOption}
-                                        onPress={() => toggleTimeFrame(timeFrame)}
-                                    >
-                                        <View style={[
-                                            styles.checkbox,
-                                            selectedTimeFrames[timeFrame] && styles.checkboxSelected
-                                        ]} />
-                                        <Text style={styles.timeFrameOptionText}>{timeFrame}</Text>
-                                    </TouchableOpacity>
-                                ))}
+                                <View style={styles.checkboxContainer}>
+                                    {timeFrames.map((timeFrame, index) => (
+                                        <TouchableOpacity 
+                                            key={index} 
+                                            style={[styles.timeFrameOption, styles.checkboxSpacing]}
+                                            onPress={() => toggleTimeFrame(timeFrame)}
+                                        >
+                                            <View style={[
+                                                styles.checkbox,
+                                                selectedTimeFrames[timeFrame] && styles.checkboxSelected
+                                            ]} />
+                                           <Text style={[styles.timeFrameOptionText]}>
+                                                {timeFrame}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
                             </View>
                         )}
                     </View>
-                    <View style={styles.tagsButtonContainer}>
+                    <View style={[
+                        styles.tagsButtonContainer,
+                        filterStates.dateTime && styles.tagsButtonContainerExpanded
+                        ]}>
                         <TouchableOpacity 
                             style={styles.tagsButton}
                             onPress={() => setIsTagsModalOpen(true)}
@@ -422,6 +517,13 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         left: '3.5%',
     },
+    scrollViewContent: {
+        flexGrow: 1,
+    },
+    tagsButtonContainerExpanded: {
+        marginBottom: 48,
+  
+    },
     filterSection: {
         alignItems: 'center',
         marginTop: '-4.25%',
@@ -485,7 +587,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 17,
         width: '92%',
-        height: 436,
+        height: 440,
         paddingTop: '2%',
     },
     modalTitle: {
@@ -562,7 +664,7 @@ const styles = StyleSheet.create({
     resetThisFilterText: {
         color: '#0653A1',
         textDecorationLine: 'underline',
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Regular',
     },
     dateFrameText: {
@@ -570,18 +672,31 @@ const styles = StyleSheet.create({
         fontFamily: 'NotoSansTaiTham-Bold',
         marginBottom: 10,
     },
-    calendar: {
-        marginBottom: 20,
+    calendarContainer: {
+        borderWidth: 1,
+        borderColor: '#EBEBEB',
+        borderRadius: 6,
+        overflow: 'hidden',
+        width: '83.5%',
+        alignSelf: 'center',
+        marginBottom: 15,
+    },
+    calendar: {   
+        marginBottom:-8,
+        paddingLeft: 0,
+        paddingRight: 0,
     },
     timeFrameText: {
         fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Bold',
-        marginBottom: 10,
     },
     timeFrameOption: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 10,
+    },
+    checkboxContainer: {
+        paddingLeft: 12, 
+        marginTop: 7, 
     },
     checkbox: {
         width: 24,
@@ -589,14 +704,16 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#0653A1',
         borderRadius: 4,
-        marginRight: 10,
     },
     checkboxSelected: {
         backgroundColor: '#0653A1',
     },
     timeFrameOptionText: {
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Regular',
+    },
+    checkboxSpacing: {
+        marginTop: -1,
     },
     filterContent: {
         width: '92%',
@@ -720,8 +837,7 @@ const styles = StyleSheet.create({
         width: '92%',
         backgroundColor: '#ffffff',
         borderRadius: 10,
-        padding: 15,
-        marginTop: 10,
+        marginTop: 4,
     },
     resetThisFilterContainer: {
         alignItems: 'flex-end',
@@ -730,33 +846,33 @@ const styles = StyleSheet.create({
     resetThisFilterText: {
         color: '#0653A1',
         textDecorationLine: 'underline',
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Regular',
+        marginRight: 4,
     },
     dateFrameText: {
         fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Bold',
-        marginBottom: 10,
-    },
-    calendar: {
-        marginBottom: 20,
+        marginTop:-3,
+        marginBottom:11,
     },
     timeFrameText: {
         fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Bold',
-        marginBottom: 10,
+        marginBottom: 10.5,
     },
     timeFrameOption: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
+        marginLeft: 4,
     },
     checkbox: {
-        width: 24,
-        height: 24,
-        borderWidth: 2,
+        width: 25,
+        height: 25,
+        borderWidth: 2.5,
         borderColor: '#0653A1',
-        borderRadius: 4,
+        borderRadius: 7,
         marginRight: 10,
     },
     checkboxSelected: {

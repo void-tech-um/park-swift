@@ -7,11 +7,6 @@ import Dropdown from '../assets/Down.png';
 function CustomDropdown({ selectedValue, onValueChange, options }) {
   const [modalVisible, setModalVisible] = React.useState(false);
 
-  const handleSelect = (value) => {
-    onValueChange(value);
-    setModalVisible(false);
-  };
-
   return (
     <View style={styles.dropdownContainer}>
       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.dropdownButton}>
@@ -47,17 +42,101 @@ function CreatePost({ navigation, route }) {
   const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState('');
   const [selectedDates, setSelectedDates] = React.useState({});
-  const [showCalendar, setShowCalendar] = React.useState(false);
 
-  const handleDateSelect = (day) => {
-    const updatedSelectedDates = { ...selectedDates };
-    if (updatedSelectedDates[day.dateString]) {
-      delete updatedSelectedDates[day.dateString];
+  const handleDateSelect = (date) => {
+    const dateString = date.dateString;
+    let updatedSelectedDates = { ...selectedDates };
+
+    if (Object.keys(updatedSelectedDates).length === 0) {
+        updatedSelectedDates[dateString] = {
+            selected: true,
+            startingDay: true,
+            endingDay: true,
+            color: 'rgba(6, 83, 161, 1)',
+            textColor: '#FFFFFF',
+            customStyles: {
+                container: {
+                    backgroundColor: 'rgba(6, 83, 161, 1)',
+                },
+                text: {
+                    color: '#FFFFFF',
+                },
+            },
+        };
+    } else if (Object.keys(updatedSelectedDates).length === 1) {
+        const firstDate = Object.keys(updatedSelectedDates)[0];
+        if (firstDate === dateString) {
+            updatedSelectedDates = {};
+        } else {
+            const [startDate, endDate] = [firstDate, dateString].sort();
+            updatedSelectedDates = {
+                [startDate]: {
+                    startingDay: true,
+                    color: 'rgba(6, 83, 161, 1)',
+                    textColor: '#FFFFFF',
+                    customStyles: {
+                        container: {
+                            backgroundColor: 'rgba(6, 83, 161, 1)',
+                        },
+                        text: {
+                            color: '#FFFFFF',
+                        },
+                    },
+                },
+                [endDate]: {
+                    endingDay: true,
+                    color: 'rgba(6, 83, 161, 1)',
+                    textColor: '#FFFFFF',
+                    customStyles: {
+                        container: {
+                            backgroundColor: 'rgba(6, 83, 161, 1)',
+                        },
+                        text: {
+                            color: '#FFFFFF',
+                        },
+                    },
+                },
+            };
+            let currentDate = new Date(startDate);
+            const lastDate = new Date(endDate);
+            currentDate.setDate(currentDate.getDate() + 1);
+            while (currentDate < lastDate) {
+                const dateStr = currentDate.toISOString().split('T')[0];
+                updatedSelectedDates[dateStr] = {
+                    color: 'rgba(6, 83, 161, 0.2)',
+                    customStyles: {
+                        container: {
+                            backgroundColor: 'rgba(6, 83, 161, 0.2)',
+                        },
+                        text: {
+                            color: '#FFFFFF',
+                        },
+                    },
+                };
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
     } else {
-      updatedSelectedDates[day.dateString] = { selected: true, selectedColor: '#0653A1' };
+        updatedSelectedDates = {
+            [dateString]: {
+                selected: true,
+                startingDay: true,
+                endingDay: true,
+                color: 'rgba(6, 83, 161, 1)',
+                textColor: '#FFFFFF',
+                customStyles: {
+                    container: {
+                        backgroundColor: 'rgba(6, 83, 161, 1)',
+                    },
+                    text: {
+                        color: '#FFFFFF',
+                    },
+                },
+            },
+        };
     }
     setSelectedDates(updatedSelectedDates);
-  };
+};
 
   const handleAddTag = () => {
     setTags([...tags, 'New Tag']);
@@ -70,7 +149,7 @@ function CreatePost({ navigation, route }) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
       <MenuSearchBar showSearchBar={false} />
       <Text style={styles.title}>List Your Space</Text>
       
@@ -136,36 +215,29 @@ function CreatePost({ navigation, route }) {
       </View>
 
       <Text style={styles.subHeading}>Available dates</Text>
-      <TouchableOpacity style={styles.calendarButton} onPress={() => setShowCalendar(!showCalendar)}>
-        <Text style={styles.calendarButtonText}>
-          {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
-        </Text>
-      </TouchableOpacity>
-      {showCalendar && (
+      <View style={styles.calendarContainer}>
         <Calendar
-          style={styles.calendar}
-          theme={{
-            backgroundColor: '#ffffff',
-            calendarBackground: '#ffffff',
-            textSectionTitleColor: '#b6c1cd',
-            selectedDayBackgroundColor: '#0653A1',
-            selectedDayTextColor: '#ffffff',
-            todayTextColor: '#0653A1',
-            dayTextColor: '#2d4150',
-            textDisabledColor: '#d9e1e8',
-            dotColor: '#0653A1',
-            selectedDotColor: '#ffffff',
-            arrowColor: '#0653A1',
-            monthTextColor: '#0653A1',
-            indicatorColor: '#0653A1',
-            textDayFontFamily: 'NotoSansTaiTham-Regular',
-            textMonthFontFamily: 'NotoSansTaiTham-Bold',
-            textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
-          }}
-          onDayPress={handleDateSelect}
-          markedDates={selectedDates}
-        />
-      )}
+            style={styles.calendar}
+            onDayPress={handleDateSelect}
+            markedDates={selectedDates}
+            markingType={'period'}
+            theme={{
+                textDayFontSize: 13,
+                textMonthFontSize: 13,
+                textDayHeaderFontSize: 13,
+                textDayFontFamily: 'NotoSansTaiTham-Regular',
+                textMonthFontFamily: 'NotoSansTaiTham-Bold',
+                textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
+                calendarBackground: 'white',
+                textSectionTitleColor: 'black',
+                dayTextColor: 'black',
+                monthTextColor: 'black',
+                todayTextColor: 'black',
+                arrowColor: 'rgba(6, 83, 161, 1)',
+                selectedDayTextColor: 'black',
+              }}
+          />
+        </View>
 
       <Text style={styles.subHeading}>Price</Text>
       <View style={styles.priceContainer}>
@@ -215,7 +287,6 @@ function CreatePost({ navigation, route }) {
         value={notes}
         onChangeText={setNotes}
       />
-
       <TouchableOpacity style={styles.listButton}>
         <Text style={styles.listButtonText}>List</Text>
       </TouchableOpacity>
@@ -227,6 +298,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  scrollViewContent: {
+    paddingBottom: 104, 
   },
   title: {
     fontFamily: "NotoSansTaiTham-Bold",
@@ -318,22 +392,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000000',
   },
-  calendarButton: {
-    backgroundColor: '#E9E9E9',
-    borderRadius: 17,
-    height: 40,
-    justifyContent: 'center',
-    paddingHorizontal: 14,
-    marginLeft: '3.5%',
-    marginRight: '3.5%',
+  calendarContainer: {
+    borderWidth: 1,
+    borderColor: '#EBEBEB',
+    borderRadius: 6,
+    overflow: 'hidden',
+    width: '77%',
+    alignSelf: 'center',
+    marginBottom: 15,
   },
-  calendarButtonText: {
-    fontSize: 16,
-    color: '#000000',
-  },
-  calendar: {
-    marginVertical: 20,
-    marginHorizontal: '3.5%',
+  calendar: {   
+      marginBottom:-8,
+      paddingLeft: 0,
+      paddingRight: 0,
   },
   priceContainer: {
     flexDirection: 'row',
@@ -349,8 +420,6 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: "NotoSansTaiTham-Regular",
     backgroundColor: '#E9E9E9',
-    paddingHorizontal: 14,
-    marginRight: 10,
   },
   tagsContainer: {
     flexDirection: 'row',
@@ -377,29 +446,35 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   addTagButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 17,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    backgroundColor: '#0653A1',
+    height: 40,
+    width: 86,
+    borderRadius: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   addTagButtonText: {
     color: '#ffffff',
     fontSize: 16,
   },
   notesInput: {
-    height: 80,
+    height: 140,
+    width: "92%",
     textAlignVertical: 'top',
-  },
-  listButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 17,
-    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: '3.5%',
-    marginRight: '3.5%',
+    alignSelf: 'center',
+  },
+  listButton: {
+    backgroundColor: '#0653A1',
+    borderRadius: 999,
+    width: 191,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
     marginTop: '5%',
-    marginBottom: '5%',
   },
   listButtonText: {
     color: '#ffffff',
