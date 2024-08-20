@@ -14,12 +14,12 @@ import MenuSearchBar from './search';
 function CreatePost({ navigation, route }) {
   const userId = route.params.userId;
   const [location, setLocation] = React.useState('');
-  const [startTimeHour, setStartTimeHour] = React.useState('');
+  /*const [startTimeHour, setStartTimeHour] = React.useState('');
   const [startTimeMinute, setStartTimeMinute] = React.useState('');
   const [startTimePeriod, setStartTimePeriod] = React.useState('AM');
   const [endTimeHour, setEndTimeHour] = React.useState('');
   const [endTimeMinute, setEndTimeMinute] = React.useState('');
-  const [endTimePeriod, setEndTimePeriod] = React.useState('PM');
+  const [endTimePeriod, setEndTimePeriod] = React.useState('PM');*/
   const [price, setPrice] = React.useState('');
   const [rentalPeriod, setRentalPeriod] = React.useState('hour');
   const [isNegotiable, setIsNegotiable] = React.useState(null);
@@ -60,7 +60,7 @@ function CreatePost({ navigation, route }) {
 
  const onPostPress = () => {
   //  alert(userId);
-   createPost(userId, location, startTime, endTime, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate)
+   createPost(userId, location, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate) // no start time or end time for now
      .then(() => {
       navigation.navigate('ThankYou');
      })
@@ -93,7 +93,7 @@ function CreatePost({ navigation, route }) {
           </View>
 
           
-            <Text style={styles.headerText}>Start Time</Text>
+            {/* <Text style={styles.headerText}>Start Time</Text>
             <View style={styles.timeButtonContainer}>
               <View style={styles.inputWithIcon}>
                 <TextInput
@@ -165,7 +165,7 @@ function CreatePost({ navigation, route }) {
               }}
             />
             </View>
-            </View>
+            </View> */}
 
           <Text style={styles.centeredHeaderText}>Available Dates</Text>
           <Calendar
