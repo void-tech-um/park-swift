@@ -27,7 +27,7 @@ const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, lis
                 </View>
                 <View style={styles.imageContainer}>
                     <Image
-                        source={{uri: image}}
+                        source={Car}
                         style={styles.image}
                     />
                 </View>
