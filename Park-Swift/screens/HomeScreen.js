@@ -12,7 +12,8 @@ import listingsData from '../components/listingsData';
 import CustomText from '../components/CustomText';
 import { app } from "../services/configFirestore" 
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import CarImage from '../assets/CarImage.png'; 
+import Car from '../assets/car.png'; 
+import { useNavigation } from "@react-navigation/native";
 
 
 const windowHeight = Dimensions.get('window').height;
@@ -28,7 +29,8 @@ function formatDate(dateString) {
 
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); 
-  const userId = route.params.userId;
+  const userID = route.params.userID;
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const listingCardHeight = windowHeight * 0.2;
 
@@ -47,6 +49,7 @@ function HomeScreen({route}) {
                 startTime: null, 
                 endTime: null, 
                 ppHour: `$${data.price} /${data.rentalPeriod}`,
+                userID: data.userID,
                 // listingURL: `https://example.com/listing/${doc.id}`
             };
           });
@@ -80,7 +83,7 @@ function HomeScreen({route}) {
       </View>
       <ScrollView>
       {posts.map((post) => {
-        console.log('Post data:', post); // Log post data to see what is being passed
+        console.log('Post data:', post);
         return (
           <ListingCard
             key={post.id}
@@ -88,9 +91,10 @@ function HomeScreen({route}) {
             date={post.date || 'No date available'}
             startTime={post.startTime}
             endTime={post.endTime}
-            image={post.image || CarImage}
+            image={post.image || Car}
             ppHour={post.ppHour}
             listingURL={post.listingURL || '#'}
+            userID={post.userID}
           />
         );
       })}

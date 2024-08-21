@@ -10,14 +10,44 @@ import PrivateProperty from '../assets/PrivateProperty.png';
 import Save from '../assets/Save.png'; 
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from './search';
+import { useState, useEffect } from 'react';
+import { app } from "../services/configFirestore" 
+import { getFirestore, collection, getDoc, doc } from "firebase/firestore";
+
 
 const Listing = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, myUser } = route.params;
+    const { address, ppHour, userID, date } = route.params;
+    const [user, setUser] = useState(null);
+    const [firstName, setFirstName] = useState('First');
+    const [lastName, setLastName] = useState('Last');
 
     const handleBackPress = () => {
         navigation.goBack();
     };
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            console.log(userID);
+            const db = getFirestore(app);
+            const userDoc = await getDoc(doc(db, 'users', userID));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                setUser(userData);
+                const fullName = userData.fullName;
+                const [first, last] = fullName.split(' ');
+                setFirstName(first);
+                setLastName(last);
+            } else {
+              console.log("User not found");
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+        fetchUserData();
+      }, [userID]);
 
     const displayAddress = address.split(',')[0];
 
@@ -33,9 +63,6 @@ const Listing = ({ route }) => {
     const removeSpaces = (text) => {
         return text.replace(/\s/g, '');
     };
-
-    const fullName = myUser?.fullName || "First Last";
-    const [firstName, lastName] = fullName.split(' ');
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -95,7 +122,7 @@ const Listing = ({ route }) => {
                     <Text style={styles.listingInfo}>Listing Information</Text>
                     <Text style={styles.infoLabels}>Available from:</Text>
                     <View style={styles.border}>
-                        <Text style={styles.dateText}>8/29/23 - 05/02/24</Text>
+                        <Text style={styles.dateText}>{date}</Text>
                     </View>
                     <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                     <View style={styles.border}>
