@@ -5,38 +5,65 @@ import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './search';
 import { useState, useEffect } from 'react';
-import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice} from '../firebaseFunctions/firebaseFirestore';
+import {getAllPosts, getPostByStartDate, getUserPosts, getPost, filterByFirstDate, filterByDates, filterByPrice, getListingCardInfo} from '../firebaseFunctions/firebaseFirestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SavedListings from './SavedListings';
 import listingsData from '../components/listingsData';
 import CustomText from '../components/CustomText';
+import { app } from "../services/configFirestore" 
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import Car from '../assets/car.png'; 
+import { useNavigation } from "@react-navigation/native";
 
 
 const windowHeight = Dimensions.get('window').height;
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", { 
+      year: '2-digit', 
+      month: 'numeric', 
+      day: 'numeric' 
+  });
+}
+
 function HomeScreen({route}) {
   const [posts, setPosts] = useState([]); 
-  const [myPost, setMyPost] = useState(null);
-  const userId = route.params.userId;
+  const userID = route.params.userID;
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const listingCardHeight = windowHeight * 0.2;
 
   useEffect(() => {
       async function fetchPosts() {
-          const posts = await filterByPrice(1, 20);
-          setPosts(posts); // Update the posts state variable
+        try {
+          // const posts = await filterByPrice(1, 20);
+          const database = getFirestore(app);
+          const querySnapshot = await getDocs(collection(database, "posts"));
+          const postList = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                address: data.location, 
+                date: `${formatDate(data.firstDate)} - ${formatDate(data.lastDate)}`, 
+                startTime: null, 
+                endTime: null, 
+                ppHour: `$${data.price} /${data.rentalPeriod}`,
+                userID: data.userID,
+                // listingURL: `https://example.com/listing/${doc.id}`
+            };
+          });
+          setPosts(postList);
+        }
+        catch (error) {
+          console.error("Error fetching posts:", error);
+        }
       }
       fetchPosts();
-      getPost('9YCofto5I1dUh2M2lbho')
-            .then((postData) => {
-                setMyPost(postData);
-            })
-            .catch((error) => {
-                console.error('Error fetching post:', error);
-            });
+      
   }, []); // Add this line
 
-  if (!myPost || !posts) {
+  if (posts.length === 0) {
     return <Text>Loading...</Text>;
   }
 
@@ -55,20 +82,24 @@ function HomeScreen({route}) {
         <SortingButton />
       </View>
       <ScrollView>
-        {listingsData.map((listing) => (
+      {posts.map((post) => {
+        console.log('Post data:', post);
+        return (
           <ListingCard
-            key={listing.id}
-            address={listing.address}
-            date={listing.date}
-            startTime={listing.startTime}
-            endTime={listing.endTime}
-            image={listing.image}
-            ppHour={listing.ppHour}
-            listingURL={listing.listingURL}
+            key={post.id}
+            address={post.address || 'No address available'}
+            date={post.date || 'No date available'}
+            startTime={post.startTime}
+            endTime={post.endTime}
+            image={post.image || Car}
+            ppHour={post.ppHour}
+            listingURL={post.listingURL || '#'}
+            userID={post.userID}
           />
-        ))}
-      </ScrollView>
-      <SavedListings listingsData={listingsData} />
+        );
+      })}
+</ScrollView>
+      <SavedListings listingsData={posts} />
     </View>
   );
 };
