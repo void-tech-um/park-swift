@@ -6,15 +6,24 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ListSpaceButton from '../components/ListSpaceButton';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import { useState } from 'react';
+import List_Header from '../components/List_Header';
+import {PropsWithChildren} from 'react';
 import MenuSearchBar from './search';
 
 
 function CreatePost({ navigation, route }) {
   const userId = route.params.userId;
   const [location, setLocation] = React.useState('');
+  /*const [startTimeHour, setStartTimeHour] = React.useState('');
+  const [startTimeMinute, setStartTimeMinute] = React.useState('');
+  const [startTimePeriod, setStartTimePeriod] = React.useState('AM');
+  const [endTimeHour, setEndTimeHour] = React.useState('');
+  const [endTimeMinute, setEndTimeMinute] = React.useState('');
+  const [endTimePeriod, setEndTimePeriod] = React.useState('PM');*/
   const [price, setPrice] = React.useState('');
   const [rentalPeriod, setRentalPeriod] = React.useState('hour');
   const [isNegotiable, setIsNegotiable] = React.useState(null);
+  const [sizeOfCar, setSize] = React.useState('sedan');
   const [selectedDates, setSelectedDates] = React.useState({});
   const [firstDate, setFirstDate] = useState(null);
   const [lastDate, setLastDate] = useState(null);
@@ -33,6 +42,7 @@ function CreatePost({ navigation, route }) {
       }
     }
   };
+  
   const fillDatesBetween = (startDate, endDate) => {
     let start = new Date(startDate);
     let end = new Date(endDate);
@@ -50,7 +60,7 @@ function CreatePost({ navigation, route }) {
 
  const onPostPress = () => {
   //  alert(userId);
-   createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate)
+   createPost(userId, location, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate) // no start time or end time for now
      .then(() => {
       navigation.navigate('ThankYou');
      })
@@ -82,28 +92,168 @@ function CreatePost({ navigation, route }) {
             />
           </View>
 
-          <Text style={styles.headerText}>Price</Text>
-          <View style={styles.inputWithIcon}>
-            <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
-            <TextInput
-              style={[styles.inputRounded, styles.inputPrice]}
-              keyboardType="numeric"
-              placeholder="0.00"
-              value={price}
-              onChangeText={setPrice}
-            />
-            <Text style={styles.slash}>/</Text>
-
+          
+            {/* <Text style={styles.headerText}>Start Time</Text>
+            <View style={styles.timeButtonContainer}>
+              <View style={styles.inputWithIcon}>
+                <TextInput
+                  style={[styles.timeInputRounded, styles.inputTime]}
+                  keyboardType="numeric"
+                  placeholder="10"
+                  value={startTimeHour}
+                  onChangeText={setStartTimeHour}
+                />
+                <Text style={styles.slash}>:</Text>
+                <TextInput
+                  style={[styles.timeInputRounded, styles.inputTime]}
+                  keyboardType="numeric"
+                  placeholder="30"
+                  value={startTimeMinute}
+                  onChangeText={setStartTimeMinute}
+                />
+              </View>
+              <View style={styles.inputWithIcon}>
             <RNPickerSelect
-              onValueChange={(value) => setRentalPeriod(value)}
+              onValueChange={(value) => setStartTimePeriod(value)}
               items={[
-                { label: 'Hour', value: 'hour' },
-                { label: 'Day', value: 'day' },
-                { label: 'Week', value: 'week' },
-                { label: 'Month', value: 'month' },
+                { label: 'AM', value: 'am' },
+                { label: 'PM', value: 'pm' },
               ]}
               style={pickerSelectStyles}
-              value={rentalPeriod}
+              value={startTimePeriod}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => {
+                return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+              }}
+            />
+          </View>
+                <Text style={styles.slash}> -</Text>
+          
+            </View>
+            <Text style={styles.headerText}>End Time</Text>
+
+            <View style={styles.inputWithIcon}>
+              <TextInput
+                style={[styles.timeInputRounded, styles.inputTime]}
+                keyboardType="numeric"
+                placeholder="3"
+                value={endTimeHour}
+                onChangeText={setEndTimeHour}
+              />
+              <Text style={styles.slash}>:</Text>
+              <TextInput
+                style={[styles.timeInputRounded, styles.inputTime]}
+                keyboardType="numeric"
+                placeholder="30"
+                value={endTimeMinute}
+                onChangeText={setEndTimeMinute}
+              />
+              <View style={styles.inputWithIcon}>
+            <RNPickerSelect
+              onValueChange={(value) => setEndTimePeriod(value)}
+              items={[
+                { label: 'AM', value: 'am' },
+                { label: 'PM', value: 'pm' },
+              ]}
+              style={pickerSelectStyles}
+              value={endTimePeriod}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => {
+                return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+              }}
+            />
+            </View>
+            </View> */}
+
+          <Text style={styles.centeredHeaderText}>Available Dates</Text>
+          <Calendar
+            style={styles.calendarStyle}
+            onDayPress={handleDayPress}
+      markedDates={selectedDates}
+          />
+        
+        </View>
+
+        <View style={styles.container}>
+  <View style={styles.priceAndNegotiable}>
+    {/* Price Container */}
+    <View style={styles.priceContainer}>
+      <Text style={styles.headerText}>Price</Text>
+      <View style={styles.inputWithIcon}>
+        <MaterialCommunityIcons name="currency-usd" size={20} color="black" style={styles.iconInsideInput} />
+        <TextInput
+          style={[styles.inputRounded, styles.inputPrice]}
+          keyboardType="numeric"
+          placeholder="0.00"
+          value={price}
+          onChangeText={setPrice}
+        />
+        <Text style={styles.slash}>/</Text>
+        <RNPickerSelect
+          onValueChange={(value) => setRentalPeriod(value)}
+          items={[
+            { label: 'Hour', value: 'hour' },
+            { label: 'Day', value: 'day' },
+            { label: 'Week', value: 'week' },
+            { label: 'Month', value: 'month' },
+          ]}
+          style={pickerSelectStyles}
+          value={rentalPeriod}
+          useNativeAndroidPickerStyle={false}
+          placeholder={{}}
+          Icon={() => {
+            return <MaterialCommunityIcons name="triangle" size={20} color="lightgrey" style={{ alignSelf: 'center', marginRight: 10, transform: [{ rotate: '180deg' }] }} />;
+          }}
+        />
+      </View>
+    </View>
+    {/* Negotiable Container */}
+    <View style={styles.negotiableContainer}>
+      <Text style={styles.headerText}>Negotiable?</Text>
+      <View style={styles.negotiableOptions}>
+        <TouchableOpacity
+          style={[styles.option, isNegotiable ? styles.selectedOption : null]}
+          onPress={() => setIsNegotiable(true)}>
+          <View style={[styles.circle, styles.lightGreyCircle]}>
+            {isNegotiable && (
+              <MaterialCommunityIcons name="check" size={24} color="black" />
+            )}
+          </View>
+          <Text style={styles.optionText}>Yes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.option, !isNegotiable ? styles.selectedOption : null]}
+          onPress={() => setIsNegotiable(false)}>
+          <View style={[styles.circle, styles.lightGreyCircle]}>
+            {!isNegotiable && (
+              <MaterialCommunityIcons name="check" size={24} color="black" />
+            )}
+          </View>
+          <Text style={styles.optionText}>No</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</View>
+
+
+          <Text style={styles.headerText}>Size</Text>
+          <View style={styles.inputWithIcon}>
+            <RNPickerSelect
+              onValueChange={(value) => setSize(value)}
+              items={[
+                { label: 'Sedan', value: 'sedan' },
+                { label: 'SUV', value: 'suv' },
+                { label: 'Minivan', value: 'minivan' },
+                { label: 'Full-bed Truck', value: 'fullbedtruck' },
+                { label: 'Half-bed Truck', value: 'halfbedtruck' },
+                { label: 'RV', value: 'rv' },
+                { label: 'Camper Van', value: 'campervan' },
+              ]}
+              style={pickerSelectStyles}
+              value={sizeOfCar}
               useNativeAndroidPickerStyle={false}
               placeholder={{}}
               Icon={() => {
@@ -112,45 +262,13 @@ function CreatePost({ navigation, route }) {
             />
           </View>
 
-          <Text style={styles.headerText}>Negotiable?</Text>
-          <View style={styles.negotiableContainer}>
-            <TouchableOpacity
-              style={styles.option}
-              onPress={() => setIsNegotiable(true)}>
-              <View style={[styles.circle, styles.lightGreyCircle]}>
-                {isNegotiable === true && (
-                  <MaterialCommunityIcons name="check" size={24} color="black" />
-                )}
-              </View>
-              <Text style={styles.optionText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.option, styles.noOption]}
-              onPress={() => setIsNegotiable(false)}>
-              <View style={[styles.circle, styles.lightGreyCircle]}>
-                {isNegotiable === false && (
-                  <MaterialCommunityIcons name="check" size={24} color="black" />
-                )}
-              </View>
-              <Text style={styles.optionText}>No</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.headerText}>Description</Text>
-<View style={styles.inputWithIcon}>
-  <TextInput
-    style={[styles.inputRounded, styles.inputDescription]}
-    placeholder="Describe your space"
-    multiline
-    numberOfLines={4} // Adjust based on your needs
-  />
-</View>
-
-          <Text style={styles.centeredHeaderText}>Available Dates</Text>
-          <Calendar
-            style={styles.calendarStyle}
-            onDayPress={(day) => handleDayPress(day)}
-            markedDates={selectedDates}
+        <Text style={styles.headerText}>Additional Notes</Text>
+        <View style={styles.inputWithIcon}>
+          <TextInput
+            style={[styles.inputRounded, styles.inputDescription]}
+            placeholder="Example: Please enter & exit the spot quietly."
+            multiline
+            numberOfLines={4} // Adjust based on your needs
           />
         </View>
 
@@ -195,13 +313,12 @@ const styles = StyleSheet.create({
    fontSize: 20,
    color: 'black',
    fontWeight: 'bold',
-   marginTop: 15,
+   marginTop: 20,
+   marginBottom: 10,
  },
  inputWithIcon: {
    flexDirection: 'row',
    alignItems: 'center',
-   marginTop: 20,
-  
  },
  iconInsideInput: {
    position: 'absolute',
@@ -219,22 +336,53 @@ const styles = StyleSheet.create({
    paddingLeft: 45,
    borderColor: 'transparent',
  },
+ timeInputRounded: {
+  borderWidth: 1,
+  borderRadius: 20,
+  padding: 10,
+  backgroundColor: '#f0f0f0',
+  fontSize: 16,
+  flex: 1,
+  height: 50,
+  paddingLeft: 15,
+  borderColor: 'transparent',
+},
+ timeButtonContainer: {
+  flexDirection: 'row',
+  flex: 1,
+  flexWrap: "wrap",
+ },
+ inputTime: {
+  flex: 0,
+  width: 60,
+  height: 45,
+  marginRight: 5,
+},
  inputPrice: {
    marginRight: 10,
    flex: 0,
-   width: 160,
+   width: 100,
    height: 45,
-   marginTop: 6,
-   paddingLeft: 45,
+   paddingLeft: 40,
  },
+ priceContainer: {
+  flex: 1,
+  marginRight: 10,
+},
  slash: {
    fontSize: 40,
    color: 'black',
    marginHorizontal: 5,
  },
  negotiableContainer: {
-   flexDirection: 'row',
-   marginTop: 15,
+   flexDirection: 'column',
+   flexWrap: 'wrap',
+ },
+ priceAndNegotiable: {
+  flexDirection: 'row',
+  flex: 1,
+  marginTop: 15,
+  flexWrap: "wrap",
  },
  option: {
    flexDirection: 'row',
@@ -253,6 +401,7 @@ const styles = StyleSheet.create({
    justifyContent: 'center',
    alignItems: 'center',
    backgroundColor: '#f0f0f0',
+   margin: 5,
  },
  optionText: {
    fontSize: 16,
@@ -263,7 +412,7 @@ const styles = StyleSheet.create({
    fontSize: 20,
    color: 'black',
    fontWeight: 'bold',
-   marginTop: 15,
+   marginTop: 35,
    textAlign: 'center',
  },
  calendarStyle: {
@@ -292,9 +441,7 @@ const pickerSelectStyles = StyleSheet.create({
    backgroundColor: '#f0f0f0',
    height: 45,
    marginTop: 6,
-   width: 125,
- 
-  
+   width: 100,
  },
  inputAndroid: {
    fontSize: 16,
