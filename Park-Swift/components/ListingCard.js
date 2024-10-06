@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import arrow from '../assets/arrow.png'; 
 import SavedIcon from '../assets/Vector.png'; 
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#052658",
         borderRadius: 20,
         marginVertical: 7,
-        marginHorizontal: 20,
         overflow: 'hidden',
         width: '90%',
         height: 165,
@@ -114,7 +113,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 14,
         justifyContent: "flex-start",
-        marginTop: 12.5,
+        marginTop: Platform.OS === 'ios' ? '5%' : '3%',
     },
     address: {
         fontSize: 14,

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
 import HamburgerMenu from './hamburgerMenu.js';
+
+const { width, height } = Dimensions.get('window');
 
 const MenuSearchBar = ({ showSearchBar = true }) => {
     const [isMenuVisible, setMenuVisible] = useState(false);
@@ -48,9 +50,9 @@ const styles_searchbar = StyleSheet.create({
         backgroundColor: '#f5f5f5',
         alignSelf: 'center',
         height: 41,
-        width: 303,
+        width: width * 0.70, 
         marginLeft: 'auto',
-        marginRight: 15,
+        marginRight: '4.5%',
     },
     inputText: {
         fontSize: 20,

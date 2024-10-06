@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, } from 'react-native';
 import { useState } from 'react';
 import { getUser } from '../firebaseFunctions/firebaseFirestore';
 import MenuSearchBar from './search';
@@ -41,8 +41,8 @@ function ProfileScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
-            <ScrollView>
-                <MenuSearchBar showSearchBar={false} />
+            <MenuSearchBar showSearchBar={false} />
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <TouchableOpacity onPress={onPostPress}>
                     <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
@@ -59,18 +59,20 @@ function ProfileScreen({ navigation, route }) {
                 <Text style={styles.contactText}>{myUser.email}</Text>
                 <Text style={styles.contactText}>{myUser.phoneNumber}</Text>
                 <Text style={styles.listingsHeader}>My listings:</Text>
-                {listingsData.map((listing) => (
-                    <ListingCard
-                        key={listing.id}
-                        address={listing.address}
-                        date={listing.date}
-                        startTime={listing.startTime}
-                        endTime={listing.endTime}
-                        image={listing.image}
-                        ppHour={listing.ppHour}
-                        listingURL={listing.listingURL}
-                    />
-                ))}
+                <View style={styles.listingsContainer}>
+                    {listingsData.map((listing) => (
+                        <ListingCard
+                            key={listing.id}
+                            address={listing.address}
+                            date={listing.date}
+                            startTime={listing.startTime}
+                            endTime={listing.endTime}
+                            image={listing.image}
+                            ppHour={listing.ppHour}
+                            listingURL={listing.listingURL}
+                        />
+                    ))}
+                </View>
             </ScrollView>
         </View>
     );
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
     },
     bioText: {
         fontSize: 16,
-        fontFamily: 'NotoSansTaiTham',
+        fontFamily: 'NotoSansTaiTham-Regular',
         textAlign: 'left',
         paddingHorizontal: 71,
         alignSelf: 'center',
@@ -118,12 +120,18 @@ const styles = StyleSheet.create({
     contactText: {
         textAlign: 'center',
         fontSize: 16,
-        fontFamily: 'NotoSansTaiTham',
+        fontFamily: 'NotoSansTaiTham-Regular',
     },
     listingsHeader: {
         fontSize: 18,
         fontWeight: 'bold',
         marginLeft: 19,
+    },
+    scrollViewContainer: {
+        paddingBottom: '28%',
+    },
+    listingsContainer: {
+        alignItems: 'center',
     },
 });
 

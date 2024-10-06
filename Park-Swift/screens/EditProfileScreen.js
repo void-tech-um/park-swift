@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, } from 'react-native';
 import User from '../assets/profile.png';
 import Pencil from '../assets/pencil.png';
 import MenuSearchBar from './search';
@@ -29,60 +29,62 @@ function EditProfileScreen({ navigation, route }) {
     return (
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
-            <View style={styles.headerContainer}>
-                <View style={styles.headerSpacer} />
-                <Text style={styles.headerText}>Edit Profile</Text>
-                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                    <Text style={styles.saveButtonText}>Save</Text>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.profileContainer}>
-                <Image
-                    source={User}
-                    style={styles.profileImage}
-                />
-                <TouchableOpacity style={styles.editCircle}>
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <View style={styles.headerContainer}>
+                    <View style={styles.headerSpacer} />
+                    <Text style={styles.headerText}>Edit Profile</Text>
+                    <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                        <Text style={styles.saveButtonText}>Save</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.profileContainer}>
                     <Image
-                        source={Pencil}
-                        style={styles.pencilImage}
+                        source={User}
+                        style={styles.profileImage}
                     />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.formContainer}>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Display name</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={updatedUser.fullName}
-                        onChangeText={(text) => handleInputChange('fullName', text)}
-                    />
+                    <TouchableOpacity style={styles.editCircle}>
+                        <Image
+                            source={Pencil}
+                            style={styles.pencilImage}
+                        />
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Bio (optional)</Text>
-                    <TextInput
-                        style={[styles.input, styles.bioInput]}
-                        value={updatedUser.bio}
-                        onChangeText={(text) => handleInputChange('bio', text)}
-                        multiline
-                    />
+                <View style={styles.formContainer}>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Display name</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={updatedUser.fullName}
+                            onChangeText={(text) => handleInputChange('fullName', text)}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Bio (optional)</Text>
+                        <TextInput
+                            style={[styles.input, styles.bioInput]}
+                            value={updatedUser.bio}
+                            onChangeText={(text) => handleInputChange('bio', text)}
+                            multiline
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={updatedUser.email}
+                            onChangeText={(text) => handleInputChange('email', text)}
+                        />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.label}>Phone number</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={updatedUser.phoneNumber}
+                            onChangeText={(text) => handleInputChange('phoneNumber', text)}
+                        />
+                    </View>
                 </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={updatedUser.email}
-                        onChangeText={(text) => handleInputChange('email', text)}
-                    />
-                </View>
-                <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Phone number</Text>
-                    <TextInput
-                        style={styles.input}
-                        value={updatedUser.phoneNumber}
-                        onChangeText={(text) => handleInputChange('phoneNumber', text)}
-                    />
-                </View>
-            </View>
+            </ScrollView>
         </View>
     );
 }
@@ -160,9 +162,10 @@ const styles = StyleSheet.create({
     },
     bioInput: {
         height: 137,
-        paddingVertical: 10,
         paddingHorizontal: 18,
         textAlign: 'left',
+        textAlignVertical: 'top',
+        paddingTop: 10,
     },
     saveButton: {
         backgroundColor: '#0653A1',
@@ -179,6 +182,9 @@ const styles = StyleSheet.create({
         fontFamily: 'NotoSansTaiTham-Regular',
         textAlign: 'center',
         paddingVertical: 3.5,
+    },
+    scrollViewContainer: {
+        paddingBottom: '28%', 
     },
 });
 
