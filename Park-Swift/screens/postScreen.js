@@ -4,6 +4,10 @@ import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from './search';
 import Dropdown from '../assets/Down.png';
 
+function handleSelect(ranges){ 
+  console.log(ranges); // TO DO: implement
+}
+
 function CustomDropdown({ selectedValue, onValueChange, options }) {
   const [modalVisible, setModalVisible] = React.useState(false);
 
@@ -375,10 +379,14 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   modalContainer: {
+    width: '100%',
+    height: '40%',
+    position: 'absolute',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
+    bottom: 0,
   },
   modalOption: {
     backgroundColor: '#ffffff',
