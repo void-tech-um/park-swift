@@ -1,0 +1,23 @@
+#!/bin/sh
+
+npm install
+
+npm install @react-navigation/material-top-tabs react-native-tab-view
+
+nvm install node --reinstall-packages-from=current
+
+npm install react-native-star-rating
+
+npm install react-native-stars
+
+npm install react-native-maps
+
+npx expo install react-native-pager-view
+
+npm install react-native-keyboard-aware-scroll-view
+
+npm install --save firebase
+
+npm install axios
+
+npm install firebase@10.11.0 --save
