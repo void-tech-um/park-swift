@@ -334,17 +334,17 @@ const FilterScreen = () => {
                                         <View style={[styles.checkbox, useCurrentLocationChecked && styles.checkboxSelected]} />
                                     </TouchableOpacity>
 
-{/* Container for location text and icon */}
-    <View style={[styles.locationBox, { flexDirection: 'row', alignItems: 'center' }]}>
-        {/* Icon on the left */}
-        <Image
-            source={require('../assets/location.png')}  // Replace with the path to your icon
-            style={styles.locationIcon}
-        />
-        
-        {/* Location text */}
-        <Text style={styles.currentLocationText}>{currentLocation}</Text>
-    </View>
+                                    {/* Container for location text and icon */}
+                                    <View style={[styles.locationBox, { flexDirection: 'row', alignItems: 'center' }]}>
+                                        {/* Icon on the left */}
+                                        <Image
+                                            source={require('../assets/location.png')}  // Replace with the path to your icon
+                                            style={styles.locationIcon}
+                                        />
+
+                                        {/* Location text */}
+                                        <Text style={styles.currentLocationText}>{currentLocation}</Text>
+                                    </View>
                                 </View>
                                 <Text style={styles.filterSubheading}>Range:</Text>
                                 <View style={styles.rangeContainer}>
