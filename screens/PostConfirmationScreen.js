@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 
-const ThankYouScreen = () => {
+const PostConfirmationScreen = () => {
   const navigation = useNavigation();
   const handleButtonPress1 = () => {
     // Add your code for the first button press here
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ThankYouScreen;
+export default PostConfirmationScreen;

@@ -6,8 +6,8 @@ import { Image, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import PostScreen from '../screens/postScreen';
-import SavedListings from '../screens/SavedListings';
+import PostScreen from '../screens/PostScreen.js';
+import SavedListingsScreen from '../screens/SavedListingsScreen.js';
 import EditProfileScreen from '../screens/EditProfileScreen';
 
 import HomeIcon from '../assets/home.png';
@@ -103,8 +103,8 @@ const NavBar = ({ route }) => {
                 }}
             />
             <Tab.Screen
-                name="SavedListings"
-                component={SavedListings}
+                name="SavedListingsScreen"
+                component={SavedListingsScreen}
                 initialParams={{ userId }}
                 options={{
                     tabBarLabel: ({ focused }) => (

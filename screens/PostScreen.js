@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import MenuSearchBar from './search';
+import MenuSearchBar from './MenuSearchBar';
 import Dropdown from '../assets/Down.png';
 
 function CustomDropdown({ selectedValue, onValueChange, options }) {
@@ -31,7 +31,7 @@ function CustomDropdown({ selectedValue, onValueChange, options }) {
   );
 }
 
-function CreatePost({ navigation, route }) {
+function PostScreen({ navigation, route }) {
   const [location, setLocation] = React.useState('');
   const [startTime, setStartTime] = React.useState({ hours: '', minutes: '' });
   const [endTime, setEndTime] = React.useState({ hours: '', minutes: '' });
@@ -483,4 +483,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePost;
+export default PostScreen;

@@ -4,7 +4,8 @@ import { View, Image, Text, StyleSheet} from 'react-native';
 import axios from 'axios';
 import { Card } from 'react-native-elements';
 
-const AddressMapping = () => { 
+//THIS IS UNFINISHED, IT SEEMS TO BE FOR GETTING THE IMAGE FOR LISTINGS AUTOMATICALLY BY THE ADDRESS
+const AddressImageScraper = () => { 
   return (
     <View style={styles.container}>
       <Text style={styles.caption}>Address 123</Text>
@@ -73,6 +74,6 @@ const styles = StyleSheet.create({
 //   );
 // };
 
-export default AddressMapping;
+export default AddressImageScraper;
 
 
