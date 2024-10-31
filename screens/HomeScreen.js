@@ -6,7 +6,7 @@ import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from '../screens/MenuSearchBar.js';
 import { useState, useEffect } from 'react';
 import { getPost, filterByPrice } from '../firebaseFunctions/firebaseFirestore';
-import ListingsData from '../components/ListingsData';
+import ListingsData from '../components/ListingsData.js';
 
 function HomeScreen({ route }) {
   const [posts, setPosts] = useState([]);
