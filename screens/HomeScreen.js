@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, } from 'react-native';
-import SortingButton from '../components/SortingButton2';
+import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
-import MenuSearchBar from './search';
+import MenuSearchBar from '../screens/MenuSearchBar.js';
 import { useState, useEffect } from 'react';
 import { getPost, filterByPrice } from '../firebaseFunctions/firebaseFirestore';
-import listingsData from '../components/listingsData';
+import ListingsData from '../components/ListingsData';
 
 function HomeScreen({ route }) {
   const [posts, setPosts] = useState([]);
@@ -50,7 +50,7 @@ function HomeScreen({ route }) {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {listingsData.map((listing) => (
+        {ListingsData.map((listing) => (
           <ListingCard
             key={listing.id}
             address={listing.address}

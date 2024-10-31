@@ -1,4 +1,4 @@
-const listingsData = [
+const ListingsData = [
   {
       id: 1,
       address: "419 S State St, Ann Arbor",
@@ -41,4 +41,4 @@ const listingsData = [
   },
 ];
 
-export default listingsData;
+export default ListingsData;

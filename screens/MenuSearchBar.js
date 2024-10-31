@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
-import HamburgerMenu from './hamburgerMenu.js';
+import HamburgerMenu from './HamburgerMenu.js';
 
 const { width, height } = Dimensions.get('window');
 

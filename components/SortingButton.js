@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import FilterScreen from '../screens/filter';
+import FilterScreen from '../screens/FilterScreen';
 import Filter from '../assets/Filter.png';
 const SortingButton = () => {
     const navigation = useNavigation();

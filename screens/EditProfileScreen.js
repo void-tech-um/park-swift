@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, } from 'react-native';
 import User from '../assets/profile.png';
 import Pencil from '../assets/pencil.png';
-import MenuSearchBar from './search';
+import MenuSearchBar from './MenuSearchBar';
 import { updateUser } from '../firebaseFunctions/firebaseFirestore';
 
 function EditProfileScreen({ navigation, route }) {

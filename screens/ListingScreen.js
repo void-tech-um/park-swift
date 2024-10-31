@@ -9,11 +9,11 @@ import PavedEntrance from '../assets/PavedEntrance.png';
 import PrivateProperty from '../assets/PrivateProperty.png';  
 import Save from '../assets/Save.png'; 
 import CarImage from '../assets/CarImage.png'; 
-import MenuSearchBar from './search';
+import MenuSearchBar from './MenuSearchBar';
 
 const { width, height } = Dimensions.get('window');
 
-const Listing = ({ route }) => {
+const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
     const { address, ppHour, myUser } = route.params;
 
@@ -386,4 +386,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Listing;
+export default ListingScreen;

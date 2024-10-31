@@ -2,10 +2,10 @@ import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, } from 'react-native';
 import { useState } from 'react';
 import { getUser } from '../firebaseFunctions/firebaseFirestore';
-import MenuSearchBar from './search';
+import MenuSearchBar from './MenuSearchBar';
 import { useFocusEffect } from '@react-navigation/native';
 import ListingCard from '../components/ListingCard';
-import listingsData from '../components/listingsData';
+import listingsData from '../components/ListingsData';
 import User from '../assets/profile.png';
 
 function ProfileScreen({ navigation, route }) {

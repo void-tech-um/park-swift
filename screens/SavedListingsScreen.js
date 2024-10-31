@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
-import SearchbarComponent from './searchBar';
-import MenuSearchBar from './search';
+import SearchbarComponent from './SearchBar';
+import MenuSearchBar from './MenuSearchBar';
 import ListingCard from '../components/ListingCard';
-import listingsData from '../components/listingsData';
+import ListingsData from '../components/ListingsData';
 
-const SavedListings = () => {
+const SavedListingsScreen = () => {
   return (
     <View style={styles.container}>
       <MenuSearchBar showSearchBar={false} />
@@ -19,7 +19,7 @@ const SavedListings = () => {
       <SearchbarComponent />
       <View style={styles.listingsContainer}>
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-          {listingsData.map((listing) => (
+          {ListingsData.map((listing) => (
             <ListingCard
               key={listing.id}
               address={listing.address}
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SavedListings;
+export default SavedListingsScreen;
