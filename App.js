@@ -63,7 +63,7 @@ function App({ route }) {
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
         <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
-        <Stack.Screen name="ListingScreen" component={ListingScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
       </Stack.Navigator>
