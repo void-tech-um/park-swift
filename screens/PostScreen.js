@@ -3,6 +3,15 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Image, Scro
 import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from './MenuSearchBar';
 import Dropdown from '../assets/Down.png';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import PostConfirmationScreen from '../screens/PostConfirmationScreen.js';
+
+
+// dummy function
+const handleSelect = (index) => {
+  console.log(index);
+};
 
 function CustomDropdown({ selectedValue, onValueChange, options }) {
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -42,6 +51,7 @@ function PostScreen({ navigation, route }) {
   const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState('');
   const [selectedDates, setSelectedDates] = React.useState({});
+  const [isButtonEnabled, setIsButtonEnabled] = React.useState(false);
 
   const handleDateSelect = (date) => {
     const dateString = date.dateString;
@@ -148,6 +158,17 @@ function PostScreen({ navigation, route }) {
     setTags(newTags);
   };
 
+  const handleListButtonPress = () => {
+    navigation.navigate(PostConfirmationScreen); // Navigate to the Target screen
+  };
+
+
+  React.useEffect(() => {
+    const isFilled = location && startTime.hours && startTime.minutes && endTime.hours && endTime.minutes && price && size && Object.keys(selectedDates).length > 0;
+    setIsButtonEnabled(isFilled);
+  }, [location, startTime, endTime, price, size, selectedDates]);
+
+  
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
       <MenuSearchBar showSearchBar={false} />
@@ -287,7 +308,11 @@ function PostScreen({ navigation, route }) {
         value={notes}
         onChangeText={setNotes}
       />
-      <TouchableOpacity style={styles.listButton}>
+      <TouchableOpacity 
+        style={[styles.listButton, { backgroundColor: isButtonEnabled ? '#4CAF50' : '#A8A8A8' }]}
+        disabled={!isButtonEnabled}
+        onPress={handleListButtonPress}
+      >
         <Text style={styles.listButtonText}>List</Text>
       </TouchableOpacity>
     </ScrollView>
