@@ -6,9 +6,7 @@ export default function ListSpaceButton({onPress}) {
     const navigation = useNavigation();
 
     const handlePress = () => {
-        // Navigate to the "ThankYou" screen
-        onPress();
-        
+        onPress(); 
     };
     return (
         <View style={styles.container}>

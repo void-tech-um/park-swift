@@ -8,7 +8,6 @@ const SortingButton = () => {
 
 
     const handlePress = () => {
-      // Placeholder for future functionality
       console.log('Button pressed');
       navigation.navigate('FilterScreen', { FilterScreen });
     };
