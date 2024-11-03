@@ -27,6 +27,10 @@ const FilterScreen = () => {
     const [minPrice, setMinPrice] = useState('10');
     const [maxPrice, setMaxPrice] = useState('100');
     const [pricePer, setPricePer] = useState('Hour');
+    const [useAddressChecked, setUseAddressChecked] = useState(false);
+    const [useCurrentLocationChecked, setUseCurrentLocationChecked] = useState(false);
+    const [timeRangeChecked, setTimeRangeChecked] = useState(false);
+    const [mileRangeChecked, setMileRangeChecked] = useState(false);
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -44,7 +48,7 @@ const FilterScreen = () => {
     };
 
     const toggleTimeFrame = (timeFrame) => {
-        setSelectedTimeFrames(prev => ({...prev, [timeFrame]: !prev[timeFrame]}));
+        setSelectedTimeFrames(prev => ({ ...prev, [timeFrame]: !prev[timeFrame] }));
     };
 
     const handleDateSelect = (date) => {
@@ -142,7 +146,34 @@ const FilterScreen = () => {
         setSelectedDates(updatedSelectedDates);
     };
       
-    
+    const handleAddressCheck = () => {
+        setUseAddressChecked(!useAddressChecked);
+        if (!useAddressChecked) {
+            setUseCurrentLocationChecked(false); // Uncheck "Use current location"
+        }
+    };
+
+    const handleCurrentLocationCheck = () => {
+        setUseCurrentLocationChecked(!useCurrentLocationChecked);
+        if (!useCurrentLocationChecked) {
+            setUseAddressChecked(false); // Uncheck "Use input address"
+        }
+    };
+
+    const handleTimeRangeCheck = () => {
+        setTimeRangeChecked(!timeRangeChecked);
+        if (!timeRangeChecked) {
+            setMileRangeChecked(false); // Uncheck "Mile range"
+        }
+    };
+
+    const handleMileRangeCheck = () => {
+        setMileRangeChecked(!mileRangeChecked);
+        if (!mileRangeChecked) {
+            setTimeRangeChecked(false); // Uncheck "Time range"
+        }
+    };
+
     const resetDateTimeFilter = () => {
         setSelectedDates({});
         setSelectedTimeFrames({});
@@ -279,42 +310,69 @@ const FilterScreen = () => {
                                 </View>
                                 <Text style={styles.filterSubheading}>Close By:</Text>
                                 <View style={styles.inputContainer}>
-                                    <Text style={styles.inputLabel}>Use input address</Text>
-                                    <TextInput
-                                        style={styles.textInput}
-                                        placeholder="123 Address Rd"
-                                        value={addressInput}
-                                        onChangeText={setAddressInput}
-                                    />
+                                    <Text style={styles.checkboxLabel}>Use input address</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={handleAddressCheck}>
+                                            <View style={[styles.checkbox, useAddressChecked && styles.checkboxSelected]} />
+                                        </TouchableOpacity>
+                                        <TextInput
+                                            style={[styles.textInput, { flex: 1, marginLeft: 10 }]}
+                                            placeholder="123 Address Rd"
+                                            value={addressInput}
+                                            onChangeText={setAddressInput}
+                                            editable={useAddressChecked}
+                                        />
+                                    </View>
                                 </View>
                                 <View style={styles.inputContainer}>
                                     <Text style={styles.inputLabel}>Use current location</Text>
-                                    <View style={styles.currentLocationContainer}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <TouchableOpacity onPress={handleCurrentLocationCheck}>
+                                        <View style={[styles.checkbox, useCurrentLocationChecked && styles.checkboxSelected]} />
+                                    </TouchableOpacity>
+                                    <View style={[styles.currentLocationContainer, { flexDirection: 'row', alignItems: 'center' }]}>
                                         <Image source={Location} style={styles.locationIcon} />
                                         <Text style={styles.currentLocationText}>{currentLocation}</Text>
                                     </View>
                                 </View>
+                                </View>
                                 <Text style={styles.filterSubheading}>Range:</Text>
                                 <View style={styles.rangeContainer}>
-                                    <Text style={styles.rangeLabel}>Time range</Text>
+                                    <View style={styles.checkboxContainer}>
+                                        <Text style={styles.rangeLabel}>
+
+                                            Time range
+                                        </Text>
+                                    </View>
                                     <View style={styles.rangeInputContainer}>
+                                        <TouchableOpacity onPress={handleTimeRangeCheck}>
+                                            <View style={[styles.checkbox, timeRangeChecked && styles.checkboxSelected]} />
+                                        </TouchableOpacity>
                                         <Text style={styles.rangeInputLabel}>Less than</Text>
                                         <TouchableOpacity style={styles.rangeDropdown}>
                                             <Text style={styles.rangeDropdownText}>{timeRange}</Text>
                                             <Image source={WhiteDropdown} style={styles.dropdownIcon} />
                                         </TouchableOpacity>
-                                        <Text style={styles.rangeInputLabel}>away.</Text>
+                                        <Text style={styles.rangeInputLabel}> away.</Text>
                                     </View>
                                 </View>
                                 <View style={styles.rangeContainer}>
-                                    <Text style={styles.rangeLabel}>Mile range</Text>
+                                    <View style={styles.checkboxContainer}>
+                                        <Text style={styles.rangeLabel}>
+
+                                            Mile range
+                                        </Text>
+                                    </View>
                                     <View style={styles.rangeInputContainer}>
+                                        <TouchableOpacity onPress={handleMileRangeCheck}>
+                                            <View style={[styles.checkbox, mileRangeChecked && styles.checkboxSelected]} />
+                                        </TouchableOpacity>
                                         <Text style={styles.rangeInputLabel}>Less than</Text>
                                         <TouchableOpacity style={styles.rangeDropdown}>
                                             <Text style={styles.rangeDropdownText}>{mileRange}</Text>
                                             <Image source={WhiteDropdown} style={styles.dropdownIcon} />
                                         </TouchableOpacity>
-                                        <Text style={styles.rangeInputLabel}>away.</Text>
+                                        <Text style={styles.rangeInputLabel}> away.</Text>
                                     </View>
                                 </View>
                             </View>
@@ -751,8 +809,8 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     locationIcon: {
-        width: 20,
-        height: 20,
+        width: 34,
+        height: 27,
         marginRight: 10,
     },
     currentLocationText: {
