@@ -7,6 +7,8 @@ import MenuSearchBar from './MenuSearchBar.js';
 import { useState, useEffect } from 'react';
 import { getPost, filterByPrice } from '../firebaseFunctions/firebaseFirestore';
 import ListingsData from '../components/ListingsData.js';
+import Car from '../assets/car.png'; 
+import { useNavigation } from "@react-navigation/native";
 
 function HomeScreen({ route }) {
   const [posts, setPosts] = useState([]);

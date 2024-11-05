@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
   thankYouText: {
     fontSize: 24,
     fontWeight: 'bold',
-    //marginBottom: 25,
   },
   additionalText: {
     fontSize: 24,
@@ -53,12 +52,11 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#D3D3D3', // Light gray color
+    backgroundColor: '#D3D3D3',
     padding: 13,
-    borderRadius: 17, // Rounded corners
-    //marginBottom: 20, // Space between buttons
-    width: 340, // Button width
-    alignItems: 'center', // Center text horizontally
+    borderRadius: 17, 
+    width: 340, 
+    alignItems: 'center', 
   },
   buttonText: {
     fontSize: 16,

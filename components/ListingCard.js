@@ -10,48 +10,59 @@ const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, lis
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
-        navigation.navigate('Listing', { id, address, ppHour, listingURL });
+        navigation.navigate('Listing', { 
+            id, 
+            address, 
+            ppHour, 
+            listingURL, 
+            date, 
+            userID, 
+            startTime, 
+            endTime
+        });
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.contentContainer}>
-                <View style={styles.topSection}>
-                    <Text style={styles.address}>{address}</Text>
-                    {showSavedIcon && (
-                        <Image
-                            source={SavedIcon}
-                            style={styles.savedIcon}
-                        />
-                    )}
-                </View>
-                <View style={styles.imageContainer}>
-                    <Image
-                        source={Car}
-                        style={styles.image}
-                    />
-                </View>
-                <View style={styles.bottomSection}>
-                    <View style={styles.content}>
-                        <Text style={styles.price}>{ppHour}</Text>
-                        <Text style={styles.description}>10 minutes away</Text>
-                        <Text style={styles.description}>{date}</Text>
-                        {startTime && endTime && (
-                            <Text style={styles.description}>{startTime} - {endTime}</Text>
+        <TouchableOpacity onPress={handleSeeMorePress}>
+            <View style={styles.container}>
+                <View style={styles.contentContainer}>
+                    <View style={styles.topSection}>
+                        <Text style={styles.address}>{address}</Text>
+                        {showSavedIcon && (
+                            <Image
+                                source={SavedIcon}
+                                style={styles.savedIcon}
+                            />
                         )}
                     </View>
-                    {!isAvailable && <UnavailableBadge />}
-                    {isAvailable && (
-                        <TouchableOpacity onPress={handleSeeMorePress}>
-                            <Image
-                                source={arrow}
-                                style={styles.button}
-                            />
-                        </TouchableOpacity>
-                    )}
+                    <View style={styles.imageContainer}>
+                        <Image
+                            source={Car}
+                            style={styles.image}
+                        />
+                    </View>
+                    <View style={styles.bottomSection}>
+                        <View style={styles.content}>
+                            <Text style={styles.price}>{ppHour}</Text>
+                            <Text style={styles.description}>x minutes away</Text>
+                            <Text style={styles.description}>{date}</Text>
+                            {startTime && endTime && (
+                                <Text style={styles.description}>{startTime} - {endTime}</Text>
+                            )}
+                        </View>
+                        {!isAvailable && <UnavailableBadge />}
+                        {isAvailable && (
+                            <TouchableOpacity onPress={handleSeeMorePress}>
+                                <Image
+                                    source={arrow}
+                                    style={styles.button}
+                                />
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 

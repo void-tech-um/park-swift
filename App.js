@@ -17,7 +17,6 @@ import FilterScreen from './screens/FilterScreen.js';
 import EditProfileScreen from './screens/EditProfileScreen.js';
 
 const Stack = createStackNavigator();
-const Tab = createMaterialTopTabNavigator();
 
 const loadFonts = () => {
   return Font.loadAsync({
@@ -29,20 +28,17 @@ const loadFonts = () => {
   });
 };
 
-function App({ route }) {
+function App() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     async function prepare() {
       try {
-        // Keep the splash screen visible while we fetch resources
         await SplashScreen.preventAutoHideAsync();
-        // Pre-load fonts, make any API calls you need to do here
         await loadFonts();
       } catch (e) {
         console.warn(e);
       } finally {
-        // Tell the application to render
         setIsReady(true);
         await SplashScreen.hideAsync();
       }
@@ -52,13 +48,12 @@ function App({ route }) {
   }, []);
 
   if (!isReady) {
-    return null; // Render nothing while loading
+    return null; 
   }
   
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* TODO: LoginScreen AND RegistrationScreen COMMENTED OUT FOR DISABLING LOGIN DURING DEVELOPMENT */}
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
