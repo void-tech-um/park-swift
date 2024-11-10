@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Image, Scro
 import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from './MenuSearchBar';
 import Dropdown from '../assets/Down.png';
+import { createPost } from '../firebaseFunctions/firebaseFirestore';
 
 function CustomDropdown({ selectedValue, onValueChange, options }) {
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -148,6 +149,26 @@ function PostScreen({ navigation, route }) {
     setTags(newTags);
   };
 
+  const onPostPress = () => {
+    const userId = route.params.userId; 
+    const firstDate = Object.keys(selectedDates)[0];
+    const lastDate = Object.keys(selectedDates)[Object.keys(selectedDates).length - 1];
+  
+    if (!firstDate || !lastDate) {
+      alert("Please select a valid date range.");
+      return;
+    }
+  
+    createPost(userId, location, 'hour', price, true, firstDate, lastDate)
+      .then(() => {
+        navigation.navigate('PostConfirmationScreen');
+      })
+      .catch((error) => {
+        console.error('Error creating post:', error);
+        alert('Error creating post:', error.message);
+      });
+  };
+  
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
       <MenuSearchBar showSearchBar={false} />
@@ -287,7 +308,7 @@ function PostScreen({ navigation, route }) {
         value={notes}
         onChangeText={setNotes}
       />
-      <TouchableOpacity style={styles.listButton}>
+      <TouchableOpacity style={styles.listButton} onPress={onPostPress}>
         <Text style={styles.listButtonText}>List</Text>
       </TouchableOpacity>
     </ScrollView>
