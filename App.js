@@ -6,6 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
+
+import HomeScreen from './screens/HomeScreen.js';
 import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
@@ -55,6 +57,7 @@ function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
+        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: true }}/>
         <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
         <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>

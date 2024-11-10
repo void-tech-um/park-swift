@@ -5,13 +5,11 @@ import { useNavigation } from "@react-navigation/native";
 const PostConfirmationScreen = () => {
   const navigation = useNavigation();
   const handleButtonPress1 = () => {
-    // Add your code for the first button press here
     navigation.navigate('List Your Space');
   };
 
-  const handleButtonPress2 = () => {
-    // Add your code for the second button press here
-    navigation.navigate('Home');
+  const handleReturnHome = () => {
+    navigation.popToTop();
   };
 
   return (
@@ -22,11 +20,11 @@ const PostConfirmationScreen = () => {
         style={styles.button}
         onPress={handleButtonPress1}
       >
-        <Text style={styles.buttonText}>Continue listing</Text>
+        <Text style={styles.buttonText}>List another</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={handleButtonPress2}
+        onPress={handleReturnHome}
       >
         <Text style={styles.buttonText}>Return back to home</Text>
       </TouchableOpacity>
@@ -42,25 +40,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   thankYouText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 25,
+    fontFamily: "NotoSansTaiTham-Bold",
   },
   additionalText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 30,
+    fontSize: 25,
+    fontFamily: "NotoSansTaiTham-Bold",
+    marginBottom: 30
   },
   button: {
     marginTop: 20,
     backgroundColor: '#D3D3D3',
-    padding: 13,
-    borderRadius: 17, 
-    width: 340, 
-    alignItems: 'center', 
+    borderRadius: 20, 
+    width: 400, 
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#0653A1",
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: "NotoSansTaiTham-Bold",
+    color: "white",
   },
 });
 

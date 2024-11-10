@@ -1,8 +1,11 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, getDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
-import { database } from '../services/configFirestore';
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, } from "firebase/firestore";
+import { app } from '../services/configFirestore';
 
 const auth = getAuth();
+const database = getFirestore(app);
+
+export { collection, getDocs, doc, query, where, addDoc, setDoc, getDoc, database };
 
 export const updateUser = async (user) => {
     try {
@@ -45,8 +48,9 @@ export function loginUser(email, password) {
 }
 
 export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate) {
-    if (!location || !rentalPeriod || !price || negotiable == null || !firstDate || !lastDate) {
+    if (!location || !firstDate || !lastDate) {
         alert('All parameters must be provided');
+        return Promise.reject(new Error('Missing required parameters'));
     }
     const postsCollectionRef = collection(database, 'posts');
     const postData = {
@@ -62,7 +66,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
     return addDoc(postsCollectionRef, postData)
         .then((docRef) => {
             const userPostsDocRef = doc(database, 'users', userID, 'posts', docRef.id);
-            return setDoc(userPostsDocRef, { id: docRef.id });
+            return setDoc(userPostsDocRef, { id: docRef.id }).then(() => docRef);
         })
         .catch((error) => {
             alert('Error creating post:', error);

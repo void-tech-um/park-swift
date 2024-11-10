@@ -1,42 +1,70 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, } from 'react-native';
 import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './MenuSearchBar.js';
-import { useState, useEffect } from 'react';
-import { getPost, filterByPrice } from '../firebaseFunctions/firebaseFirestore';
+import { getPost, filterByPrice, getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
 import ListingsData from '../components/ListingsData.js';
 import Car from '../assets/car.png'; 
 import { useNavigation } from "@react-navigation/native";
 
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
 function HomeScreen({ route }) {
   const [posts, setPosts] = useState([]);
   const [myPost, setMyPost] = useState(null);
+  const userID = route.params?.userID; 
+  const navigation = useNavigation();
 
+  const navigateToHomeScreen = () => {
+    navigation.navigate('HomeScreen', { userID: userID });
+  };
+  
   useEffect(() => {
     async function fetchPosts() {
-      const posts = await filterByPrice(1, 20);
-      setPosts(posts); // Update the posts state variable
+        try {
+            const postsCollectionRef = collection(database, "posts"); // Use 'database' here
+            const querySnapshot = await getDocs(postsCollectionRef);
+            const postList = querySnapshot.docs.map((doc) => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    address: data.location,
+                    date: `${formatDate(data.firstDate)} - ${formatDate(data.lastDate)}`,
+                    startTime: null,
+                    endTime: null,
+                    ppHour: `$${data.price} /${data.rentalPeriod}`,
+                    userID: data.userID,
+                };
+            });
+            setPosts(postList);
+        } catch (error) {
+            console.error("Error fetching posts:", error);
+        }
     }
     fetchPosts();
-    getPost('9YCofto5I1dUh2M2lbho')
-      .then((postData) => {
-        setMyPost(postData);
-      })
-      .catch((error) => {
-        console.error('Error fetching post:', error);
-      });
-  }, []); // Add this line
 
-  if (!myPost || !posts) {
+    getPost('9YCofto5I1dUh2M2lbho')
+        .then((postData) => {
+            setMyPost(postData);
+        })
+        .catch((error) => {
+            console.error('Error fetching post:', error);
+        });
+  }, []);
+
+  if (!myPost || posts.length === 0) {
     return <Text>Loading...</Text>;
   }
 
   console.log(posts);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <MenuSearchBar />
       </TouchableWithoutFeedback>
@@ -52,16 +80,17 @@ function HomeScreen({ route }) {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {ListingsData.map((listing) => (
+        {posts.map((post) => (
           <ListingCard
-            key={listing.id}
-            address={listing.address}
-            date={listing.date}
-            startTime={listing.startTime}
-            endTime={listing.endTime}
-            image={listing.image}
-            ppHour={listing.ppHour}
-            listingURL={listing.listingURL}
+            key={post.id}
+            address={post.address || 'No address available'}
+            date={post.date || 'No date available'}
+            startTime={post.startTime}
+            endTime={post.endTime}
+            image={post.image || Car}
+            ppHour={post.ppHour}
+            listingURL={post.listingURL || '#'}
+            userID={post.userID}
           />
         ))}
       </ScrollView>

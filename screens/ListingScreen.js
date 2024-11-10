@@ -10,18 +10,50 @@ import PrivateProperty from '../assets/PrivateProperty.png';
 import Save from '../assets/Save.png'; 
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from './MenuSearchBar';
+import { useState, useEffect } from 'react';
+import { app } from "../services/configFirestore" 
+import { getFirestore, collection, getDoc, doc } from "firebase/firestore";
 
 const { width, height } = Dimensions.get('window');
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, myUser } = route.params;
+    const { address, ppHour, userID, date, postId} = route.params || {};
+
+    const [post, setPost] = useState(null);
+    const [user, setUser] = useState(null);
+    const [firstName, setFirstName] = useState('First');
+    const [lastName, setLastName] = useState('Last');
 
     const handleBackPress = () => {
         navigation.goBack();
     };
 
-    const displayAddress = address.split(',')[0];
+    useEffect(() => {
+        const fetchPostData = async () => {
+            try {
+                const postData = await getPost(postId);
+                setPost(postData);
+                const userId = postData.userID;
+                const userDoc = await getDoc(doc(database, 'users', userId));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    setUser(userData);
+                    const fullName = userData.fullName || "First Last";
+                    const [first, last] = fullName.split(' ');
+                    setFirstName(first);
+                    setLastName(last);
+                }
+            } catch (error) {
+                console.error("Error fetching post data:", error);
+            }
+        };
+        if (postId) {
+            fetchPostData();
+        }
+    }, [postId]);
+
+    const displayAddress = address ? address.split(',')[0] : 'No address available';
 
     const formatCostText = (cost) => {
         if (cost.includes('hr')) {
@@ -35,9 +67,6 @@ const ListingScreen = ({ route }) => {
     const removeSpaces = (text) => {
         return text.replace(/\s/g, '');
     };
-
-    const fullName = myUser?.fullName || "First Last";
-    const [firstName, lastName] = fullName.split(' ');
 
     const getImageMargins = () => {
         if (width > 447) {

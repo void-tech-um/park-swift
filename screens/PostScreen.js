@@ -160,13 +160,13 @@ function PostScreen({ navigation, route }) {
     }
   
     createPost(userId, location, 'hour', price, true, firstDate, lastDate)
-      .then(() => {
-        navigation.navigate('PostConfirmationScreen');
-      })
-      .catch((error) => {
-        console.error('Error creating post:', error);
-        alert('Error creating post:', error.message);
-      });
+        .then((docRef) => {
+            navigation.navigate('PostConfirmationScreen', { postId: docRef.id });
+        })
+        .catch((error) => {
+            console.error('Error creating post:', error);
+            alert('Error creating post:', error.message);
+        });
   };
   
   return (

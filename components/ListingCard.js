@@ -6,17 +6,17 @@ import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
-const ListingCard = ({ id, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
+const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
         navigation.navigate('Listing', { 
             id, 
+            userID,
             address, 
+            date,
             ppHour, 
             listingURL, 
-            date, 
-            userID, 
             startTime, 
             endTime
         });
