@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -12,7 +11,6 @@ import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
 import ListingScreen from './screens/ListingScreen.js';
-import PostScreen from './screens/PostScreen.js';
 import FilterScreen from './screens/FilterScreen.js';
 import EditProfileScreen from './screens/EditProfileScreen.js';
 
@@ -28,27 +26,27 @@ const loadFonts = () => {
   });
 };
 
+SplashScreen.preventAutoHideAsync();
+
 function App() {
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     async function prepare() {
       try {
-        await SplashScreen.preventAutoHideAsync();
         await loadFonts();
       } catch (e) {
         console.warn(e);
       } finally {
         setIsReady(true);
-        await SplashScreen.hideAsync();
+        SplashScreen.hideAsync();
       }
     }
-
     prepare();
   }, []);
 
   if (!isReady) {
-    return null; 
+    return null;
   }
   
   return (
