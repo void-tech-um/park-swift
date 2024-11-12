@@ -43,7 +43,7 @@ function PostScreen({ navigation, route }) {
   const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState('');
   const [selectedDates, setSelectedDates] = React.useState({});
-
+  
   const handleDateSelect = (date) => {
     const dateString = date.dateString;
     let updatedSelectedDates = { ...selectedDates };

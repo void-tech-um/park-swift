@@ -13,7 +13,8 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "AIzaSyBou68kGUkMw6JWn6ytfaoVm2DUtwm_cXg"
+        "googleMapsApiKey": "AIzaSyAoIxy7B-Yn7WLvzXPpwBVFhjkc22-7MrI",
+        "placesApiKey": "AIzaSyCji2-QddGTOiDYXzhBcpsSzpuPt9I1-pw"
       }
     },
     "android": {
@@ -24,7 +25,8 @@
       "package": "com.voidtech.parkswift",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAlo1fkwhVkPlnLC45s_nytlNUwpP17MpQ"
+          "apiKey": "AIzaSyDy0sdb0KP2qAp9bQbYT1NeOAucFyCBI1w",
+          "placesApiKey": "AIzaSyCji2-QddGTOiDYXzhBcpsSzpuPt9I1-pw"
         }
       }
     },

@@ -6,7 +6,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-
 import HomeScreen from './screens/HomeScreen.js';
 import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
 import NavBar from './components/NavBar.js';
