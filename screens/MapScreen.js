@@ -1,48 +1,64 @@
-import React from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, Dimensions, View, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import MenuSearchBar from './MenuSearchBar';
+import * as Location from 'expo-location';
 
-const MapScreen = () => {
-  const markers = [
-    { id: '1', latitude: 42.280826, longitude: -83.743038, title: 'Ann Arbor' }, 
-  ];
+const { width, height } = Dimensions.get('window');
+const markerSize = Math.min(width, height) * 0.1; 
+
+const MapComponent = () => {
+  const [userLocation, setUserLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      try {
+        const location = await Location.getCurrentPositionAsync({});
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        setErrorMsg('Error fetching location');
+        console.error(error);
+      }
+    })();
+  }, []);
+
+  if (errorMsg) {
+    return <Text>{errorMsg}</Text>;
+  }
+
+  if (!userLocation) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
-        <MenuSearchBar />
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 42.280826,
-            longitude: -83.743038,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }}
-        >
-          {markers.map(marker => (
-            <Marker
-              key={marker.id}
-              coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-              title={marker.title}
-            />
-          ))}
-        </MapView>
-      </View>
-    </TouchableWithoutFeedback>
+    <MapView
+      style={{ flex: 1 }}
+      initialRegion={{
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      }}
+    >
+      <Marker coordinate={userLocation} title="You are here">
+        <View>
+          <Image
+            source={require('../assets/user-marker.png')}
+            style={{ width: markerSize, height: markerSize }} // Dynamically set size here
+          />
+        </View>
+      </Marker>
+    </MapView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-});
-
-export default MapScreen;
+export default MapComponent;
