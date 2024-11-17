@@ -4,7 +4,8 @@ import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from './MenuSearchBar';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
-
+import RNPickerSelect from 'react-native-picker-select';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 function CustomDropdown({ selectedValue, onValueChange, options }) {
   const [modalVisible, setModalVisible] = React.useState(false);
 
@@ -39,7 +40,9 @@ function PostScreen({ navigation, route }) {
   const [startPeriod, setStartPeriod] = React.useState('AM');
   const [endPeriod, setEndPeriod] = React.useState('AM');
   const [price, setPrice] = React.useState('');
-  const [size, setSize] = React.useState('');
+  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
+  const [isNegotiable, setIsNegotiable] = React.useState(null);
+  const [sizeOfCar, setSize] = React.useState('sedan');
   const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState('');
   const [selectedDates, setSelectedDates] = React.useState({});
@@ -159,7 +162,7 @@ function PostScreen({ navigation, route }) {
       return;
     }
   
-    createPost(userId, location, 'hour', price, true, firstDate, lastDate)
+    createPost(userId, location, rentalPeriod, 'hour', price, sizeOfCar, isNegotiable, firstDate, lastDate)
         .then((docRef) => {
             navigation.navigate('PostConfirmationScreen', { postId: docRef.id });
         })
@@ -258,31 +261,105 @@ function PostScreen({ navigation, route }) {
                 selectedDayTextColor: 'black',
               }}
           />
+      </View>
+      <View style={styles.priceAndNegotiableContainer}>
+        <View style={styles.priceSection}>
+          <Text style={styles.subHeading}>Price</Text>
+          <View style={[styles.inputGroupContainer, { marginTop: '-2.5%' }]}>
+            <TextInput
+              style={styles.inputPrice}
+              keyboardType="numeric"
+              placeholder="0.00"
+              value={price}
+              onChangeText={setPrice}
+            />
+            <Text style={styles.slash}>/</Text>
+            <RNPickerSelect
+              onValueChange={(value) => setRentalPeriod(value)}
+              items={[
+                { label: 'Hour', value: 'hour' },
+                { label: 'Day', value: 'day' },
+                { label: 'Week', value: 'week' },
+                { label: 'Month', value: 'month' },
+              ]}
+              style={{
+                inputIOS: {
+                  fontSize: 16,
+                  paddingVertical: 10,
+                  paddingHorizontal: 10,
+                  borderRadius: 17,
+                  backgroundColor: '#E9E9E9',
+                  height: 40,
+                  width: 110,
+                  paddingLeft: '4.75%',
+                },
+                inputAndroid: {
+                  fontSize: 16,
+                  paddingVertical: 8,
+                  paddingHorizontal: 10,
+                  borderRadius: 17,
+                  backgroundColor: '#E9E9E9',
+                  height: 40,
+                  width: 100,
+                },
+                iconContainer: {
+                  top: '40%',
+                  right: 18,
+                },
+              }}
+              value={rentalPeriod}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => (
+                <Image source={Dropdown} style={styles.dropdownImage} />
+              )}
+            />
+          </View>
         </View>
 
-      <Text style={styles.subHeading}>Price</Text>
-      <View style={styles.priceContainer}>
-        <TextInput
-          style={styles.priceInput}
-          placeholder="$0.00"
-          placeholderTextColor="#A8A8A8"
-          keyboardType="numeric"
-          value={price}
-          onChangeText={setPrice}
-        />
-        <CustomDropdown
-          selectedValue="$ / sem-hr"
-          onValueChange={() => {}}
-          options={['$ / sem-hr', '$ / hour', '$ / day']}
-        />
+        <View style={styles.negotiableSection}>
+          <Text style={styles.subHeading}>Negotiable?</Text>
+          <View style={styles.negotiableOptions}>
+            <TouchableOpacity
+              style={[styles.option, isNegotiable === true ? styles.selectedOption : null]}
+              onPress={() => setIsNegotiable(true)}
+            >
+              <View style={[styles.circle, isNegotiable === true ? styles.selectedCircle : styles.unselectedCircle]} />
+              <Text style={styles.optionText}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.option, isNegotiable === false ? styles.selectedOption : null]}
+              onPress={() => setIsNegotiable(false)}
+            >
+              <View style={[styles.circle, isNegotiable === false ? styles.selectedCircle : styles.unselectedCircle]} />
+              <Text style={styles.optionText}>No</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       <Text style={styles.subHeading}>Size</Text>
-      <CustomDropdown
-        selectedValue={size || "Select"}
-        onValueChange={setSize}
-        options={['Small', 'Medium', 'Large']}
-      />
+      <View style={styles.inputWithIcon}>
+        <RNPickerSelect
+          onValueChange={(value) => setSize(value)}
+          items={[
+            { label: 'Sedan', value: 'sedan' },
+            { label: 'SUV', value: 'suv' },
+            { label: 'Minivan', value: 'minivan' },
+            { label: 'Full-bed Truck', value: 'fullbedtruck' },
+            { label: 'Half-bed Truck', value: 'halfbedtruck' },
+            { label: 'RV', value: 'rv' },
+            { label: 'Camper Van', value: 'campervan' },
+          ]}
+          style={pickerSelectStyles}
+          value={sizeOfCar}
+          useNativeAndroidPickerStyle={false}
+          placeholder={{}}
+          Icon={() => (
+            <Image source={Dropdown} style={styles.dropdownImage} />
+          )}
+        />
+      </View>
 
       <Text style={styles.subHeading}>Tags</Text>
       <View style={styles.tagsContainer}>
@@ -427,21 +504,6 @@ const styles = StyleSheet.create({
       paddingLeft: 0,
       paddingRight: 0,
   },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: '3.5%',
-    marginRight: '3.5%',
-  },
-  priceInput: {
-    flex: 1,
-    height: 40,
-    borderRadius: 17,
-    fontSize: 16,
-    color: '#000000',
-    fontFamily: "NotoSansTaiTham-Regular",
-    backgroundColor: '#E9E9E9',
-  },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -502,6 +564,119 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  priceAndNegotiableContainer: {
+    flexDirection: 'row',
+  },
+  priceSection: {
+    marginLeft: '1.5%',
+  },
+  inputWithIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  inputGroupContainer: {
+
+    flexDirection: 'row',
+    alignItems: 'center', 
+    justifyContent: 'center', 
+  },
+  inputPrice: {
+    marginLeft: '3%', 
+    borderRadius: 17,
+    backgroundColor: '#E9E9E9',
+    fontSize: 16,
+    height: 40,
+    width: 100,
+    paddingLeft: '8.25%',
+  },
+  slash: {
+    marginTop: '-4%',
+    fontSize: 30,
+    color: 'black',
+    marginHorizontal: 5,
+  },
+  negotiableSection: {
+
+  },
+  negotiableOptions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    marginRight: 8,
+    borderWidth: 1,
+  },
+  unselectedCircle: {
+    borderColor: '#ccc',
+    backgroundColor: '#f0f0f0',
+  },
+  selectedCircle: {
+    backgroundColor: '#0653A1',
+    borderColor: '#0653A1',
+  },
+  optionText: {
+    fontSize: 16,
+    color: 'black',
+  },
 });
 
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 15,
+    color: 'black',
+    paddingRight: 30,
+    backgroundColor: '#f0f0f0',
+    height: 45,
+    marginTop: 6,
+    width: 100,
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'transparent',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30,
+    backgroundColor: '#f0f0f0',
+    height: 45,
+    marginTop: -5,
+    width: 125,
+  },
+  iconContainer: {
+    top: '50%',
+    right: 0,
+    transform: [{ translateY: -10 }], 
+  },
+  button: {
+   alignItems: 'center',
+   justifyContent: 'center',
+   paddingVertical: 12,
+   paddingHorizontal: 32,
+   borderRadius: 4,
+   elevation: 3,
+   backgroundColor: 'black',
+ },
+ text: {
+   fontSize: 16,
+   lineHeight: 21,
+   fontWeight: 'bold',
+   letterSpacing: 0.25,
+   color: 'white',
+ },
+ });
 export default PostScreen;
