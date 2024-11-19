@@ -4,8 +4,7 @@ import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from './MenuSearchBar.js';
-import { getPost, filterByPrice, getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
-import ListingsData from '../components/ListingsData.js';
+import { getPost, getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
 import Car from '../assets/car.png'; 
 import { useNavigation } from "@react-navigation/native";
 

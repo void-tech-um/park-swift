@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { View, StyleSheet } from 'react-native';
 
 import HomeScreen from './screens/HomeScreen.js';
 import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
@@ -40,30 +41,43 @@ function App() {
         console.warn(e);
       } finally {
         setIsReady(true);
-        SplashScreen.hideAsync();
       }
     }
     prepare();
   }, []);
+
+  const onLayoutRootView = async () => {
+    if (isReady) {
+      await SplashScreen.hideAsync(); 
+    }
+  };
 
   if (!isReady) {
     return null;
   }
   
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Registration" component={RegistrationScreen} />
-        <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
-        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: true }}/>
-        <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
-        <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container} onLayout={onLayoutRootView}>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Registration" component={RegistrationScreen} />
+          <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: true }}/>
+          <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
+          <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff', 
+  },
+});
 export default App;
