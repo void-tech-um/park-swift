@@ -1,4 +1,213 @@
-import React from "react";
+// import React from "react";
+// import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
+// import { useNavigation } from '@react-navigation/native';
+// import Back from '../assets/Back.png'; 
+// import User from '../assets/profile.png';
+// import FitsAllModels from '../assets/FitsAllModels.png'; 
+// import WeatherProtected from '../assets/WeatherProtected.png'; 
+// import PavedEntrance from '../assets/PavedEntrance.png'; 
+// import PrivateProperty from '../assets/PrivateProperty.png';  
+// import Save from '../assets/Save.png'; 
+// import CarImage from '../assets/CarImage.png'; 
+// import MenuSearchBar from './MenuSearchBar';
+
+// const { width, height } = Dimensions.get('window');
+
+// const ListingScreen = ({ route }) => {
+//     const navigation = useNavigation();
+//     const { address, ppHour, myUser } = route.params;
+
+//     const handleBackPress = () => {
+//         navigation.goBack();
+//     };
+
+//     const displayAddress = address.split(',')[0];
+
+//     const formatCostText = (cost) => {
+//         if (cost.includes('hr')) {
+//             return cost.replace('hr', 'hour');
+//         } else if (cost.includes('sem')) {
+//             return cost.replace('sem', 'semester');
+//         }
+//         return cost;
+//     };
+
+//     const removeSpaces = (text) => {
+//         return text.replace(/\s/g, '');
+//     };
+
+//     const fullName = myUser?.fullName || "First Last";
+//     const [firstName, lastName] = fullName.split(' ');
+
+//     const getImageMargins = () => {
+//         if (width > 447) {
+//             return {
+//                 firstImageMarginLeft: '-0.20%',
+//                 secondImageMarginLeft:'-5%',
+//             };
+//         }if ((width === 432 && height === 840)) {
+//             return {
+//                 firstImageMarginLeft: '3.6%',
+//                 secondImageMarginLeft: '2.%',
+//             };
+//         }else if (width > 411){
+//             return {
+//                 firstImageMarginLeft: '8.9%',
+//                 secondImageMarginLeft: '12.4%',
+//             };
+//         }else if(width > 392){
+//             return {
+//                 firstImageMarginLeft: '14.%',
+//                 secondImageMarginLeft: '22.4%',
+//             };
+//         }
+//         else{
+//             return {
+//                 firstImageMarginLeft: '8%',
+//                 secondImageMarginLeft: '11%',
+//             };
+//         }
+//     };
+
+//     const backButtonMarginLeft = () => {
+//         if(width > 447){
+//             return 2.8;
+//         }if ((width === 432 && height === 840)) {
+//             return 2.5;
+//         }else if(width > 411){
+//             return 2.7;  
+//         }else if(width > 392){
+//             return 2.7;
+//         }
+//         else{
+//             return 0;
+//         }
+//     };
+
+//     const textContactSpacing = () => {
+//         if(width > 447){
+//             return -3;
+//         }if ((width === 432 && height === 840)) {
+//             return -1.8;
+//         }else if(width > 411){
+//             return 0;
+//         }else if(width > 392){
+//             return 1.6;
+//         }else{
+//             return 0;
+//         }
+//     };
+//     const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
+//     const backMarginLeft = backButtonMarginLeft();
+//     const textSpacing = textContactSpacing();
+
+//     return (
+//         <View style={styles.container}>
+//             <MenuSearchBar showSearchBar={false} />
+//             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+//                 <ScrollView style={styles.container}>
+//                     <View style={styles.header}>
+//                         <TouchableOpacity onPress={handleBackPress}>
+//                             <Image
+//                                 source={Back}
+//                                 style={[styles.Back, { marginLeft: backMarginLeft}]}
+//                             />
+//                         </TouchableOpacity>
+//                         <Text style={styles.listingHeading}>{displayAddress}</Text>
+//                     </View>
+//                     <TouchableOpacity style={styles.editListingButton}>
+//                         <Text style={styles.editListingText}>Edit Listing</Text>
+//                     </TouchableOpacity>
+//                     <View style={styles.carImagesContainer}>
+//                         <Image
+//                             source={CarImage}
+//                             style={[styles.FirstImage, { marginLeft: firstImageMarginLeft }]}
+//                         />
+//                         <Image
+//                             source={CarImage}
+//                             style={[styles.SecondImage, { marginLeft: secondImageMarginLeft }]}
+//                         />
+//                     </View>
+//                     <View style={styles.userInfoContainer}>
+//                         <Image
+//                             source={User}
+//                             style={styles.UserImage}
+//                         />
+//                         <View style={styles.userInfoTextContainer}>
+//                             <Text style={styles.listedUser}>Listed by {firstName} {lastName}</Text>
+//                             <Text style={styles.listingDate}>Listing since 2024</Text>
+//                         </View>
+//                     </View>
+//                     <View style={styles.iconRow}>
+//                         <Image
+//                             source={FitsAllModels}
+//                             style={styles.modelIcon}
+//                         />
+//                         <Image
+//                             source={PavedEntrance}
+//                             style={styles.pavedIcon}
+//                         />
+//                     </View>
+//                     <View style={styles.iconRow}>
+//                         <Image
+//                             source={WeatherProtected}
+//                             style={styles.weatherIcon}
+//                         />
+//                         <Image
+//                             source={PrivateProperty}
+//                             style={styles.privacyIcon}
+//                         />
+//                     </View>
+
+//                     <View style={styles.listingInfoSection}>
+//                         <Text style={styles.listingInfo}>Listing Information</Text>
+//                         <Text style={styles.infoLabels}>Available from:</Text>
+//                         <View style={styles.border}>
+//                             <Text style={styles.dateText}>8/29/23 - 05/02/24</Text>
+//                         </View>
+//                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
+//                         <View style={styles.border}>
+//                             <Text style={styles.costText}>{formatCostText(ppHour)}</Text>
+//                         </View>
+//                         <Text style={styles.additionalNotes}>Additional Notes</Text>
+//                         <View style={styles.bulletPointContainer}>
+//                             <Text style={styles.bulletPoint}>•</Text>
+//                             <Text style={styles.bulletText}>Please enter and exit the parking spot quietly</Text>
+//                         </View>
+//                         <View style={styles.bulletPointContainer}>
+//                             <Text style={styles.bulletPoint}>•</Text>
+//                             <Text style={styles.bulletText}>No other cars, go in and out as you please</Text>
+//                         </View>
+//                         <View style={styles.bulletPointContainer}>
+//                             <Text style={styles.bulletPoint}>•</Text>
+//                             <Text style={styles.bulletText}>Less than a mile from central campus and the big house.</Text>
+//                         </View>
+//                     </View>
+//                     <View style={styles.contactBorder}>
+//                         <View style={styles.textContainer}>
+//                             <Text style={[styles.boldCostText, { marginLeft: textSpacing }]}>{removeSpaces(formatCostText(ppHour))}</Text>
+//                             <Text style={[styles.negotiableText, { marginLeft: textSpacing }]}>Negotiable</Text>
+//                         </View>
+//                         <TouchableOpacity>
+//                             <View style={styles.contactButton}>
+//                                 <Text style={styles.contactText}>Contact</Text>
+//                             </View>
+//                         </TouchableOpacity>
+//                         <TouchableOpacity>
+//                             <Image
+//                                 source={Save}
+//                                 style={styles.saveIcon}
+//                                 // add a button that changes the icon to be filled in 
+//                             />
+//                         </TouchableOpacity>
+//                     </View>
+//                 </ScrollView>
+//             </TouchableWithoutFeedback>
+//         </View>
+//     );
+// };
+
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
@@ -8,6 +217,7 @@ import WeatherProtected from '../assets/WeatherProtected.png';
 import PavedEntrance from '../assets/PavedEntrance.png'; 
 import PrivateProperty from '../assets/PrivateProperty.png';  
 import Save from '../assets/Save.png'; 
+import SaveIcon2 from '../assets/saved_icon.png';  // Import the second save icon
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from './MenuSearchBar';
 
@@ -16,6 +226,9 @@ const { width, height } = Dimensions.get('window');
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
     const { address, ppHour, myUser } = route.params;
+
+    // State to toggle between Save icon and Save icon 2
+    const [isSaved, setIsSaved] = useState(false);
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -100,6 +313,11 @@ const ListingScreen = ({ route }) => {
     const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
     const backMarginLeft = backButtonMarginLeft();
     const textSpacing = textContactSpacing();
+
+    // Toggle the icon between Save and SaveIcon2
+    const handleSavePress = () => {
+        setIsSaved(prevState => !prevState);
+    };
 
     return (
         <View style={styles.container}>
@@ -193,11 +411,10 @@ const ListingScreen = ({ route }) => {
                                 <Text style={styles.contactText}>Contact</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleSavePress}>
                             <Image
-                                source={Save}
+                                source={isSaved ? SaveIcon2 : Save}  // Toggle between Save and SaveIcon2
                                 style={styles.saveIcon}
-                                // add a button that changes the icon to be filled in 
                             />
                         </TouchableOpacity>
                     </View>
