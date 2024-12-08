@@ -31,7 +31,7 @@ const FilterScreen = () => {
     const [useCurrentLocationChecked, setUseCurrentLocationChecked] = useState(false);
     const [timeRangeChecked, setTimeRangeChecked] = useState(false);
     const [mileRangeChecked, setMileRangeChecked] = useState(false);
-
+    const [priceChecked, setPriceChecked] = useState(false);
     const handleBackPress = () => {
         navigation.goBack();
     };
@@ -393,33 +393,30 @@ const FilterScreen = () => {
                                         <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.filterSubheading}>Price Range:</Text>
+                                <Text style={styles.filterSubheading}>Maximum Price:</Text>
                                 <View style={styles.priceRangeContainer}>
+                                <TouchableOpacity onPress={() => setPriceChecked(!priceChecked)}>
+                                 <View style={[styles.checkbox, priceChecked && styles.checkboxSelected]} />
+                                  </TouchableOpacity>
                                     <View style={styles.priceInputContainer}>
-                                        <Text style={styles.priceInputLabel}>Minimum</Text>
-                                        <TextInput
-                                            style={styles.priceInput}
-                                            value={minPrice}
-                                            onChangeText={setMinPrice}
-                                            keyboardType="numeric"
-                                        />
-                                    </View>
-                                    <View style={styles.priceInputContainer}>
-                                        <Text style={styles.priceInputLabel}>Maximum</Text>
+                                    
+                                    <Text style={styles.dollarSign}>$</Text>
                                         <TextInput
                                             style={styles.priceInput}
                                             value={maxPrice}
                                             onChangeText={setMaxPrice}
                                             keyboardType="numeric"
                                         />
+                                        
+                                        <Text style={styles.pricePerLabel}>  Per</Text>
+                                        <TouchableOpacity style={styles.pricePerDropdown}>
+    <Image source={WhiteDropdown} style={styles.dropdownIcon} />
+    <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
+</TouchableOpacity>
                                     </View>
                                 </View>
                                 <View style={styles.pricePerContainer}>
-                                    <Text style={styles.pricePerLabel}>Per</Text>
-                                    <TouchableOpacity style={styles.pricePerDropdown}>
-                                        <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
-                                        <Image source={WhiteDropdown} style={styles.dropdownIcon} />
-                                    </TouchableOpacity>
+                                    
                                 </View>
                             </View>
                         )}
@@ -852,11 +849,25 @@ const styles = StyleSheet.create({
     },
     priceRangeContainer: {
         flexDirection: 'row',
+        alignItems: 'center', // Centers items vertically on the same line
         justifyContent: 'space-between',
         marginBottom: 15,
     },
     priceInputContainer: {
-        width: '48%',
+        flexDirection: 'row', // Aligns input and other elements in a row
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '80%', 
+    },
+    dollarSign: {
+        position: 'absolute',
+        zIndex: 1, // Ensures dollar sign appears above the TextInput
+        left: 10, // Position the dollar sign on the left inside the TextInput
+        top: '50%',
+        transform: [{ translateY: -13 }], // Center it vertically
+        color: '#0053A1',
+        fontSize: 16,
+        fontFamily: 'NotoSansTaiTham-Regular',
     },
     priceInputLabel: {
         fontSize: 14,
@@ -865,32 +876,50 @@ const styles = StyleSheet.create({
     },
     priceInput: {
         borderWidth: 1,
-        borderColor: '#b6c1cd',
-        borderRadius: 5,
-        padding: 10,
+        borderColor: '#b6c1cd', 
+        borderRadius: 8, 
+        paddingVertical: 10,
+        paddingLeft: 30, 
+        paddingRight: 15,
         fontFamily: 'NotoSansTaiTham-Regular',
+        fontSize: 16,
+        backgroundColor: '#f8f9fa', 
+        color: '#0053A1', 
+        shadowColor: '#000', 
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+        elevation: 1, 
+        textAlign: 'left', 
+        flex: 0.6, 
     },
     pricePerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginLeft: 10, 
     },
     pricePerLabel: {
         fontSize: 14,
         fontFamily: 'NotoSansTaiTham-Regular',
-        marginRight: 10,
+        marginRight: 0,
     },
     pricePerDropdown: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#0653A1',
         borderRadius: 5,
-        padding: 10,
+        paddingHorizontal: 20, // Add more padding for a larger dropdown
+        paddingVertical: 10,
+        width: 120, // Increase width for a larger dropdown
+       
     },
     pricePerDropdownText: {
         color: '#ffffff',
         fontFamily: 'NotoSansTaiTham-Regular',
-        marginRight: 5,
+        marginRight: 3,
+        marginLeft: 6
     },
+    
     dateTimeContent: {
         width: '92%',
         backgroundColor: '#ffffff',
