@@ -7,6 +7,7 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { View, StyleSheet } from 'react-native';
 
+import LoadingScreen from './screens/LoadingScreen.js';
 import HomeScreen from './screens/HomeScreen.js';
 import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
 import NavBar from './components/NavBar.js';
@@ -32,15 +33,16 @@ SplashScreen.preventAutoHideAsync();
 
 function App() {
   const [isReady, setIsReady] = useState(false);
-
   useEffect(() => {
     async function prepare() {
       try {
         await loadFonts();
+        await new Promise(resolve => setTimeout(resolve, 4500)); // Simulate a 4.5s loading time
       } catch (e) {
         console.warn(e);
       } finally {
         setIsReady(true);
+        SplashScreen.hideAsync();
       }
     }
     prepare();
@@ -53,7 +55,7 @@ function App() {
   };
 
   if (!isReady) {
-    return null;
+    return <LoadingScreen isLoading={!isReady} />;
   }
   
   return (
