@@ -115,6 +115,9 @@ const ListingScreen = ({ route }) => {
                         </TouchableOpacity>
                         <Text style={styles.listingHeading}>{displayAddress}</Text>
                     </View>
+                    <TouchableOpacity style={styles.editListingButton}>
+                        <Text style={styles.editListingText}>Edit Listing</Text>
+                    </TouchableOpacity>
                     <View style={styles.carImagesContainer}>
                         <Image
                             source={CarImage}
@@ -194,6 +197,7 @@ const ListingScreen = ({ route }) => {
                             <Image
                                 source={Save}
                                 style={styles.saveIcon}
+                                // add a button that changes the icon to be filled in 
                             />
                         </TouchableOpacity>
                     </View>
@@ -222,6 +226,17 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontFamily: "NotoSansTaiTham-Bold",
         letterSpacing: -1,
+    },
+    editListingButton: {
+        marginLeft: 17, 
+        alignItems: 'left',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+    },
+    editListingText: {
+        color: '#0653A1',
+        fontSize: 15, 
+        fontFamily: 'NotoSansTaiTham-Regular', 
     },
     carImagesContainer: {
         flexDirection: 'row',
