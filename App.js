@@ -1,13 +1,11 @@
 import 'react-native-gesture-handler';
-import { createStackNavigator } from '@react-navigation/stack'
-import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { View, StyleSheet, Image } from 'react-native';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { View, StyleSheet } from 'react-native';
 
-import LoadingScreen from './screens/LoadingScreen.js';
 import HomeScreen from './screens/HomeScreen.js';
 import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
 import NavBar from './components/NavBar.js';
@@ -19,13 +17,10 @@ import EditProfileScreen from './screens/EditProfileScreen.js';
 
 const Stack = createStackNavigator();
 
-const loadFonts = () => {
-  return Font.loadAsync({
+const loadFontsAndAssets = async () => {
+  await Font.loadAsync({
     'NotoSansTaiTham-Bold': require('./assets/fonts/NotoSansTaiTham-Bold.ttf'),
-    'NotoSansTaiTham-Medium': require('./assets/fonts/NotoSansTaiTham-Medium.ttf'),
     'NotoSansTaiTham-Regular': require('./assets/fonts/NotoSansTaiTham-Regular.ttf'),
-    'NotoSansTaiTham-SemiBold': require('./assets/fonts/NotoSansTaiTham-SemiBold.ttf'),
-    'NotoSansTaiTham-Variable': require('./assets/fonts/NotoSansTaiTham-VariableFont_wght.ttf'),
   });
 };
 
@@ -33,43 +28,47 @@ SplashScreen.preventAutoHideAsync();
 
 function App() {
   const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
-    async function prepare() {
+    const prepareResources = async () => {
       try {
-        await loadFonts();
-        await new Promise(resolve => setTimeout(resolve, 4500)); // Simulate a 4.5s loading time
+        await loadFontsAndAssets();
       } catch (e) {
         console.warn(e);
       } finally {
         setIsReady(true);
         SplashScreen.hideAsync();
       }
-    }
-    prepare();
+    };
+    prepareResources();
   }, []);
 
-  const onLayoutRootView = async () => {
-    if (isReady) {
-      await SplashScreen.hideAsync(); 
-    }
-  };
-
   if (!isReady) {
-    return <LoadingScreen isLoading={!isReady} />;
+    return (
+      <View style={styles.loadingContainer}>
+        <Image source={require('./assets/shuttle.png')} style={styles.loadingImage} />
+      </View>
+    );
   }
-  
+
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
+    <View style={styles.container}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator lazy={true}>
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Registration" component={RegistrationScreen} />
-          <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }}/>
-          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: true }}/>
-          <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{headerStyle: {backgroundColor: '#959595', height:'12%'},}}/>
-          <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false}}/>
+          <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: true }} />
+          <Stack.Screen
+            name="PostConfirmationScreen"
+            component={PostConfirmationScreen}
+            options={{
+              headerStyle: { backgroundColor: '#959595', height: '12%' },
+            }}
+          />
+          <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>
@@ -79,7 +78,19 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#ffffff', 
   },
+  loadingImage: {
+    width: 400, 
+    height: 400, 
+    resizeMode: 'contain',
+  },
 });
+
 export default App;
