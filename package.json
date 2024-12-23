@@ -24,16 +24,17 @@
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.20",
     "axios": "^1.6.8",
-    "expo": "~52.0.17",
+    "expo": "~52.0.21",
     "expo-firebase": "^0.0.0-alpha.0",
-    "expo-font": "~13.0.1",
+    "expo-font": "~13.0.2",
+    "expo-location": "~18.0.4",
     "expo-modules-autolinking": "~2.0.0",
-    "expo-splash-screen": "~0.29.16",
+    "expo-splash-screen": "^0.29.18",
     "expo-status-bar": "~2.0.0",
     "firebase": "^10.9.0",
     "punycode": "^2.3.1",
     "react": "^18.3.1",
-    "react-native": "^0.76.3",
+    "react-native": "^0.76.5",
     "react-native-calendars": "^1.1306.0",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.20.2",
@@ -46,8 +47,7 @@
     "react-native-screens": "~4.1.0",
     "react-native-star-rating": "^1.0.8",
     "react-native-stars": "^1.2.2",
-    "react-native-tab-view": "^3.5.2",
-    "expo-location": "~18.0.3"
+    "react-native-tab-view": "^3.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5"
