@@ -1,37 +1,11 @@
 import * as React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal, Image, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from './MenuSearchBar';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-function CustomDropdown({ selectedValue, onValueChange, options }) {
-  const [modalVisible, setModalVisible] = React.useState(false);
 
-  return (
-    <View style={styles.dropdownContainer}>
-      <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.dropdownButton}>
-        <Text style={styles.dropdownText}>{selectedValue}</Text>
-        <Image source={Dropdown} style={styles.dropdownImage} />
-      </TouchableOpacity>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          {options.map((option) => (
-            <TouchableOpacity key={option} style={styles.modalOption} onPress={() => handleSelect(option)}>
-              <Text style={styles.modalOptionText}>{option}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </Modal>
-    </View>
-  );
-}
 
 function PostScreen({ navigation, route }) {
   const [location, setLocation] = React.useState('');
@@ -190,7 +164,7 @@ function PostScreen({ navigation, route }) {
       <View style={styles.timeContainer}>
         <TextInput
           style={styles.timeInput}
-          placeholder="1"
+          placeholder="12"
           placeholderTextColor="#A8A8A8"
           keyboardType="numeric"
           value={startTime.hours}
@@ -205,18 +179,57 @@ function PostScreen({ navigation, route }) {
           value={startTime.minutes}
           onChangeText={(text) => setStartTime({ ...startTime, minutes: text })}
         />
-        <CustomDropdown
-          selectedValue={startPeriod}
-          onValueChange={setStartPeriod}
-          options={['AM', 'PM']}
-        />
+        <View style={styles.dropdownContainer}>
+          <RNPickerSelect
+            onValueChange={(value) => setStartPeriod(value)}
+            items={[
+              { label: 'AM', value: 'AM', color: 'black' },
+              { label: 'PM', value: 'PM', color: 'black' },
+            ]}
+            value={startPeriod}
+            style={{
+              inputIOS: {
+                fontSize: 16,
+                color: 'black',
+                height: 40,
+                width: 75,
+                backgroundColor: '#E9E9E9',
+                borderRadius: 17,
+                paddingLeft: 15,
+                paddingRight: 35, 
+                textAlign: 'left', 
+              },
+              inputAndroid: {
+                fontSize: 16,
+                color: 'black',
+                height: 40,
+                backgroundColor: '#E9E9E9',
+                borderRadius: 17,
+                paddingLeft: 15, 
+                paddingRight: 35, 
+                textAlign: 'left', 
+              },
+              iconContainer: {
+                position: 'absolute',
+                right: 13, 
+                top: '50%', 
+                transform: [{ translateY: '-50%' }], 
+              },
+            }}
+            useNativeAndroidPickerStyle={false}
+            placeholder={{}}
+            Icon={() => (
+              <Image source={Dropdown} style={styles.dropdownImage} />
+            )}
+          />
+        </View>
       </View>
 
       <Text style={styles.subHeading}>End Time</Text>
       <View style={styles.timeContainer}>
         <TextInput
           style={styles.timeInput}
-          placeholder="10"
+          placeholder="12"
           placeholderTextColor="#A8A8A8"
           keyboardType="numeric"
           value={endTime.hours}
@@ -225,17 +238,56 @@ function PostScreen({ navigation, route }) {
         <Text style={styles.colon}>:</Text>
         <TextInput
           style={styles.timeInput}
-          placeholder="30"
+          placeholder="00"
           placeholderTextColor="#A8A8A8"
           keyboardType="numeric"
           value={endTime.minutes}
           onChangeText={(text) => setEndTime({ ...endTime, minutes: text })}
         />
-        <CustomDropdown
-          selectedValue={endPeriod}
-          onValueChange={setEndPeriod}
-          options={['AM', 'PM']}
-        />
+        <View style={styles.dropdownContainer}>
+          <RNPickerSelect
+            onValueChange={(value) => setStartPeriod(value)}
+            items={[
+              { label: 'AM', value: 'AM', color: 'black' },
+              { label: 'PM', value: 'PM', color: 'black' },
+            ]}
+            value={startPeriod}
+            style={{
+              inputIOS: {
+                fontSize: 16,
+                color: 'black',
+                height: 40,
+                width: 75,
+                backgroundColor: '#E9E9E9',
+                borderRadius: 17,
+                paddingLeft: 15,
+                paddingRight: 35, 
+                textAlign: 'left', 
+              },
+              inputAndroid: {
+                fontSize: 16,
+                color: 'black',
+                height: 40,
+                backgroundColor: '#E9E9E9',
+                borderRadius: 17,
+                paddingLeft: 15, 
+                paddingRight: 35, 
+                textAlign: 'left', 
+              },
+              iconContainer: {
+                position: 'absolute',
+                right: 13, 
+                top: '50%', 
+                transform: [{ translateY: '-50%' }], 
+              },
+            }}
+            useNativeAndroidPickerStyle={false}
+            placeholder={{}}
+            Icon={() => (
+              <Image source={Dropdown} style={styles.dropdownImage} />
+            )}
+          />
+        </View>
       </View>
 
       <Text style={styles.subHeading}>Available dates</Text>
@@ -277,10 +329,10 @@ function PostScreen({ navigation, route }) {
             <RNPickerSelect
               onValueChange={(value) => setRentalPeriod(value)}
               items={[
-                { label: 'Hour', value: 'hour' },
-                { label: 'Day', value: 'day' },
-                { label: 'Week', value: 'week' },
-                { label: 'Month', value: 'month' },
+                { label: 'Hour', value: 'hour', color: 'black'},
+                { label: 'Day', value: 'day', color: 'black' },
+                { label: 'Week', value: 'week', color: 'black' },
+                { label: 'Month', value: 'month', color: 'black' },
               ]}
               style={{
                 inputIOS: {
@@ -290,7 +342,7 @@ function PostScreen({ navigation, route }) {
                   borderRadius: 17,
                   backgroundColor: '#E9E9E9',
                   height: 40,
-                  width: 110,
+                  width: 100,
                   paddingLeft: '4.75%',
                 },
                 inputAndroid: {
@@ -318,7 +370,7 @@ function PostScreen({ navigation, route }) {
         </View>
 
         <View style={styles.negotiableSection}>
-          <Text style={styles.subHeading}>Negotiable?</Text>
+          <Text style={styles.subHeading}>Negotiable</Text>
           <View style={styles.negotiableOptions}>
             <TouchableOpacity
               style={[styles.option, isNegotiable === true ? styles.selectedOption : null]}
@@ -343,13 +395,13 @@ function PostScreen({ navigation, route }) {
         <RNPickerSelect
           onValueChange={(value) => setSize(value)}
           items={[
-            { label: 'Sedan', value: 'sedan' },
-            { label: 'SUV', value: 'suv' },
-            { label: 'Minivan', value: 'minivan' },
-            { label: 'Full-bed Truck', value: 'fullbedtruck' },
-            { label: 'Half-bed Truck', value: 'halfbedtruck' },
-            { label: 'RV', value: 'rv' },
-            { label: 'Camper Van', value: 'campervan' },
+            { label: 'Sedan', value: 'sedan', color: 'black' },
+            { label: 'SUV', value: 'suv', color: 'black' },
+            { label: 'Minivan', value: 'minivan', color: 'black' },
+            { label: 'Full-bed Truck', value: 'fullbedtruck', color: 'black' },
+            { label: 'Half-bed Truck', value: 'halfbedtruck', color: 'black' },
+            { label: 'RV', value: 'rv', color: 'black' },
+            { label: 'Camper Van', value: 'campervan', color: 'black' },
           ]}
           style={pickerSelectStyles}
           value={sizeOfCar}
@@ -454,8 +506,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#E9E9E9',
     borderRadius: 17,
-    width: 75,
-    height: 40,
     justifyContent: 'center',
     marginLeft: '1.25%',
   },
@@ -575,7 +625,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputGroupContainer: {
-
     flexDirection: 'row',
     alignItems: 'center', 
     justifyContent: 'center', 
@@ -596,7 +645,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   negotiableSection: {
-
+    marginLeft: '5%',
   },
   negotiableOptions: {
     flexDirection: 'row',

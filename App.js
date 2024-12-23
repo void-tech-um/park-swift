@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff', 
   },
   loadingImage: {
-    width: 400, 
-    height: 400, 
+    width: 350, 
+    height: 350, 
     resizeMode: 'contain',
   },
 });
