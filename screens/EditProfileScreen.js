@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Modal, TouchableWithoutFeedback } from 'react-native';
 import User from '../assets/profile.png';
 import Pencil from '../assets/pencil.png';
 import MenuSearchBar from './MenuSearchBar';
 import { updateUser } from '../firebaseFunctions/firebaseFirestore';
+
+// Firebase Auth + Image Picker, Expo GO
+import { updateProfile } from 'firebase/auth';
+import * as ImagePicker from 'expo-image-picker';
 
 function EditProfileScreen({ navigation, route }) {
     const { user, onProfileUpdate } = route.params;
@@ -11,19 +15,68 @@ function EditProfileScreen({ navigation, route }) {
     const [updatedUser, setUpdatedUser] = React.useState({
         ...user,
         bio: user.bio || defaultBio,
+        profileImage: user.profileImage || null,
     });
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     const handleSave = () => {
-        updateUser(updatedUser).then(() => {
-            onProfileUpdate(updatedUser);
-            navigation.goBack();
-        }).catch((error) => {
-            console.error('Error updating profile:', error);
-        });
+        updateUser(updatedUser)
+            .then(() => {
+                onProfileUpdate(updatedUser);
+                navigation.goBack();
+            })
+            .catch((error) => {
+                console.error('Error updating profile:', error);
+            });
     };
 
     const handleInputChange = (field, value) => {
         setUpdatedUser({ ...updatedUser, [field]: value });
+    };
+
+    const clickOutsideModal = () => {
+        setModalVisible(false);
+    };
+
+    const handleImageChange = (image) => {
+        setUpdatedUser({...updatedUser, profileImage: image});
+        //handleSave();
+    };
+
+
+    // Image picker code
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+
+        try {
+            if (!result.canceled && result.assets && result.assets.length > 0) {
+                handleImageChange(result.assets[0].uri);
+            }
+        } catch (error) {
+            console.error('Error picking image, please try again: ', error);
+            // Console Logging for Debugging
+            console.log('Error at ', Date.now(), "Error: ", error);
+        } finally {
+            // Console Logging
+            console.log('Image successfully picked at ', Date.now());
+            console.log('Image URI: ', result.assets[0].uri);
+        }
+        
+        setModalVisible(false);
+    };
+
+    const removePhoto = () => {
+        if (updatedUser.profileImage === null) {
+            console.error('No profile image to remove');
+        } else {
+            handleImageChange(null);
+            setModalVisible(false);
+        }
     };
 
     return (
@@ -39,19 +92,16 @@ function EditProfileScreen({ navigation, route }) {
                 </View>
                 <View style={styles.profileContainer}>
                     <Image
-                        source={User}
+                        source={updatedUser.profileImage ? { uri: updatedUser.profileImage } : User}
                         style={styles.profileImage}
                     />
-                    <TouchableOpacity style={styles.editCircle}>
-                        <Image
-                            source={Pencil}
-                            style={styles.pencilImage}
-                        />
+                    <TouchableOpacity style={styles.editCircle} onPress={() => setModalVisible(true)}>
+                        <Image source={Pencil} style={styles.pencilImage} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.formContainer}>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Display name</Text>
+                        <Text style={styles.label}>Display Name:</Text>
                         <TextInput
                             style={styles.input}
                             value={updatedUser.fullName}
@@ -59,7 +109,7 @@ function EditProfileScreen({ navigation, route }) {
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Bio (optional)</Text>
+                        <Text style={styles.label}>Bio (Optional):</Text>
                         <TextInput
                             style={[styles.input, styles.bioInput]}
                             value={updatedUser.bio}
@@ -68,7 +118,7 @@ function EditProfileScreen({ navigation, route }) {
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Email</Text>
+                        <Text style={styles.label}>Email Address:</Text>
                         <TextInput
                             style={styles.input}
                             value={updatedUser.email}
@@ -76,7 +126,7 @@ function EditProfileScreen({ navigation, route }) {
                         />
                     </View>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Phone number</Text>
+                        <Text style={styles.label}>Phone Number:</Text>
                         <TextInput
                             style={styles.input}
                             value={updatedUser.phoneNumber}
@@ -85,6 +135,29 @@ function EditProfileScreen({ navigation, route }) {
                     </View>
                 </View>
             </ScrollView>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <TouchableWithoutFeedback onPress={clickOutsideModal}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalHeader}>Profile Options</Text>
+                        <TouchableOpacity style={styles.modalOption} onPress={pickImage}>
+                            <Text style={styles.modalOptionText}>Upload Photo</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalOption} onPress={removePhoto}>
+                            <Text style={styles.modalOptionText}>Remove Photo</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalOption} onPress={() => setModalVisible(false)}>
+                            <Text style={styles.modalOptionText}>Exit</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                </TouchableWithoutFeedback>
+            </Modal>
         </View>
     );
 }
@@ -92,99 +165,156 @@ function EditProfileScreen({ navigation, route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#F8F9FA',
     },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 27,
-        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: 15,
+        paddingHorizontal: 24,
+        borderBottomWidth: 1.2,
+        borderBottomColor: 'rgba(0,0,0,0.05)',
     },
     headerSpacer: {
-        width: 79,
+        width: 80,
     },
     headerText: {
-        fontSize: 28,
-        fontFamily: 'NotoSansTaiTham-Bold',
+        fontSize: 24,
         textAlign: 'center',
+        fontFamily: 'Montserrat-Bold',
+        fontWeight: '600',
+        color: '#1A1A1A',
     },
     profileContainer: {
         alignSelf: 'center',
+        marginTop: 32,
         position: 'relative',
-        marginTop: -15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 5,
     },
     profileImage: {
-        width: 190,
-        height: 190,
-        borderRadius: 95,
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        borderWidth: 3,
+        borderColor: '#FFF',
     },
     editCircle: {
-        width: 50,
-        height: 50,
-        backgroundColor: '#D9D9D9',
-        borderRadius: 25,
+        width: 44,
+        height: 44,
+        backgroundColor: '#0653A1',
+        borderRadius: 22,
         position: 'absolute',
-        bottom: 10,
-        right: 10,
+        bottom: 8,
+        right: 8,
         justifyContent: 'center',
         alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 4,
     },
     pencilImage: {
-        width: 30,
-        height: 30,
+        width: 20,
+        height: 20,
+        tintColor: '#FFF',
     },
     formContainer: {
-        alignItems: 'center',
-        marginTop: 12.5,
+        paddingHorizontal: 24,
+        marginTop: 32,
     },
     inputContainer: {
-        width: 300,
-        marginBottom: 12,
-        alignItems: 'center',
+        marginBottom: 20,
     },
     label: {
-        fontSize: 12,
-        fontFamily: 'NotoSansTaiTham-Normal',
-        marginBottom: 5,
-        alignSelf: 'flex-start',
-        paddingHorizontal: 13,
+        fontSize: 15,
+        color: '#444',
+        marginBottom: 8,
+        fontWeight: '500',
     },
     input: {
-        borderRadius: 17,
-        backgroundColor: '#E9E9E9',
-        width: 310,
-        height: 43,
+        backgroundColor: '#FFF',
+        borderRadius: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
         fontSize: 16,
-        fontFamily: 'NotoSansTaiTham-Regular',
-        paddingHorizontal: 18,
-        textAlign: 'left',
+        color: '#333',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 2,
     },
     bioInput: {
-        height: 137,
-        paddingHorizontal: 18,
-        textAlign: 'left',
+        height: 100,
         textAlignVertical: 'top',
-        paddingTop: 10,
+        paddingTop: 12,
     },
     saveButton: {
         backgroundColor: '#0653A1',
-        borderRadius: 15,
-        width: 79,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: -5,
+        borderRadius: 16,
+        paddingHorizontal: 32,
+        paddingVertical: 14,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 4,
     },
     saveButtonText: {
-        color: '#FFFFFF',
+        color: '#FFF',
         fontSize: 16,
-        fontFamily: 'NotoSansTaiTham-Regular',
+        fontWeight: '600',
         textAlign: 'center',
-        paddingVertical: 3.5,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    modalContent: {
+        width: '85%',
+        backgroundColor: '#FFF',
+        borderRadius: 20,
+        paddingVertical: 24,
+        paddingHorizontal: 24,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 8,
+        elevation: 8,
+    },
+    modalHeader: {
+        fontSize: 20,
+        fontWeight: '600',
+        marginBottom: 20,
+        color: '#1A1A1A',
+    },
+    modalOption: {
+        paddingVertical: 16,
+        width: '100%',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+    modalOptionText: {
+        fontSize: 17,
+        color: '#0653A1',
+        fontWeight: '500',
     },
     scrollViewContainer: {
-        paddingBottom: '28%', 
+        paddingBottom: '30%',
+        paddingTop: 16,
     },
 });
 
