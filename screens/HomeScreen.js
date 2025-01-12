@@ -46,21 +46,15 @@ function HomeScreen({ route }) {
         }
     }
     fetchPosts();
-
-    getPost('9YCofto5I1dUh2M2lbho')
-        .then((postData) => {
-            setMyPost(postData);
-        })
-        .catch((error) => {
-            console.error('Error fetching post:', error);
-        });
   }, []);
 
-  if (!myPost || posts.length === 0) {
-    return <Text>Loading...</Text>;
+  if (posts.length === 0) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>No listings available. Add a post!</Text>
+      </View>
+    );
   }
-
-  console.log(posts);
 
   return (
     <View style={[styles.container]}>

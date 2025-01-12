@@ -8,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import HomeScreen from './screens/HomeScreen.js';
 import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
+import PostScreen from './screens/PostScreen.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
 import RegistrationScreen from './screens/RegistrationScreen.js';
@@ -58,14 +59,9 @@ function App() {
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Registration" component={RegistrationScreen} />
           <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: true }} />
-          <Stack.Screen
-            name="PostConfirmationScreen"
-            component={PostConfirmationScreen}
-            options={{
-              headerStyle: { backgroundColor: '#959595', height: '12%' },
-            }}
-          />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false}} />
+          <Stack.Screen name="PostScreen" component={PostScreen} options={{ headerShown: false }}/>
+          <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }} />
           <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }} />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />

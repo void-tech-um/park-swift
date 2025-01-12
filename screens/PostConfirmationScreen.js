@@ -4,12 +4,15 @@ import { useNavigation } from "@react-navigation/native";
 
 const PostConfirmationScreen = () => {
   const navigation = useNavigation();
-  const handleButtonPress1 = () => {
+
+  const handleListAnother = () => {
+    // Navigate to PostScreen as a new screen
     navigation.navigate('List Your Space');
   };
 
   const handleReturnHome = () => {
-    navigation.popToTop();
+    // Navigate back to HomeScreen
+    navigation.navigate('Home');
   };
 
   return (
@@ -18,7 +21,7 @@ const PostConfirmationScreen = () => {
       <Text style={styles.additionalText}>Your listing has been posted.</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={handleButtonPress1}
+        onPress={handleListAnother}
       >
         <Text style={styles.buttonText}>List another</Text>
       </TouchableOpacity>
@@ -46,11 +49,10 @@ const styles = StyleSheet.create({
   additionalText: {
     fontSize: 25,
     fontFamily: "NotoSansTaiTham-Bold",
-    marginBottom: 30
+    marginBottom: 30,
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#D3D3D3',
     borderRadius: 20, 
     width: 400, 
     height: 60,

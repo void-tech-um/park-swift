@@ -1,10 +1,11 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from './MenuSearchBar';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
+import { useIsFocused } from '@react-navigation/native';
 
 
 function PostScreen({ navigation, route }) {
@@ -125,6 +126,31 @@ function PostScreen({ navigation, route }) {
     newTags.splice(index, 1);
     setTags(newTags);
   };
+
+  const isFocused = useIsFocused();
+
+  const resetForm = () => {
+    setLocation('');
+    setStartTime({ hours: '', minutes: '' });
+    setEndTime({ hours: '', minutes: '' });
+    setStartPeriod('AM');
+    setEndPeriod('AM');
+    setPrice('');
+    setRentalPeriod('hour');
+    setIsNegotiable(null);
+    setSize('sedan');
+    setTags([]);
+    setNotes('');
+    setSelectedDates({});
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      resetForm();
+    });
+
+    return unsubscribe; // Cleanup listener on unmount
+  }, [navigation]);
 
   const onPostPress = () => {
     const userId = route.params.userId; 
