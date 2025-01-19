@@ -7,15 +7,11 @@ import MenuSearchBar from './MenuSearchBar.js';
 import { getPost, getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
 import Car from '../assets/car.png'; 
 import { useNavigation } from "@react-navigation/native";
-
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-}
+import { useIsFocused } from '@react-navigation/native';
 
 function HomeScreen({ route }) {
   const [posts, setPosts] = useState([]);
-  const [myPost, setMyPost] = useState(null);
+  const isFocused = useIsFocused();
   const userID = route.params?.userID; 
   const navigation = useNavigation();
 
@@ -23,30 +19,58 @@ function HomeScreen({ route }) {
     navigation.navigate('HomeScreen', { userID: userID });
   };
   
-  useEffect(() => {
-    async function fetchPosts() {
-        try {
-            const postsCollectionRef = collection(database, "posts"); // Use 'database' here
-            const querySnapshot = await getDocs(postsCollectionRef);
-            const postList = querySnapshot.docs.map((doc) => {
-                const data = doc.data();
-                return {
-                    id: doc.id,
-                    address: data.location,
-                    date: `${formatDate(data.firstDate)} - ${formatDate(data.lastDate)}`,
-                    startTime: null,
-                    endTime: null,
-                    ppHour: `$${data.price} /${data.rentalPeriod}`,
-                    userID: data.userID,
-                };
-            });
-            setPosts(postList);
-        } catch (error) {
-            console.error("Error fetching posts:", error);
-        }
+  function formatDate(dateString) {
+    if (!dateString || dateString === "null" || dateString === "undefined") {
+      return "No date available"; 
     }
-    fetchPosts();
-  }, []);
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return "Invalid date"; 
+    }
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  }
+  
+  async function fetchPosts() {
+    try {
+        const postsCollectionRef = collection(database, "posts");
+        const querySnapshot = await getDocs(postsCollectionRef);
+
+        const postList = querySnapshot.docs.map((doc) => {
+            const data = doc.data();
+
+            const date =
+              data.firstDate && data.lastDate
+                ? `${formatDate(data.firstDate)} - ${formatDate(data.lastDate)}`
+                : "No date available"; 
+
+            return {
+                id: doc.id,
+                address: data.location,
+                date: date,
+                startTime: data.startTime || null,
+                endTime: data.endTime || null,
+                ppHour: data.price && data.rentalPeriod
+                    ? `$${data.price} /${data.rentalPeriod}`
+                    : "Price not available",
+                isNegotiable: data.isNegotiable ? 'Negotiable' : 'Fixed Price',
+                carSize: data.sizeOfCar || "Size not specified",
+                userID: data.userID,
+            };
+        });
+
+        setPosts(postList);
+    } catch (error) {
+        console.error("Error fetching posts:", error);
+    }
+  };
+
+  
+  
+  useEffect(() => {
+    if (isFocused) {
+      fetchPosts(); 
+    }
+  }, [isFocused]);
 
   if (posts.length === 0) {
     return (

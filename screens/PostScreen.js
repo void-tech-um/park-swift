@@ -153,16 +153,18 @@ function PostScreen({ navigation, route }) {
   }, [navigation]);
 
   const onPostPress = () => {
-    const userId = route.params.userId; 
+    const userId = route.params.userId;
     const firstDate = Object.keys(selectedDates)[0];
     const lastDate = Object.keys(selectedDates)[Object.keys(selectedDates).length - 1];
-  
+
+    console.log("Selected Dates:", firstDate, lastDate);
+
     if (!firstDate || !lastDate) {
-      alert("Please select a valid date range.");
-      return;
+        alert("Please select a valid date range.");
+        return;
     }
-  
-    createPost(userId, location, rentalPeriod, 'hour', price, sizeOfCar, isNegotiable, firstDate, lastDate)
+
+    createPost(userId, location, rentalPeriod, price, sizeOfCar, isNegotiable, firstDate, lastDate, startTime, endTime)
         .then((docRef) => {
             navigation.navigate('PostConfirmationScreen', { postId: docRef.id });
         })
@@ -170,7 +172,10 @@ function PostScreen({ navigation, route }) {
             console.error('Error creating post:', error);
             alert('Error creating post:', error.message);
         });
-  };
+        console.log("selectedDates:", selectedDates);
+        console.log("Dates being sent:", firstDate, lastDate);
+    };
+
   
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>

@@ -45,7 +45,7 @@ const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppH
                         <View style={styles.content}>
                             <Text style={styles.price}>{ppHour}</Text>
                             <Text style={styles.description}>x minutes away</Text>
-                            <Text style={styles.description}>{date}</Text>
+                            {date ? <Text style={styles.description}>{date}</Text> : null}
                             {startTime && endTime && (
                                 <Text style={styles.description}>{startTime} - {endTime}</Text>
                             )}
