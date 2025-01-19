@@ -8,6 +8,7 @@ import WeatherProtected from '../assets/WeatherProtected.png';
 import PavedEntrance from '../assets/PavedEntrance.png'; 
 import PrivateProperty from '../assets/PrivateProperty.png';  
 import Save from '../assets/Save.png'; 
+import SaveIcon2 from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from './MenuSearchBar';
 import { useState, useEffect } from 'react';
@@ -24,6 +25,7 @@ const ListingScreen = ({ route }) => {
     const [user, setUser] = useState(null);
     const [firstName, setFirstName] = useState('First');
     const [lastName, setLastName] = useState('Last');
+    const [isSaved, setIsSaved] = useState(false);
 
     const handleBackPress = () => {
         navigation.goBack();
@@ -129,6 +131,9 @@ const ListingScreen = ({ route }) => {
     const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
     const backMarginLeft = backButtonMarginLeft();
     const textSpacing = textContactSpacing();
+    const handleSavePress = () => {
+        setIsSaved(prevState => !prevState);
+    };
 
     return (
         <View style={styles.container}>
@@ -222,9 +227,9 @@ const ListingScreen = ({ route }) => {
                                 <Text style={styles.contactText}>Contact</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleSavePress}>
                             <Image
-                                source={Save}
+                                source={isSaved ? SaveIcon2 : Save}
                                 style={styles.saveIcon}
                             />
                         </TouchableOpacity>
