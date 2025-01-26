@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
-import MenuSearchBar from './MenuSearchBar';
+import MenuSearchBar from '../components/MenuSearchBar';
 import Back from '../assets/Back.png';
 import TabUp from '../assets/FilterUp.png';
 import TabDown from '../assets/FilterDown.png';

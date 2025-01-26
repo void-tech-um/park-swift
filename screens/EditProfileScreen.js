@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Modal, TouchableWithoutFeedback } from 'react-native';
 import User from '../assets/profile.png';
 import Pencil from '../assets/pencil.png';
-import MenuSearchBar from './MenuSearchBar';
+import MenuSearchBar from '../components/MenuSearchBar';
 import { updateUser } from '../firebaseFunctions/firebaseFirestore';
 import * as ImagePicker from 'expo-image-picker';
 

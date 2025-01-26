@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView,
 import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
-import MenuSearchBar from './MenuSearchBar.js';
+import MenuSearchBar from '../components/MenuSearchBar.js';
 import { getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
 import Car from '../assets/car.png'; 
 import { useNavigation } from "@react-navigation/native";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import MenuSearchBar from './MenuSearchBar';
+import MenuSearchBar from '../components/MenuSearchBar';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';

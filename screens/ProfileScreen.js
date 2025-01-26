@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, } from 'react-native';
 import { useState } from 'react';
 import { getUser } from '../firebaseFunctions/firebaseFirestore';
-import MenuSearchBar from './MenuSearchBar';
+import MenuSearchBar from '../components/MenuSearchBar';
 import { useFocusEffect } from '@react-navigation/native';
 import ListingCard from '../components/ListingCard';
 import listingsData from '../components/ListingsData';
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
         marginLeft: 19,
     },
     scrollViewContainer: {
-        paddingBottom: '28%',
+        paddingBottom: '8%',
     },
     listingsContainer: {
         alignItems: 'center',

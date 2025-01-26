@@ -10,7 +10,7 @@ import PrivateProperty from '../assets/PrivateProperty.png';
 import Save from '../assets/Save.png'; 
 import SaveIcon2 from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
-import MenuSearchBar from './MenuSearchBar';
+import MenuSearchBar from '../components/MenuSearchBar';
 import { useState, useEffect } from 'react';
 import { getDoc, doc } from "firebase/firestore";
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
-import SearchbarComponent from './SearchBar';
-import MenuSearchBar from './MenuSearchBar';
+import SearchbarComponent from '../components/SearchBar';
+import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
 import ListingsData from '../components/ListingsData';
 
