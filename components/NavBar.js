@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Image, Text, StyleSheet, Dimensions, Platform } from 'react-native';
+import { Image, Text, StyleSheet, Dimensions, View } from 'react-native';
 
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/MapScreen';
@@ -23,23 +23,12 @@ import PlusIcon from '../assets/Plus.png';
 const Tab = createBottomTabNavigator();
 const ProfileStack = createStackNavigator();
 
-const { height: screenHeight } = Dimensions.get('window');
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
-const calculateNavBarHeight = () => {
-    if (screenHeight <= 718) { // 5.6" and below
-        return screenHeight * 0.132;
-    } else if (screenHeight <= 719) { // 5.7" and below
-        return screenHeight * 0.125;
-    } else if (screenHeight <= 778) { // 6.0" and below
-        return screenHeight * 0.123;
-    } else if (screenHeight <= 903) { // 6.7" and below
-        return screenHeight * 0.11;
-    } else {
-        return screenHeight * 0.1;
-    }
-};
-
-const navBarHeight = Platform.OS === 'ios' ? screenHeight * 0.1 : calculateNavBarHeight();
+// Dynamically calculate navBarHeight
+const navBarHeight = screenHeight * 0.1;
+const iconSize = screenWidth * 0.1; // Icon size based on screen width
+const labelFontSize = Math.max(12, screenWidth * 0.03); // Ensure font size scales but doesn't go too small
 
 const ProfileStackScreen = ({ route }) => {
     const { userId } = route.params;
@@ -55,121 +44,96 @@ const ProfileStackScreen = ({ route }) => {
 const NavBar = ({ route }) => {
     const { userId } = route.params;
 
-    // Calculate dynamic margins
-    const tabBarLabelMarginBottom = Platform.OS === 'android' ? navBarHeight * 0.17 : -navBarHeight * 0.15;
-    const listLabelMarginTop = Platform.OS === 'android' ? navBarHeight * 0.135 : navBarHeight * 0.15;
-    const listLabelMarginBottom = Platform.OS === 'android' ? navBarHeight * 0.09 : -navBarHeight * 0.25;
+    // Dynamic calculations for spacing
+    const containerHeight = navBarHeight * 0; // Height for icon + label container
+    const blueBackgroundPadding = navBarHeight * 0.13; // Padding above and below the container
+    const iconSpacing = containerHeight * 0; // Space between icon and label
 
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            screenOptions={({ route }) => ({
+            screenOptions={{
                 headerShown: false,
-                tabBarShowLabel: true,
+                tabBarShowLabel: false, // Turn off default labels
                 tabBarStyle: {
                     height: navBarHeight,
-                    paddingHorizontal: '2.3%',
                     backgroundColor: '#052658',
-                    position: 'absolute',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    paddingHorizontal: '3%',
                     borderTopWidth: 0,
                 },
-                tabBarItemStyle: {
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: Platform.OS === 'android' ? '4%' : '5%',
-                },
-                tabBarIconStyle: {
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                },
-                tabBarActiveTintColor: '#FED869',
-                tabBarInactiveTintColor: 'white',
-            })}
+            }}
         >
-            <Tab.Screen
-                name="Home"
-                component={HomeScreen}
-                initialParams={{ userId }}
-                options={{
-                    tabBarLabel: ({ focused }) => (
-                        <Text style={[styles.tabBarLabel, { marginBottom: tabBarLabelMarginBottom, color: focused ? '#FED869' : 'white' }]}>Home</Text>
-                    ),
-                    tabBarIcon: ({ focused }) => (
-                        <Image source={focused ? HomeIconColor : HomeIcon} style={{ width: 40, height: 40 }} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="SavedListingsScreen"
-                component={SavedListingsScreen}
-                initialParams={{ userId }}
-                options={{
-                    tabBarLabel: ({ focused }) => (
-                        <Text style={[styles.tabBarLabel, { marginBottom: tabBarLabelMarginBottom, color: focused ? '#FED869' : 'white' }]}>Saved</Text>
-                    ),
-                    tabBarIcon: ({ focused }) => (
-                        <Image source={focused ? BookmarksIconColor : BookmarksIcon} style={{ width: 40, height: 40 }} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="List Your Space"
-                component={PostScreen}
-                initialParams={{ userId }}
-                options={{
-                    tabBarLabel: ({ focused }) => (
-                        <Text style={[styles.listLabel, { marginTop: listLabelMarginTop, marginBottom: listLabelMarginBottom, color: focused ? '#FED869' : 'white' }]}>List</Text>
-                    ),
-                    tabBarIcon: ({ focused }) => (
-                        <Image source={PlusIcon} style={{ width: 60, height: 60, tintColor: focused ? '#FED869' : 'white' }} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Map"
-                component={MapScreen}
-                initialParams={{ userId }}
-                options={{
-                    tabBarLabel: ({ focused }) => (
-                        <Text style={[styles.tabBarLabel, { marginBottom: tabBarLabelMarginBottom, color: focused ? '#FED869' : 'white' }]}>Map</Text>
-                    ),
-                    tabBarIcon: ({ focused }) => (
-                        <Image source={focused ? MapIconColor : MapIcon} style={[styles.mapIcon, { width: 40, height: 40 }]} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Profile"
-                component={ProfileStackScreen}
-                initialParams={{ userId }}
-                options={{
-                    tabBarLabel: ({ focused }) => (
-                        <Text style={[styles.tabBarLabel, { marginBottom: tabBarLabelMarginBottom, color: focused ? '#FED869' : 'white' }]}>Profile</Text>
-                    ),
-                    tabBarIcon: ({ focused }) => (
-                        <Image source={focused ? UserIconColor : UserIcon} style={{ width: 40, height: 40 }} />
-                    ),
-                }}
-            />
+            {[
+                {
+                    name: 'Home',
+                    component: HomeScreen,
+                    icon: { default: HomeIcon, active: HomeIconColor },
+                    label: 'Home',
+                },
+                {
+                    name: 'SavedListingsScreen',
+                    component: SavedListingsScreen,
+                    icon: { default: BookmarksIcon, active: BookmarksIconColor },
+                    label: 'Saved',
+                },
+                {
+                    name: 'List Your Space',
+                    component: PostScreen,
+                    icon: { default: PlusIcon },
+                    iconStyle: { width: iconSize * 1.3, height: iconSize * 1.3 }, 
+                },
+                {
+                    name: 'Map',
+                    component: MapScreen,
+                    icon: { default: MapIcon, active: MapIconColor },
+                    label: 'Map',
+                },
+                {
+                    name: 'Profile',
+                    component: ProfileStackScreen,
+                    icon: { default: UserIcon, active: UserIconColor },
+                    label: 'Profile',
+                },
+            ].map((tab, index) => (
+                <Tab.Screen
+                    key={index}
+                    name={tab.name}
+                    component={tab.component}
+                    initialParams={{ userId }}
+                    options={{
+                        tabBarIcon: ({ focused }) => (
+                            <View style={[styles.tabContainer, { height: containerHeight, paddingVertical: blueBackgroundPadding }]}>
+                                <Image
+                                    source={tab.icon.default} // Use the same source for all states
+                                    style={[
+                                        {
+                                            width: iconSize,
+                                            height: iconSize,
+                                            tintColor: focused ? '#FED869' : 'white', // Change color dynamically
+                                        },
+                                        tab.iconStyle,
+                                    ]}
+                                />
+                                <Text style={[styles.tabBarLabel, { marginTop: iconSpacing, color: focused ? '#FED869' : 'white' }]}>
+                                    {tab.label}
+                                </Text>
+                            </View>
+                        ),
+                    }}
+                />
+            ))}
         </Tab.Navigator>
     );
 };
 
 const styles = StyleSheet.create({
-    tabBarLabel: {
-        fontSize: 12,
-        fontFamily: 'NotoSansTaiTham-Regular',
+    tabContainer: {
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flex: 1,
     },
-    listLabel: {
-        fontSize: 12,
-        fontFamily: 'NotoSansTaiTham-Regular',
-    },
-    mapIcon: {
-        marginTop: '7.5%',
-    },
+
 });
+
 
 export default NavBar;

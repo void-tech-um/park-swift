@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     alignItems: 'center',
-    paddingBottom: '28%',
+    paddingBottom: '8%',
   },
 });
 

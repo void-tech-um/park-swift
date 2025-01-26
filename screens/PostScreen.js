@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   scrollViewContent: {
-    paddingBottom: 110, 
+    paddingBottom: '8%', 
   },
   title: {
     fontFamily: "NotoSansTaiTham-Bold",
