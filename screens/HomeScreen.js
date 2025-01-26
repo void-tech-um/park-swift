@@ -51,7 +51,7 @@ function HomeScreen({ route }) {
                 endTime: data.endTime || null,
                 ppHour: data.price && data.rentalPeriod
                     ? `$${data.price} /${data.rentalPeriod}`
-                    : "Price not available",
+                    : null,
                 isNegotiable: data.isNegotiable ? 'Negotiable' : 'Fixed Price',
                 carSize: data.sizeOfCar || "Size not specified",
                 userID: data.userID,
@@ -64,21 +64,11 @@ function HomeScreen({ route }) {
     }
   };
 
-  
-  
   useEffect(() => {
     if (isFocused) {
       fetchPosts(); 
     }
   }, [isFocused]);
-
-  if (posts.length === 0) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text style={styles.loadingText}>No listings available. Add a post!</Text>
-      </View>
-    );
-  }
 
   return (
     <View style={[styles.container]}>
@@ -97,7 +87,14 @@ function HomeScreen({ route }) {
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {posts.map((post) => (
+        {posts.length === 0 ? (
+          <View style={styles.noListingsContainer}>
+            <Text style={styles.noListingsText}>
+              No listings available. Add a post!
+            </Text>
+          </View>
+        ) : (
+        posts.map((post) => (
           <ListingCard
             key={post.id}
             address={post.address || 'No address available'}
@@ -109,7 +106,8 @@ function HomeScreen({ route }) {
             listingURL={post.listingURL || '#'}
             userID={post.userID}
           />
-        ))}
+        ))
+      )}
       </ScrollView>
     </View>
   );
@@ -145,6 +143,17 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     paddingBottom: '28%', 
     alignItems: 'center',
+  },
+  noListingsContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '10%', 
+  },
+  noListingsText: {
+    fontSize: 18,
+    fontFamily: "NotoSansTaiTham-Bold",
+    color: '#000000',
+    textAlign: 'center',
   },
 });
 
