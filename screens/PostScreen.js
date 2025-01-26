@@ -7,7 +7,6 @@ import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
 import { useIsFocused } from '@react-navigation/native';
 
-
 function PostScreen({ navigation, route }) {
   const [location, setLocation] = React.useState('');
   const [startTime, setStartTime] = React.useState({ hours: '', minutes: '' });
@@ -165,9 +164,9 @@ function PostScreen({ navigation, route }) {
       alert("Please select valid calendar dates.");
       return;
     }
-    if (!price || parseFloat(price) < 0) {
-        alert("Please enter a valid price.");
-        return;
+    if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0 || parseFloat(price) > 999999.99) {
+      alert("Please enter a valid price.");
+      return;
     }
 
     createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, startTime, endTime)
@@ -180,7 +179,6 @@ function PostScreen({ navigation, route }) {
     });
   };
 
-  
   return (
     <View style={styles.container}>
         <MenuSearchBar showSearchBar={false} />
@@ -189,7 +187,7 @@ function PostScreen({ navigation, route }) {
         <Text style={styles.subHeading}>Location</Text>
         <TextInput
           style={styles.input}
-          placeholder="5678 Place Ave"
+          placeholder="Address"
           placeholderTextColor="#A8A8A8"
           value={location}
           onChangeText={setLocation}
@@ -281,12 +279,12 @@ function PostScreen({ navigation, route }) {
           />
           <View style={styles.dropdownContainer}>
             <RNPickerSelect
-              onValueChange={(value) => setStartPeriod(value)}
+              onValueChange={(value) => setEndPeriod(value)}
               items={[
                 { label: 'AM', value: 'AM', color: 'black' },
                 { label: 'PM', value: 'PM', color: 'black' },
               ]}
-              value={startPeriod}
+              value={endPeriod}
               style={{
                 inputIOS: {
                   fontSize: 16,
@@ -352,14 +350,39 @@ function PostScreen({ navigation, route }) {
         <View style={styles.priceAndNegotiableContainer}>
           <View style={styles.priceSection}>
             <Text style={styles.subHeading}>Price</Text>
-            <View style={[styles.inputGroupContainer, { marginTop: '-2.5%' }]}>
+            <View style={[styles.priceInputs, { marginTop: '-2.5%' }]}>
+            <View style={styles.priceContainer}>
+              <Text style={styles.dollarSign}>$</Text>
               <TextInput
                 style={styles.inputPrice}
                 keyboardType="numeric"
                 placeholder="0.00"
                 value={price}
-                onChangeText={setPrice}
+                onChangeText={(text) => {
+                  // Allow only numbers and one decimal point
+                  let sanitizedText = text.replace(/[^0-9.]/g, '');
+                  // Ensure only one decimal point
+                  if ((sanitizedText.match(/\./g) || []).length > 1) {
+                    sanitizedText = sanitizedText.slice(0, -1);
+                  }
+                  // Limit to two digits after the decimal
+                  if (sanitizedText.includes('.')) {
+                    const parts = sanitizedText.split('.');
+                    if (parts[1]?.length > 2) {
+                      sanitizedText = `${parts[0]}.${parts[1].slice(0, 2)}`;
+                    }
+                  }
+                  // Convert to a number and enforce range limits
+                  const numericValue = parseFloat(sanitizedText);
+                  if (numericValue > 999999.99) {
+                    sanitizedText = '999999.99';
+                  } else if (numericValue < 0) {
+                    sanitizedText = '0.00';
+                  }
+                  setPrice(sanitizedText);
+                }}
               />
+            </View>
               <Text style={styles.slash}>/</Text>
               <RNPickerSelect
                 onValueChange={(value) => setRentalPeriod(value)}
@@ -368,6 +391,7 @@ function PostScreen({ navigation, route }) {
                   { label: 'Day', value: 'day', color: 'black' },
                   { label: 'Week', value: 'week', color: 'black' },
                   { label: 'Month', value: 'month', color: 'black' },
+                  { label: 'Semstr', value: 'semester', color: 'black' },
                 ]}
                 style={{
                   inputIOS: {
@@ -377,8 +401,8 @@ function PostScreen({ navigation, route }) {
                     borderRadius: 17,
                     backgroundColor: '#E9E9E9',
                     height: 40,
-                    width: 100,
-                    paddingLeft: '4.75%',
+                    width: 110,
+                    paddingLeft: '3.5%',
                   },
                   inputAndroid: {
                     fontSize: 16,
@@ -387,11 +411,11 @@ function PostScreen({ navigation, route }) {
                     borderRadius: 17,
                     backgroundColor: '#E9E9E9',
                     height: 40,
-                    width: 100,
+                    width: 110,
                   },
                   iconContainer: {
                     top: '40%',
-                    right: 18,
+                    right: '14%',
                   },
                 }}
                 value={rentalPeriod}
@@ -405,28 +429,32 @@ function PostScreen({ navigation, route }) {
           </View>
 
           <View style={styles.negotiableSection}>
-            <Text style={styles.subHeading}>Negotiable</Text>
+            <Text style={[styles.subHeading, {marginLeft: '1%'}]}>Negotiable</Text>
             <View style={styles.negotiableOptions}>
-              <TouchableOpacity
-                style={[styles.option, isNegotiable === true ? styles.selectedOption : null]}
-                onPress={() => setIsNegotiable(true)}
-              >
-                <View style={[styles.circle, isNegotiable === true ? styles.selectedCircle : styles.unselectedCircle]} />
-                <Text style={styles.optionText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.option, isNegotiable === false ? styles.selectedOption : null]}
-                onPress={() => setIsNegotiable(false)}
-              >
-                <View style={[styles.circle, isNegotiable === false ? styles.selectedCircle : styles.unselectedCircle]} />
-                <Text style={styles.optionText}>No</Text>
-              </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.option}
+              onPress={() => setIsNegotiable((prev) => (prev === true ? null : true))}
+            >
+              <View style={styles.unselectedCircle}>
+                {isNegotiable === true && <View style={styles.selectedCircle} />}
+              </View>
+              <Text style={styles.optionText}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.option}
+              onPress={() => setIsNegotiable((prev) => (prev === false ? null : false))}
+            >
+              <View style={styles.unselectedCircle}>
+                {isNegotiable === false && <View style={styles.selectedCircle} />}
+              </View>
+              <Text style={styles.optionText}>No</Text>
+            </TouchableOpacity>
             </View>
           </View>
         </View>
 
         <Text style={styles.subHeading}>Size</Text>
-        <View style={styles.inputWithIcon}>
+        <View style={styles.sizeInput}>
           <RNPickerSelect
             onValueChange={(value) => setSize(value)}
             items={[
@@ -438,8 +466,32 @@ function PostScreen({ navigation, route }) {
               { label: 'RV', value: 'rv', color: 'black' },
               { label: 'Camper Van', value: 'campervan', color: 'black' },
             ]}
-            style={pickerSelectStyles}
             value={sizeOfCar}
+            style={{
+              inputIOS: {
+                fontSize: 16,
+                paddingVertical: 10,
+                paddingHorizontal: 10,
+                borderRadius: 17,
+                backgroundColor: '#E9E9E9',
+                height: 40,
+                width: 100,
+                paddingLeft: '3.5%',
+              },
+              inputAndroid: {
+                fontSize: 16,
+                paddingVertical: 8,
+                paddingHorizontal: 10,
+                borderRadius: 17,
+                backgroundColor: '#E9E9E9',
+                height: 40,
+                width: 110,
+              },
+              iconContainer: {
+                top: '40%',
+                right: '14%',
+              },
+            }}
             useNativeAndroidPickerStyle={false}
             placeholder={{}}
             Icon={() => (
@@ -656,23 +708,39 @@ const styles = StyleSheet.create({
   priceSection: {
     marginLeft: '1.5%',
   },
-  inputWithIcon: {
+  sizeInput: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginLeft: '3.75%',
   },
-  inputGroupContainer: {
+  priceInputs: {
     flexDirection: 'row',
     alignItems: 'center', 
     justifyContent: 'center', 
   },
-  inputPrice: {
-    marginLeft: '3%', 
-    borderRadius: 17,
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#E9E9E9',
-    fontSize: 16,
+    borderRadius: 17,
+    marginLeft: '3%',
+    paddingHorizontal: 12,
     height: 40,
-    width: 100,
-    paddingLeft: '8.25%',
+    width: 100, 
+  },
+  dollarSign: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    marginRight: 7, 
+    fontFamily: "NotoSansTaiTham-Regular",
+  },
+  inputPrice: {
+    flex: 1,
+    fontSize: 16,
+    color: '#000',
+    fontFamily: "NotoSansTaiTham-Regular",
+    marginTop: '2',
   },
   slash: {
     marginTop: '-4%',
@@ -692,20 +760,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 20,
   },
-  circle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+  unselectedCircle: {
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#ccc',
+    backgroundColor: '#f0f0f0',
+    width: 25,
+    height: 25,
+    borderRadius: 20,
     marginRight: 8,
     borderWidth: 1,
   },
-  unselectedCircle: {
-    borderColor: '#ccc',
-    backgroundColor: '#f0f0f0',
-  },
   selectedCircle: {
-    backgroundColor: '#0653A1',
-    borderColor: '#0653A1',
+    backgroundColor: '#052658',
+    borderColor: '#052658',
+    width: 17,
+    height: 17,
+    borderRadius: 10,
   },
   optionText: {
     fontSize: 16,
