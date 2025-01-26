@@ -192,7 +192,6 @@ function PostScreen({ navigation, route }) {
           value={location}
           onChangeText={setLocation}
         />
-
         <Text style={styles.subHeading}>Start Time</Text>
         <View style={styles.timeContainer}>
           <TextInput
@@ -546,7 +545,6 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
     marginTop: '6.3%',
     marginLeft: '3.5%',
-    marginBottom: '3%',
   },
   subHeading: {
     fontSize: 16,

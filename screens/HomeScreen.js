@@ -71,7 +71,7 @@ function HomeScreen({ route }) {
   }, [isFocused]);
 
   return (
-    <View style={[styles.container]}>
+    <View style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <MenuSearchBar />
       </TouchableWithoutFeedback>

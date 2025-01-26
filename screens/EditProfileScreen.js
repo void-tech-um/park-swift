@@ -4,8 +4,6 @@ import User from '../assets/profile.png';
 import Pencil from '../assets/pencil.png';
 import MenuSearchBar from './MenuSearchBar';
 import { updateUser } from '../firebaseFunctions/firebaseFirestore';
-
-import { updateProfile } from 'firebase/auth';
 import * as ImagePicker from 'expo-image-picker';
 
 function EditProfileScreen({ navigation, route }) {

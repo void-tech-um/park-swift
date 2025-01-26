@@ -12,8 +12,7 @@ import SaveIcon2 from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from './MenuSearchBar';
 import { useState, useEffect } from 'react';
-import { app } from "../services/configFirestore" 
-import { getFirestore, collection, getDoc, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 const { width, height } = Dimensions.get('window');
 
