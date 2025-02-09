@@ -1,5 +1,22 @@
 #!/bin/sh
 
-npm install
+# Exit on error
+set -e
 
-npm install -g expo-cli
+# Required versions
+NODE_VERSION="22.13.1"
+NPM_VERSION="10.9.2"
+EXPO_VERSION="0.22.13"
+
+echo "Installing Node.js $NODE_VERSION..."
+nvm install $NODE_VERSION
+nvm use $NODE_VERSION
+
+echo "Installing npm $NPM_VERSION..."
+npm install -g npm@$NPM_VERSION
+
+echo "Installing Expo CLI $EXPO_VERSION..."
+npm install -g expo-cli@$EXPO_VERSION
+
+echo "Installing project dependencies..."
+npm install
