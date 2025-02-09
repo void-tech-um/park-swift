@@ -3,3 +3,9 @@
 npm install  
 
 npm install -g expo  
+
+# npm install @react-native-async-storage/async-storage@1.23.1 \
+# @react-native-picker/picker@2.9.0 \
+# react-native-maps@1.18.0 \
+# react-native-pager-view@6.5.1 \
+# react-native-safe-area-context@4.12.0
