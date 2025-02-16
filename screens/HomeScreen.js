@@ -1,34 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, ScrollView, } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, } from 'react-native';
+import { getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
+import { useIsFocused } from '@react-navigation/native';
 import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from '../components/MenuSearchBar.js';
-import { getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
 import Car from '../assets/car.png'; 
-import { useNavigation } from "@react-navigation/native";
-import { useIsFocused } from '@react-navigation/native';
 
-function HomeScreen({ route }) {
+const HomeScreen = () => {
   const [posts, setPosts] = useState([]);
   const isFocused = useIsFocused();
-  const userID = route.params?.userID; 
-  const navigation = useNavigation();
-
-  const navigateToHomeScreen = () => {
-    navigation.navigate('HomeScreen', { userID: userID });
-  };
-  
-  function formatDate(dateString) {
-    if (!dateString || dateString === "null" || dateString === "undefined") {
-      return "No date available"; 
-    }
-    const date = new Date(dateString);
-    if (isNaN(date.getTime())) {
-      return "Invalid date"; 
-    }
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-  }
   
   async function fetchPosts() {
     try {
@@ -52,7 +34,7 @@ function HomeScreen({ route }) {
                 ppHour: data.price && data.rentalPeriod
                     ? `$${data.price} /${data.rentalPeriod}`
                     : null,
-                isNegotiable: data.isNegotiable ? 'Negotiable' : 'Fixed Price',
+                isNegotiable: data.negotiable ? 'Negotiable' : 'Fixed Price',
                 carSize: data.sizeOfCar || "Size not specified",
                 userID: data.userID,
             };
@@ -64,6 +46,17 @@ function HomeScreen({ route }) {
     }
   };
 
+  function formatDate(dateString) {
+    if (!dateString || dateString === "null" || dateString === "undefined") {
+      return "No date available"; 
+    }
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return "Invalid date"; 
+    }
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+  }
+
   useEffect(() => {
     if (isFocused) {
       fetchPosts(); 
@@ -72,9 +65,7 @@ function HomeScreen({ route }) {
 
   return (
     <View style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <MenuSearchBar />
-      </TouchableWithoutFeedback>
+      <MenuSearchBar/>
       <CurrentlyRentingCard />
       <View style={styles.headerContainer}>
         <View style={styles.listingsHeaderContainer}>
@@ -83,7 +74,7 @@ function HomeScreen({ route }) {
           <Text style={styles.listingsHeader}>You</Text>
         </View>
         <View style={styles.ButtonContainer}>
-          <SortingButton />
+          <SortingButton/>
         </View>
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>

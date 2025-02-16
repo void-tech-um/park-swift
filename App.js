@@ -20,9 +20,12 @@ const Stack = createStackNavigator();
 
 const loadFontsAndAssets = async () => {
   await Font.loadAsync({
-    'NotoSansTaiTham-Bold': require('./assets/fonts/NotoSansTaiTham-Bold.ttf'),
-    'NotoSansTaiTham-Regular': require('./assets/fonts/NotoSansTaiTham-Regular.ttf'),
-  });
+        'NotoSansTaiTham-Bold': require('./assets/fonts/NotoSansTaiTham-Bold.ttf'),
+        'NotoSansTaiTham-Medium': require('./assets/fonts/NotoSansTaiTham-Medium.ttf'),
+        'NotoSansTaiTham-Regular': require('./assets/fonts/NotoSansTaiTham-Regular.ttf'),
+        'NotoSansTaiTham-SemiBold': require('./assets/fonts/NotoSansTaiTham-SemiBold.ttf'),
+        'NotoSansTaiTham-Variable': require('./assets/fonts/NotoSansTaiTham-VariableFont_wght.ttf'),
+      });
 };
 
 SplashScreen.preventAutoHideAsync();
