@@ -138,7 +138,7 @@ const ListingScreen = ({ route }) => {
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <ScrollView style={styles.container}>
+                <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                     <View style={styles.header}>
                         <TouchableOpacity onPress={handleBackPress}>
                             <Image
@@ -152,14 +152,16 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.editListingText}>Edit Listing</Text>
                     </TouchableOpacity>
                     <View style={styles.carImagesContainer}>
-                        <Image
-                            source={CarImage}
-                            style={[styles.FirstImage, { marginLeft: firstImageMarginLeft }]}
-                        />
-                        <Image
-                            source={CarImage}
-                            style={[styles.SecondImage, { marginLeft: secondImageMarginLeft }]}
-                        />
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                            <Image
+                                source={CarImage}
+                                style={[styles.FirstImage, { marginLeft: firstImageMarginLeft }]}
+                            />
+                            <Image
+                                source={CarImage}
+                                style={[styles.SecondImage, { marginLeft: secondImageMarginLeft }]}
+                            />
+                        </ScrollView>
                     </View>
                     <View style={styles.userInfoContainer}>
                         <Image

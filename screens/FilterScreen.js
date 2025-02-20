@@ -27,6 +27,8 @@ const FilterScreen = () => {
     const [minPrice, setMinPrice] = useState('10');
     const [maxPrice, setMaxPrice] = useState('100');
     const [pricePer, setPricePer] = useState('Hour');
+    const [category, setCategory] = useState('Hour');
+    const categoryOptions = ['Hour', 'Week', 'Semester', 'Month'];
     const [useAddressChecked, setUseAddressChecked] = useState(false);
     const [useCurrentLocationChecked, setUseCurrentLocationChecked] = useState(false);
     const [timeRangeChecked, setTimeRangeChecked] = useState(false);
@@ -34,6 +36,14 @@ const FilterScreen = () => {
     const [priceChecked, setPriceChecked] = useState(false);
     const handleBackPress = () => {
         navigation.goBack();
+    };
+    
+    const handleCategoryPress = () => {
+        setCategory((prevCategory) => {
+            const currentIndex = categoryOptions.indexOf(prevCategory);
+            const nextIndex = (currentIndex + 1) % categoryOptions.length;
+            return categoryOptions[nextIndex];
+        });
     };
 
     const toggleFilter = (filterName) => {
@@ -410,10 +420,16 @@ const FilterScreen = () => {
                                         />
                                         
                                         <Text style={styles.pricePerLabel}>  Per</Text>
+                                        <TouchableOpacity style={styles.pricePerDropdown} onPress={handleCategoryPress}>
+                                            <Text style={styles.pricePerDropdownText}>{category}</Text>
+                                        </TouchableOpacity>
+                                        
+                                        {/* old dropdown
                                         <TouchableOpacity style={styles.pricePerDropdown}>
                                             <Image source={WhiteDropdown} style={styles.dropdownIcon} />
                                             <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
                                         </TouchableOpacity>
+                                        */}
                                     </View>
                                 </View>
                                 <View style={styles.pricePerContainer}>

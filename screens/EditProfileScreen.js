@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Modal, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Modal, TouchableWithoutFeedback, KeyboardAvoidingView, Platform } from 'react-native';
 import User from '../assets/profile.png';
 import Pencil from '../assets/pencil.png';
 import MenuSearchBar from '../components/MenuSearchBar';
@@ -76,84 +76,89 @@ function EditProfileScreen({ navigation, route }) {
     };
 
     return (
-        <View style={styles.container}>
-            <MenuSearchBar showSearchBar={false} />
-            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                <View style={styles.headerContainer}>
-                    <View style={styles.headerSpacer} />
-                    <Text style={styles.headerText}>Edit Profile</Text>
-                    <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                        <Text style={styles.saveButtonText}>Save</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.profileContainer}>
-                    <Image
-                        source={updatedUser.profileImage ? { uri: updatedUser.profileImage } : User}
-                        style={styles.profileImage}
-                    />
-                    <TouchableOpacity style={styles.editCircle} onPress={() => setModalVisible(true)}>
-                    <Image source={Pencil} style={styles.pencilImage} /></TouchableOpacity>
-                </View>
-                <View style={styles.formContainer}>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Display Name:</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={updatedUser.fullName}
-                            onChangeText={(text) => handleInputChange('fullName', text)}
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Bio (Optional):</Text>
-                        <TextInput
-                            style={[styles.input, styles.bioInput]}
-                            value={updatedUser.bio}
-                            onChangeText={(text) => handleInputChange('bio', text)}
-                            multiline
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Email Address:</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={updatedUser.email}
-                            onChangeText={(text) => handleInputChange('email', text)}
-                        />
-                    </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Phone Number:</Text>
-                        <TextInput
-                            style={styles.input}
-                            value={updatedUser.phoneNumber}
-                            onChangeText={(text) => handleInputChange('phoneNumber', text)}
-                        />
-                    </View>
-                </View>
-            </ScrollView>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <TouchableWithoutFeedback onPress={clickOutsideModal}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalHeader}>Profile Options</Text>
-                        <TouchableOpacity style={styles.modalOption} onPress={pickImage}>
-                            <Text style={styles.modalOptionText}>Upload Photo</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalOption} onPress={removePhoto}>
-                            <Text style={styles.modalOptionText}>Remove Photo</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalOption} onPress={() => setModalVisible(false)}>
-                            <Text style={styles.modalOptionText}>Exit</Text>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? 'padding' : 'height'}
+            style={{flex: 1}}>
+            <View style={styles.container}>
+                <MenuSearchBar showSearchBar={false} />
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.headerSpacer} />
+                        <Text style={styles.headerText}>Edit Profile</Text>
+                        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                            <Text style={styles.saveButtonText}>Save</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                </TouchableWithoutFeedback>
-            </Modal>
-        </View>
+                    <View style={styles.profileContainer}>
+                        <Image
+                            source={updatedUser.profileImage ? { uri: updatedUser.profileImage } : User}
+                            style={styles.profileImage}
+                        />
+                        <TouchableOpacity style={styles.editCircle} onPress={() => setModalVisible(true)}>
+                        <Image source={Pencil} style={styles.pencilImage} /></TouchableOpacity>
+                    </View>
+                    <View style={styles.formContainer}>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Display Name:</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={updatedUser.fullName}
+                                onChangeText={(text) => handleInputChange('fullName', text)}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Bio (Optional):</Text>
+                            <TextInput
+                                style={[styles.input, styles.bioInput]}
+                                value={updatedUser.bio}
+                                onChangeText={(text) => handleInputChange('bio', text)}
+                                multiline
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Email Address:</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={updatedUser.email}
+                                onChangeText={(text) => handleInputChange('email', text)}
+                            />
+                        </View>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Phone Number:</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={updatedUser.phoneNumber}
+                                onChangeText={(text) => handleInputChange('phoneNumber', text)}
+                                keyboardType = "phone-pad"
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(false)}
+                >
+                    <TouchableWithoutFeedback onPress={clickOutsideModal}>
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalHeader}>Profile Options</Text>
+                            <TouchableOpacity style={styles.modalOption} onPress={pickImage}>
+                                <Text style={styles.modalOptionText}>Upload Photo</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalOption} onPress={removePhoto}>
+                                <Text style={styles.modalOptionText}>Remove Photo</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.modalOption} onPress={() => setModalVisible(false)}>
+                                <Text style={styles.modalOptionText}>Exit</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
