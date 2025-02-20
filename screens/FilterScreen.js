@@ -189,23 +189,24 @@ const FilterScreen = () => {
 
     const resetAllFilters = () => {
         setFilterStates({ distance: false, pricing: false, dateTime: false });
-        setSelectedDates({});
-        setSelectedTimeFrames({});
-        setAddressInput('');
-        setTimeRange('30 minutes');
-        setMileRange('8 miles');
-        setMinPrice('10');
-        setMaxPrice('100');
-        setPricePer('Hour');
+        resetDateTimeFilter();
+        resetDistanceFilter();
+        resetPricingFilter();
+        handleTagSelection(null)
     };
 
     const resetDistanceFilter = () => {
+        setUseAddressChecked(false);
+        setUseCurrentLocationChecked(false);
+        setTimeRangeChecked(false);
+        setMileRangeChecked(false);
         setAddressInput('');
         setTimeRange('30 minutes');
         setMileRange('8 miles');
     };
 
     const resetPricingFilter = () => {
+        setPriceChecked(false);
         setMinPrice('10');
         setMaxPrice('100');
         setPricePer('Hour');
