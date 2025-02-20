@@ -404,16 +404,16 @@ const FilterScreen = () => {
                                     <Text style={styles.dollarSign}>$</Text>
                                         <TextInput
                                             style={styles.priceInput}
-                                            value={maxPrice}
+                                            placeholder={maxPrice}
                                             onChangeText={setMaxPrice}
                                             keyboardType="numeric"
                                         />
                                         
                                         <Text style={styles.pricePerLabel}>  Per</Text>
                                         <TouchableOpacity style={styles.pricePerDropdown}>
-    <Image source={WhiteDropdown} style={styles.dropdownIcon} />
-    <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
-</TouchableOpacity>
+                                            <Image source={WhiteDropdown} style={styles.dropdownIcon} />
+                                            <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                                 <View style={styles.pricePerContainer}>
@@ -864,8 +864,6 @@ const styles = StyleSheet.create({
         position: 'absolute',
         zIndex: 1, // Ensures dollar sign appears above the TextInput
         left: 10, // Position the dollar sign on the left inside the TextInput
-        top: '50%',
-        transform: [{ translateY: -13 }], // Center it vertically
         color: '#0053A1',
         fontSize: 16,
         fontFamily: 'NotoSansTaiTham-Regular',
