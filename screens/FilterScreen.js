@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
 import MenuSearchBar from '../components/MenuSearchBar';
@@ -281,242 +281,246 @@ const FilterScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <MenuSearchBar showSearchBar={false} />
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                    <View style={styles.header}>
-                        <TouchableOpacity onPress={handleBackPress}>
-                            <Image source={Back} style={styles.Back} />
-                        </TouchableOpacity>
-                        <Text style={styles.filterHeading}>Filters</Text>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.buttonRow}>
-                            <TouchableOpacity style={styles.saveButton}>
-                                <Text style={styles.saveButtonText}>Save Changes</Text>
+        <KeyboardAvoidingView
+                    behavior={Platform.OS === "ios" ? 'padding' : 'height'}
+                    style={{flex: 1}}>
+            <View style={styles.container}>
+                <MenuSearchBar showSearchBar={false} />
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                        <View style={styles.header}>
+                            <TouchableOpacity onPress={handleBackPress}>
+                                <Image source={Back} style={styles.Back} />
                             </TouchableOpacity>
-                            <Text style={styles.savedText}>All Changes Saved</Text>
+                            <Text style={styles.filterHeading}>Filters</Text>
                         </View>
-                        <TouchableOpacity style={styles.resetButton} onPress={resetAllFilters}>
-                            <Text style={styles.resetText}>Reset All Filters</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.filterSection}>
-                        <TouchableOpacity
-                            style={styles.filterTab}
-                            onPress={() => toggleFilter('distance')}
-                        >
-                            <View style={styles.filterTabContent}>
-                                <Image source={filterStates.distance ? TabDown : TabUp} style={styles.filterIcon} />
-                                <Text style={styles.filterTabText}>Distance</Text>
+                        <View style={styles.buttonContainer}>
+                            <View style={styles.buttonRow}>
+                                <TouchableOpacity style={styles.saveButton}>
+                                    <Text style={styles.saveButtonText}>Save Changes</Text>
+                                </TouchableOpacity>
+                                <Text style={styles.savedText}>All Changes Saved</Text>
                             </View>
-                        </TouchableOpacity>
-                        {filterStates.distance && (
-                            <View style={styles.filterContent}>
-                                <View style={styles.resetThisFilterContainer}>
-                                    <TouchableOpacity onPress={resetDistanceFilter}>
-                                        <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
-                                    </TouchableOpacity>
+                            <TouchableOpacity style={styles.resetButton} onPress={resetAllFilters}>
+                                <Text style={styles.resetText}>Reset All Filters</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.filterSection}>
+                            <TouchableOpacity
+                                style={styles.filterTab}
+                                onPress={() => toggleFilter('distance')}
+                            >
+                                <View style={styles.filterTabContent}>
+                                    <Image source={filterStates.distance ? TabDown : TabUp} style={styles.filterIcon} />
+                                    <Text style={styles.filterTabText}>Distance</Text>
                                 </View>
-                                <Text style={styles.filterSubheading}>Close By:</Text>
-                                <View style={styles.inputContainer}>
-                                    <Text style={styles.checkboxLabel}>Use input address</Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <TouchableOpacity onPress={handleAddressCheck}>
-                                            <View style={[styles.checkbox, useAddressChecked && styles.checkboxSelected]} />
+                            </TouchableOpacity>
+                            {filterStates.distance && (
+                                <View style={styles.filterContent}>
+                                    <View style={styles.resetThisFilterContainer}>
+                                        <TouchableOpacity onPress={resetDistanceFilter}>
+                                            <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
                                         </TouchableOpacity>
-                                        <TextInput
-                                            style={[styles.textInput, { flex: 1, marginLeft: 10 }]}
-                                            placeholder="123 Address Rd"
-                                            value={addressInput}
-                                            onChangeText={setAddressInput}
-                                            editable={useAddressChecked}
-                                        />
                                     </View>
-                                </View>
-                                <View style={styles.inputContainer}>
-                                    <Text style={styles.inputLabel}>Use current location</Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <TouchableOpacity onPress={handleCurrentLocationCheck}>
-                                        <View style={[styles.checkbox, useCurrentLocationChecked && styles.checkboxSelected]} />
-                                    </TouchableOpacity>
-                                    <View style={[styles.currentLocationContainer, { flexDirection: 'row', alignItems: 'center' }]}>
-                                        <Image source={Location} style={styles.locationIcon} />
-                                        <Text style={styles.currentLocationText}>{currentLocation}</Text>
+                                    <Text style={styles.filterSubheading}>Close By:</Text>
+                                    <View style={styles.inputContainer}>
+                                        <Text style={styles.checkboxLabel}>Use input address</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <TouchableOpacity onPress={handleAddressCheck}>
+                                                <View style={[styles.checkbox, useAddressChecked && styles.checkboxSelected]} />
+                                            </TouchableOpacity>
+                                            <TextInput
+                                                style={[styles.textInput, { flex: 1, marginLeft: 10 }]}
+                                                placeholder="123 Address Rd"
+                                                value={addressInput}
+                                                onChangeText={setAddressInput}
+                                                editable={useAddressChecked}
+                                            />
+                                        </View>
                                     </View>
-                                </View>
-                                </View>
-                                <Text style={styles.filterSubheading}>Range:</Text>
-                                <View style={styles.rangeContainer}>
-                                    <View style={styles.checkboxContainer}>
-                                        <Text style={styles.rangeLabel}>
+                                    <View style={styles.inputContainer}>
+                                        <Text style={styles.inputLabel}>Use current location</Text>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={handleCurrentLocationCheck}>
+                                            <View style={[styles.checkbox, useCurrentLocationChecked && styles.checkboxSelected]} />
+                                        </TouchableOpacity>
+                                        <View style={[styles.currentLocationContainer, { flexDirection: 'row', alignItems: 'center' }]}>
+                                            <Image source={Location} style={styles.locationIcon} />
+                                            <Text style={styles.currentLocationText}>{currentLocation}</Text>
+                                        </View>
+                                    </View>
+                                    </View>
+                                    <Text style={styles.filterSubheading}>Range:</Text>
+                                    <View style={styles.rangeContainer}>
+                                        <View style={styles.checkboxContainer}>
+                                            <Text style={styles.rangeLabel}>
 
-                                            Time range
-                                        </Text>
-                                    </View>
-                                    <View style={styles.rangeInputContainer}>
-                                        <TouchableOpacity onPress={handleTimeRangeCheck}>
-                                            <View style={[styles.checkbox, timeRangeChecked && styles.checkboxSelected]} />
-                                        </TouchableOpacity>
-                                        <Text style={styles.rangeInputLabel}>Less than</Text>
-                                        <TouchableOpacity style={styles.rangeDropdown}>
-                                            <Text style={styles.rangeDropdownText}>{timeRange}</Text>
-                                            <Image source={WhiteDropdown} style={styles.dropdownIcon} />
-                                        </TouchableOpacity>
-                                        <Text style={styles.rangeInputLabel}> away.</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.rangeContainer}>
-                                    <View style={styles.checkboxContainer}>
-                                        <Text style={styles.rangeLabel}>
-
-                                            Mile range
-                                        </Text>
-                                    </View>
-                                    <View style={styles.rangeInputContainer}>
-                                        <TouchableOpacity onPress={handleMileRangeCheck}>
-                                            <View style={[styles.checkbox, mileRangeChecked && styles.checkboxSelected]} />
-                                        </TouchableOpacity>
-                                        <Text style={styles.rangeInputLabel}>Less than</Text>
-                                        <TouchableOpacity style={styles.rangeDropdown}>
-                                            <Text style={styles.rangeDropdownText}>{mileRange}</Text>
-                                            <Image source={WhiteDropdown} style={styles.dropdownIcon} />
-                                        </TouchableOpacity>
-                                        <Text style={styles.rangeInputLabel}> away.</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        )}
-                        <TouchableOpacity
-                            style={styles.filterTab}
-                            onPress={() => toggleFilter('pricing')}
-                        >
-                            <View style={styles.filterTabContent}>
-                                <Image source={filterStates.pricing ? TabDown : TabUp} style={styles.filterIcon} />
-                                <Text style={styles.filterTabText}>Pricing</Text>
-                            </View>
-                        </TouchableOpacity>
-                        {filterStates.pricing && (
-                            <View style={styles.filterContent}>
-                                <View style={styles.resetThisFilterContainer}>
-                                    <TouchableOpacity onPress={resetPricingFilter}>
-                                        <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <Text style={styles.filterSubheading}>Maximum Price:</Text>
-                                <View style={styles.priceRangeContainer}>
-                                <TouchableOpacity onPress={() => setPriceChecked(!priceChecked)}>
-                                 <View style={[styles.checkbox, priceChecked && styles.checkboxSelected]} />
-                                  </TouchableOpacity>
-                                    <View style={styles.priceInputContainer}>
-                                    
-                                    <Text style={styles.dollarSign}>$</Text>
-                                        <TextInput
-                                            style={styles.priceInput}
-                                            placeholder={maxPrice}
-                                            onChangeText={setMaxPrice}
-                                            keyboardType="numeric"
-                                        />
-                                        
-                                        <Text style={styles.pricePerLabel}>  Per</Text>
-                                        <TouchableOpacity style={styles.pricePerDropdown} onPress={handleCategoryPress}>
-                                            <Text style={styles.pricePerDropdownText}>{category}</Text>
-                                        </TouchableOpacity>
-                                        
-                                        {/* old dropdown
-                                        <TouchableOpacity style={styles.pricePerDropdown}>
-                                            <Image source={WhiteDropdown} style={styles.dropdownIcon} />
-                                            <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
-                                        </TouchableOpacity>
-                                        */}
-                                    </View>
-                                </View>
-                                <View style={styles.pricePerContainer}>
-                                    
-                                </View>
-                            </View>
-                        )}
-                        <TouchableOpacity
-                            style={styles.filterTab}
-                            onPress={() => toggleFilter('dateTime')}
-                        >
-                            <View style={styles.filterTabContent}>
-                                <Image source={filterStates.dateTime ? TabDown : TabUp} style={styles.filterIcon} />
-                                <Text style={styles.filterTabText}>Date and Time</Text>
-                            </View>
-                        </TouchableOpacity>
-                        {filterStates.dateTime && (
-                            <View style={styles.dateTimeContent}>
-                                <View style={styles.resetThisFilterContainer}>
-                                    <TouchableOpacity onPress={resetDateTimeFilter}>
-                                        <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <Text style={styles.dateFrameText}>Date Frame:</Text>
-                                <View style={styles.calendarContainer}>
-                                <Calendar
-                                    style={styles.calendar}
-                                    onDayPress={handleDateSelect}
-                                    markedDates={selectedDates}
-                                    markingType={'period'} 
-                                    theme={{
-                                        textDayFontSize: 13, 
-                                        textMonthFontSize: 13,  
-                                        textDayHeaderFontSize: 13,  
-                                        textDayFontFamily: 'NotoSansTaiTham-Regular',  
-                                        textMonthFontFamily: 'NotoSansTaiTham-Bold',
-                                        textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
-
-                                        calendarBackground: 'white',  
-                                        textSectionTitleColor: 'black', 
-                                        dayTextColor: 'black', 
-                                        monthTextColor: 'black',  
-                                        todayTextColor: 'black',  
-                                        arrowColor: 'rgba(6, 83, 161, 1)',  
-                                        selectedDayTextColor: 'black',  
-                                      }}
-                                />
-                                </View>
-                                <Text style={styles.timeFrameText}>Time Frame:</Text>
-                                <View style={styles.checkboxContainer}>
-                                    {timeFrames.map((timeFrame, index) => (
-                                        <TouchableOpacity 
-                                            key={index} 
-                                            style={[styles.timeFrameOption, styles.checkboxSpacing]}
-                                            onPress={() => toggleTimeFrame(timeFrame)}
-                                        >
-                                            <View style={[
-                                                styles.checkbox,
-                                                selectedTimeFrames[timeFrame] && styles.checkboxSelected
-                                            ]} />
-                                           <Text style={[styles.timeFrameOptionText]}>
-                                                {timeFrame}
+                                                Time range
                                             </Text>
-                                        </TouchableOpacity>
-                                    ))}
+                                        </View>
+                                        <View style={styles.rangeInputContainer}>
+                                            <TouchableOpacity onPress={handleTimeRangeCheck}>
+                                                <View style={[styles.checkbox, timeRangeChecked && styles.checkboxSelected]} />
+                                            </TouchableOpacity>
+                                            <Text style={styles.rangeInputLabel}>Less than</Text>
+                                            <TouchableOpacity style={styles.rangeDropdown}>
+                                                <Text style={styles.rangeDropdownText}>{timeRange}</Text>
+                                                <Image source={WhiteDropdown} style={styles.dropdownIcon} />
+                                            </TouchableOpacity>
+                                            <Text style={styles.rangeInputLabel}> away.</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.rangeContainer}>
+                                        <View style={styles.checkboxContainer}>
+                                            <Text style={styles.rangeLabel}>
+
+                                                Mile range
+                                            </Text>
+                                        </View>
+                                        <View style={styles.rangeInputContainer}>
+                                            <TouchableOpacity onPress={handleMileRangeCheck}>
+                                                <View style={[styles.checkbox, mileRangeChecked && styles.checkboxSelected]} />
+                                            </TouchableOpacity>
+                                            <Text style={styles.rangeInputLabel}>Less than</Text>
+                                            <TouchableOpacity style={styles.rangeDropdown}>
+                                                <Text style={styles.rangeDropdownText}>{mileRange}</Text>
+                                                <Image source={WhiteDropdown} style={styles.dropdownIcon} />
+                                            </TouchableOpacity>
+                                            <Text style={styles.rangeInputLabel}> away.</Text>
+                                        </View>
+                                    </View>
                                 </View>
-                            </View>
-                        )}
-                    </View>
-                    <View style={[
-                        styles.tagsButtonContainer,
-                        filterStates.dateTime && styles.tagsButtonContainerExpanded
-                        ]}>
-                        <TouchableOpacity 
-                            style={styles.tagsButton}
-                            onPress={() => setIsTagsModalOpen(true)}
-                        >
-                            <Text style={styles.tagsButtonText}>+ Tags</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-            </TouchableWithoutFeedback>
-            <TagsModal 
-                isVisible={isTagsModalOpen} 
-                onClose={() => setIsTagsModalOpen(false)}
-            />
-        </View>
+                            )}
+                            <TouchableOpacity
+                                style={styles.filterTab}
+                                onPress={() => toggleFilter('pricing')}
+                            >
+                                <View style={styles.filterTabContent}>
+                                    <Image source={filterStates.pricing ? TabDown : TabUp} style={styles.filterIcon} />
+                                    <Text style={styles.filterTabText}>Pricing</Text>
+                                </View>
+                            </TouchableOpacity>
+                            {filterStates.pricing && (
+                                <View style={styles.filterContent}>
+                                    <View style={styles.resetThisFilterContainer}>
+                                        <TouchableOpacity onPress={resetPricingFilter}>
+                                            <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.filterSubheading}>Maximum Price:</Text>
+                                    <View style={styles.priceRangeContainer}>
+                                    <TouchableOpacity onPress={() => setPriceChecked(!priceChecked)}>
+                                    <View style={[styles.checkbox, priceChecked && styles.checkboxSelected]} />
+                                    </TouchableOpacity>
+                                        <View style={styles.priceInputContainer}>
+                                        
+                                        <Text style={styles.dollarSign}>$</Text>
+                                            <TextInput
+                                                style={styles.priceInput}
+                                                placeholder={maxPrice}
+                                                onChangeText={setMaxPrice}
+                                                keyboardType="numeric"
+                                            />
+                                            
+                                            <Text style={styles.pricePerLabel}>  Per</Text>
+                                            <TouchableOpacity style={styles.pricePerDropdown} onPress={handleCategoryPress}>
+                                                <Text style={styles.pricePerDropdownText}>{category}</Text>
+                                            </TouchableOpacity>
+                                            
+                                            {/* old dropdown
+                                            <TouchableOpacity style={styles.pricePerDropdown}>
+                                                <Image source={WhiteDropdown} style={styles.dropdownIcon} />
+                                                <Text style={styles.pricePerDropdownText}>{pricePer}</Text>
+                                            </TouchableOpacity>
+                                            */}
+                                        </View>
+                                    </View>
+                                    <View style={styles.pricePerContainer}>
+                                        
+                                    </View>
+                                </View>
+                            )}
+                            <TouchableOpacity
+                                style={styles.filterTab}
+                                onPress={() => toggleFilter('dateTime')}
+                            >
+                                <View style={styles.filterTabContent}>
+                                    <Image source={filterStates.dateTime ? TabDown : TabUp} style={styles.filterIcon} />
+                                    <Text style={styles.filterTabText}>Date and Time</Text>
+                                </View>
+                            </TouchableOpacity>
+                            {filterStates.dateTime && (
+                                <View style={styles.dateTimeContent}>
+                                    <View style={styles.resetThisFilterContainer}>
+                                        <TouchableOpacity onPress={resetDateTimeFilter}>
+                                            <Text style={styles.resetThisFilterText}>Reset This Filter</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.dateFrameText}>Date Frame:</Text>
+                                    <View style={styles.calendarContainer}>
+                                    <Calendar
+                                        style={styles.calendar}
+                                        onDayPress={handleDateSelect}
+                                        markedDates={selectedDates}
+                                        markingType={'period'} 
+                                        theme={{
+                                            textDayFontSize: 13, 
+                                            textMonthFontSize: 13,  
+                                            textDayHeaderFontSize: 13,  
+                                            textDayFontFamily: 'NotoSansTaiTham-Regular',  
+                                            textMonthFontFamily: 'NotoSansTaiTham-Bold',
+                                            textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
+
+                                            calendarBackground: 'white',  
+                                            textSectionTitleColor: 'black', 
+                                            dayTextColor: 'black', 
+                                            monthTextColor: 'black',  
+                                            todayTextColor: 'black',  
+                                            arrowColor: 'rgba(6, 83, 161, 1)',  
+                                            selectedDayTextColor: 'black',  
+                                        }}
+                                    />
+                                    </View>
+                                    <Text style={styles.timeFrameText}>Time Frame:</Text>
+                                    <View style={styles.checkboxContainer}>
+                                        {timeFrames.map((timeFrame, index) => (
+                                            <TouchableOpacity 
+                                                key={index} 
+                                                style={[styles.timeFrameOption, styles.checkboxSpacing]}
+                                                onPress={() => toggleTimeFrame(timeFrame)}
+                                            >
+                                                <View style={[
+                                                    styles.checkbox,
+                                                    selectedTimeFrames[timeFrame] && styles.checkboxSelected
+                                                ]} />
+                                            <Text style={[styles.timeFrameOptionText]}>
+                                                    {timeFrame}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                </View>
+                            )}
+                        </View>
+                        <View style={[
+                            styles.tagsButtonContainer,
+                            filterStates.dateTime && styles.tagsButtonContainerExpanded
+                            ]}>
+                            <TouchableOpacity 
+                                style={styles.tagsButton}
+                                onPress={() => setIsTagsModalOpen(true)}
+                            >
+                                <Text style={styles.tagsButtonText}>+ Tags</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                </TouchableWithoutFeedback>
+                <TagsModal 
+                    isVisible={isTagsModalOpen} 
+                    onClose={() => setIsTagsModalOpen(false)}
+                />
+            </View>
+        </KeyboardAvoidingView>
     );
 };
 
