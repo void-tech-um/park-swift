@@ -53,7 +53,7 @@ function ProfileScreen({ navigation, route }) {
                 <Text style={styles.userName}>{firstName} {lastName}</Text>
                 <View style={styles.bioContainer}>
                     <Text style={styles.bioText}>
-                        {myUser.bio || "Hello! Please feel free to reach out about any concerns. I'm very flexible!"}
+                        {myUser.bio == undefined ? "Hello! Please feel free to reach out about any concerns. I'm very flexible!" : myUser.bio}
                     </Text>
                 </View>
                 <Text style={styles.contactText}>{myUser.email}</Text>
