@@ -11,7 +11,7 @@ function EditProfileScreen({ navigation, route }) {
     const defaultBio = "Hello! Please feel free to reach out about any concerns. I'm very flexible!";
     const [updatedUser, setUpdatedUser] = React.useState({
         ...user,
-        bio: user.bio || defaultBio,
+        bio: user.bio == undefined ? defaultBio : user.bio,
         profileImage: user.profileImage || null,
     });
     const [modalVisible, setModalVisible] = React.useState(false);
