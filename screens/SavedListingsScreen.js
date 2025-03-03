@@ -1,49 +1,81 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchbarComponent from '../components/SearchBar';
 import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
 
-const SavedListingsScreen = ({route, navigation }) => {
+function formatDate(date) {
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    return "Invalid date";
+  }
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
+const SavedListingsScreen = () => {
   const [savedListings, setSavedListings] = useState([]);
-  useFocusEffect(
-    React.useCallback(() => {
-      const fetchSavedListings = async () => {
-        try {
-          const storedListings = await AsyncStorage.getItem('savedListings');
-          if (storedListings) {
-              const parsedListings = JSON.parse(storedListings);
-              setSavedListings(parsedListings);
-          }
-        } catch (error) {
-            console.error("Error fetching saved listings:", error);
+  useEffect(() => {
+    const fetchSavedListings = async () => {
+      try {
+        const storedListings = await AsyncStorage.getItem('savedListings');
+        if (storedListings) {
+          let parsedListings = JSON.parse(storedListings);
+          parsedListings = parsedListings.map(listing => {
+            console.log("Raw listing.date:", listing.date);
+          
+            let startDate = "No date available";
+            let endDate = "No date available";
+          
+            if (listing.date && typeof listing.date === 'string') {
+              const dateParts = listing.date.split(" - ");
+              console.log("Split dateParts:", dateParts);
+          
+              if (dateParts.length === 2) {
+                const parsedStartDate = new Date(dateParts[0]);
+                const parsedEndDate = new Date(dateParts[1]);
+          
+                console.log("Parsed startDate:", parsedStartDate);
+                console.log("Parsed endDate:", parsedEndDate);
+          
+                startDate = isNaN(parsedStartDate.getTime()) ? "Invalid date" : formatDate(parsedStartDate);
+                endDate = isNaN(parsedEndDate.getTime()) ? "Invalid date" : formatDate(parsedEndDate);
+              }
+            }
+          
+            return {
+              ...listing,
+              startDate: startDate,
+              endDate: endDate,
+            };
+          });          
+          setSavedListings(parsedListings);
         }
-      };    
-      fetchSavedListings();
-    }, [])
-  );
+      } catch (error) {
+        console.error("Error fetching saved listings:", error);
+      }
+    };
+    fetchSavedListings();
+  }, []);        
 
   const handleSavePress = async (postId) => {
     try {
-        let savedListings = await AsyncStorage.getItem('savedListings');
-        let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
+      let savedListings = await AsyncStorage.getItem('savedListings');
+      let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
 
-        const listingIndex = savedListingsArray.findIndex(item => item.postId === postId);
-        if (listingIndex !== -1) {
-            savedListingsArray.splice(listingIndex, 1); 
-        } else {
-            const listing = savedListings.find(item => item.postId === postId);
-            if (listing) {
-                savedListingsArray.push(listing); 
-            }
+      const listingIndex = savedListingsArray.findIndex(item => item.postId === postId);
+      if (listingIndex !== -1) {
+        savedListingsArray.splice(listingIndex, 1); 
+      } else {
+        const listing = savedListingsArray.find(item => item.postId === postId);
+        if (listing) {
+          savedListingsArray.push(listing); 
         }
+      }
 
-        await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
-        setSavedListings(savedListingsArray);
+      await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
+      setSavedListings(savedListingsArray);
     } catch (error) {
-        console.error("Error saving listing:", error);
+      console.error("Error saving listing:", error);
     }
   };
 
@@ -66,13 +98,14 @@ const SavedListingsScreen = ({route, navigation }) => {
               key={listing.postId || `listing-${index}`} 
               id={listing.postId}
               address={listing.address}
-              date={listing.date}
+              startDate={listing.startDate}
+              endDate={listing.endDate}
               ppHour={listing.ppHour}
               listingURL={listing.listingURL}
               showSavedIcon={true}
               isSaved={true}
               onSavePress={() => handleSavePress(listing.postId)}
-            />
+          />
           ))
         ) : (
           <Text style={styles.noListingsText}>No saved listings yet.</Text>

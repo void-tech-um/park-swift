@@ -14,7 +14,6 @@ function ProfileScreen({ navigation, route }) {
     const [myUser, setMyUser] = useState(null);
     const [myListings, setMyListings] = useState([]);
 
-    // Use Focus Effect to reload when navigating to Profile
     useFocusEffect(
         React.useCallback(() => {
             getUser(userId)
@@ -59,7 +58,7 @@ function ProfileScreen({ navigation, route }) {
     }
 
     const [firstName, lastName] = myUser.fullName ? myUser.fullName.split(' ') : ['First', 'Last'];
-
+    
     return (
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
@@ -77,7 +76,6 @@ function ProfileScreen({ navigation, route }) {
                 <Text style={styles.contactText}>{myUser.email}</Text>
                 <Text style={styles.contactText}>{myUser.phoneNumber}</Text>
                 <Text style={styles.listingsHeader}>My Listings:</Text>
-
                 <View style={styles.listingsContainer}>
                     {myListings.length === 0 ? (
                         <Text style={styles.noListingsText}>No listings available.</Text>
@@ -86,7 +84,8 @@ function ProfileScreen({ navigation, route }) {
                             <ListingCard
                                 key={post.id}
                                 address={post.location || 'No address available'}
-                                date={`${post.firstDate} - ${post.lastDate}` || 'No date available'}
+                                startDate={post.firstDate}  
+                                endDate={post.lastDate}     
                                 startTime={post.startTime}
                                 endTime={post.endTime}
                                 ppHour={`$${post.price} / ${post.rentalPeriod}`}

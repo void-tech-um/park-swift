@@ -6,7 +6,18 @@ import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
-const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
+const formatDate = (dateString, addDays = 1) => {
+    if (!dateString) return "No date available";
+
+    let date = new Date(dateString);
+    if (isNaN(date)) return "Invalid date";
+
+    date.setDate(date.getDate() + addDays); 
+
+    return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+};
+
+const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
@@ -17,8 +28,10 @@ const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppH
             date,
             ppHour, 
             listingURL, 
-            startTime, 
+            startTime,
             endTime,
+            startDate, 
+            endDate,
             isAvailable,
             showSavedIcon,
         });
@@ -47,10 +60,7 @@ const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppH
                         <View style={styles.content}>
                             <Text style={styles.price}>{ppHour}</Text>
                             <Text style={styles.description}>x minutes away</Text>
-                            {date ? <Text style={styles.description}>{date}</Text> : null}
-                            {startTime && endTime && (
-                                <Text style={styles.description}>{startTime} - {endTime}</Text>
-                            )}
+                            <Text style={styles.description}>{formatDate(startDate)} - {formatDate(endDate, 2)}</Text> 
                         </View>
                         {!isAvailable && <UnavailableBadge />}
                         {isAvailable && (

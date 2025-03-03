@@ -19,16 +19,17 @@ const HomeScreen = () => {
 
         const postList = querySnapshot.docs.map((doc) => {
             const data = doc.data();
-
+        
             const date =
-              data.firstDate && data.lastDate
+                data.firstDate && data.lastDate
                 ? `${formatDate(data.firstDate)} - ${formatDate(data.lastDate)}`
                 : "No date available"; 
-
+        
             return {
                 id: doc.id,
                 address: data.location,
-                date: date,
+                startDate: data.firstDate || null,  
+                endDate: data.lastDate || null, 
                 startTime: data.startTime || null,
                 endTime: data.endTime || null,
                 ppHour: data.price && data.rentalPeriod
@@ -39,7 +40,6 @@ const HomeScreen = () => {
                 userID: data.userID,
             };
         });
-
         setPosts(postList);
     } catch (error) {
         console.error("Error fetching posts:", error);
@@ -89,7 +89,8 @@ const HomeScreen = () => {
           <ListingCard
             key={post.id}
             address={post.address || 'No address available'}
-            date={post.date || 'No date available'}
+            startDate={post.startDate}
+            endDate={post.endDate}
             startTime={post.startTime}
             endTime={post.endTime}
             image={post.image || Car}
