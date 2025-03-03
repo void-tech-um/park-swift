@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
@@ -11,7 +11,6 @@ import Save from '../assets/Save.png';
 import SaveIcon2 from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from '../components/MenuSearchBar';
-import { useState, useEffect } from 'react';
 import { getDoc, doc } from "firebase/firestore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,30 +25,6 @@ const ListingScreen = ({ route }) => {
     const [firstName, setFirstName] = useState('First');
     const [lastName, setLastName] = useState('Last');
     const [isSaved, setIsSaved] = useState(initialIsSaved || false);
-
-    useEffect(() => {
-        const fetchPostData = async () => {
-            try {
-                const postData = await getPost(postId);
-                setPost(postData);
-                const userId = postData.userID;
-                const userDoc = await getDoc(doc(database, 'users', userId));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    setUser(userData);
-                    const fullName = userData.fullName || "First Last";
-                    const [first, last] = fullName.split(' ');
-                    setFirstName(first);
-                    setLastName(last);
-                }
-            } catch (error) {
-                console.error("Error fetching post data:", error);
-            }
-        };
-        if (postId) {
-            fetchPostData();
-        }
-    }, [postId]);
 
     const displayAddress = address ? address.split(',')[0] : 'No address available';
 
@@ -127,42 +102,42 @@ const ListingScreen = ({ route }) => {
     const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
     const backMarginLeft = backButtonMarginLeft();
     const textSpacing = textContactSpacing();
+
     useEffect(() => {
-        const checkIfSaved = async () => {
+        // Load saved state from AsyncStorage
+        const checkSavedState = async () => {
             try {
                 const savedListings = await AsyncStorage.getItem('savedListings');
-                let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-    
-                setIsSaved(savedListingsArray.some(item => item.postId === postId));
+                const savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
+
+                if (savedListingsArray.some((item) => item.postId === postId)) {
+                    setIsSaved(true);
+                }
             } catch (error) {
-                console.error("Error checking saved listing:", error);
+                console.error("Error loading saved state:", error);
             }
         };
-    
-        if (postId) {
-            checkIfSaved();
-        }
-    }, [postId]);    
-    
+
+        checkSavedState();
+    }, [postId]);
+
     const handleSavePress = async () => {
         try {
             let savedListings = await AsyncStorage.getItem('savedListings');
             let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-    
+
             if (isSaved) {
-                savedListingsArray = savedListingsArray.filter(item => item.postId !== postId);
+                // Remove listing if already saved
+                savedListingsArray = savedListingsArray.filter((item) => item.postId !== postId);
             } else {
-                if (!savedListingsArray.some(item => item.postId === postId)) {
-                    const newListing = { address, ppHour, userID, date, postId };
-                    savedListingsArray.push(newListing);
-                }
+                // Save new listing
+                savedListingsArray.push({ address, ppHour, userID, date, postId });
             }
-    
+
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
-            setIsSaved(!isSaved); // Corrected this line
-            navigation.setParams({ isSaved: !isSaved }); // Corrected this line
+            setIsSaved(!isSaved);
         } catch (error) {
-            console.error("Error saving listing:", error);
+            console.error('Error saving listing:', error);
         }
     };
     
