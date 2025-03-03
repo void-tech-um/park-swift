@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import arrow from '../assets/arrow.png'; 
-import SavedIcon from '../assets/Vector.png'; 
+import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
-const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable = true, showSavedIcon = false }) => {
+const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
@@ -18,7 +18,9 @@ const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppH
             ppHour, 
             listingURL, 
             startTime, 
-            endTime
+            endTime,
+            isAvailable,
+            showSavedIcon,
         });
     };
 

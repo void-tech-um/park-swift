@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
 import User from '../assets/profile.png';
 import FitsAllModels from '../assets/FitsAllModels.png'; 
@@ -13,22 +13,19 @@ import CarImage from '../assets/CarImage.png';
 import MenuSearchBar from '../components/MenuSearchBar';
 import { useState, useEffect } from 'react';
 import { getDoc, doc } from "firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, userID, date, postId} = route.params || {};
+    const { address, ppHour, userID, date, postId, isSaved:initialIsSaved} = route.params || {};
 
     const [post, setPost] = useState(null);
     const [user, setUser] = useState(null);
     const [firstName, setFirstName] = useState('First');
     const [lastName, setLastName] = useState('Last');
-    const [isSaved, setIsSaved] = useState(false);
-
-    const handleBackPress = () => {
-        navigation.goBack();
-    };
+    const [isSaved, setIsSaved] = useState(initialIsSaved || false);
 
     useEffect(() => {
         const fetchPostData = async () => {
@@ -130,9 +127,45 @@ const ListingScreen = ({ route }) => {
     const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
     const backMarginLeft = backButtonMarginLeft();
     const textSpacing = textContactSpacing();
-    const handleSavePress = () => {
-        setIsSaved(prevState => !prevState);
+    useEffect(() => {
+        const checkIfSaved = async () => {
+            try {
+                const savedListings = await AsyncStorage.getItem('savedListings');
+                let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
+    
+                setIsSaved(savedListingsArray.some(item => item.postId === postId));
+            } catch (error) {
+                console.error("Error checking saved listing:", error);
+            }
+        };
+    
+        if (postId) {
+            checkIfSaved();
+        }
+    }, [postId]);    
+    
+    const handleSavePress = async () => {
+        try {
+            let savedListings = await AsyncStorage.getItem('savedListings');
+            let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
+    
+            if (isSaved) {
+                savedListingsArray = savedListingsArray.filter(item => item.postId !== postId);
+            } else {
+                if (!savedListingsArray.some(item => item.postId === postId)) {
+                    const newListing = { address, ppHour, userID, date, postId };
+                    savedListingsArray.push(newListing);
+                }
+            }
+    
+            await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
+            setIsSaved(!isSaved); // Corrected this line
+            navigation.setParams({ isSaved: !isSaved }); // Corrected this line
+        } catch (error) {
+            console.error("Error saving listing:", error);
+        }
     };
+    
 
     return (
         <View style={styles.container}>
@@ -140,7 +173,7 @@ const ListingScreen = ({ route }) => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
                     <View style={styles.header}>
-                        <TouchableOpacity onPress={handleBackPress}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Image
                                 source={Back}
                                 style={[styles.Back, { marginLeft: backMarginLeft}]}

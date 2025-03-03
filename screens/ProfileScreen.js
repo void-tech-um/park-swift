@@ -1,29 +1,50 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useState } from 'react';
 import { getUser } from '../firebaseFunctions/firebaseFirestore';
+import { getDocs, collection, query, where } from 'firebase/firestore';
+import { database } from '../firebaseFunctions/firebaseFirestore';  // Make sure this is correctly initialized
 import MenuSearchBar from '../components/MenuSearchBar';
 import { useFocusEffect } from '@react-navigation/native';
 import ListingCard from '../components/ListingCard';
-import listingsData from '../components/ListingsData';
 import User from '../assets/profile.png';
 
 function ProfileScreen({ navigation, route }) {
     const userId = route.params.userId;
     const [myUser, setMyUser] = useState(null);
+    const [myListings, setMyListings] = useState([]);
 
+    // Use Focus Effect to reload when navigating to Profile
     useFocusEffect(
         React.useCallback(() => {
             getUser(userId)
                 .then((userData) => {
-                    console.log('Fetched user data:', userData);
                     setMyUser(userData);
                 })
                 .catch((error) => {
                     console.error('Error fetching profile:', error);
                 });
+
+            fetchUserListings(userId);
         }, [userId])
     );
+
+    async function fetchUserListings(userId) {
+        try {
+            const postsCollectionRef = collection(database, "posts");
+            const q = query(postsCollectionRef, where("userID", "==", userId)); // Fetch only user’s listings
+            const querySnapshot = await getDocs(q);
+
+            const userPosts = querySnapshot.docs.map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+
+            setMyListings(userPosts);
+        } catch (error) {
+            console.error("Error fetching user listings:", error);
+        }
+    }
 
     const handleProfileUpdate = (updatedUser) => {
         setMyUser(updatedUser);
@@ -46,32 +67,35 @@ function ProfileScreen({ navigation, route }) {
                 <TouchableOpacity onPress={onPostPress}>
                     <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
-                <Image
-                    source={User}
-                    style={styles.profileImage}
-                />
+                <Image source={User} style={styles.profileImage} />
                 <Text style={styles.userName}>{firstName} {lastName}</Text>
                 <View style={styles.bioContainer}>
                     <Text style={styles.bioText}>
-                        {myUser.bio == undefined ? "Hello! Please feel free to reach out about any concerns. I'm very flexible!" : myUser.bio}
+                        {myUser.bio ? myUser.bio : "Hello! Please feel free to reach out about any concerns. I'm very flexible!"}
                     </Text>
                 </View>
                 <Text style={styles.contactText}>{myUser.email}</Text>
                 <Text style={styles.contactText}>{myUser.phoneNumber}</Text>
-                <Text style={styles.listingsHeader}>My listings:</Text>
+                <Text style={styles.listingsHeader}>My Listings:</Text>
+
                 <View style={styles.listingsContainer}>
-                    {listingsData.map((listing) => (
-                        <ListingCard
-                            key={listing.id}
-                            address={listing.address}
-                            date={listing.date}
-                            startTime={listing.startTime}
-                            endTime={listing.endTime}
-                            image={listing.image}
-                            ppHour={listing.ppHour}
-                            listingURL={listing.listingURL}
-                        />
-                    ))}
+                    {myListings.length === 0 ? (
+                        <Text style={styles.noListingsText}>No listings available.</Text>
+                    ) : (
+                        myListings.map((post) => (
+                            <ListingCard
+                                key={post.id}
+                                address={post.location || 'No address available'}
+                                date={`${post.firstDate} - ${post.lastDate}` || 'No date available'}
+                                startTime={post.startTime}
+                                endTime={post.endTime}
+                                ppHour={`$${post.price} / ${post.rentalPeriod}`}
+                                isNegotiable={post.negotiable ? 'Negotiable' : 'Fixed Price'}
+                                carSize={post.sizeOfCar || "Size not specified"}
+                                userID={post.userID}
+                            />
+                        ))
+                    )}
                 </View>
             </ScrollView>
         </View>
@@ -132,6 +156,12 @@ const styles = StyleSheet.create({
     },
     listingsContainer: {
         alignItems: 'center',
+    },
+    noListingsText: {
+        fontSize: 18,
+        fontFamily: "NotoSansTaiTham-Bold",
+        color: '#000000',
+        textAlign: 'center',
     },
 });
 

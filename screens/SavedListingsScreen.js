@@ -1,11 +1,52 @@
-import React from 'react';
-import { View, Text, ScrollView, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchbarComponent from '../components/SearchBar';
 import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
-import ListingsData from '../components/ListingsData';
 
-const SavedListingsScreen = () => {
+const SavedListingsScreen = ({route, navigation }) => {
+  const [savedListings, setSavedListings] = useState([]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchSavedListings = async () => {
+        try {
+          const storedListings = await AsyncStorage.getItem('savedListings');
+          if (storedListings) {
+              const parsedListings = JSON.parse(storedListings);
+              setSavedListings(parsedListings);
+          }
+        } catch (error) {
+            console.error("Error fetching saved listings:", error);
+        }
+      };    
+      fetchSavedListings();
+    }, [])
+  );
+
+  const handleSavePress = async (postId) => {
+    try {
+        let savedListings = await AsyncStorage.getItem('savedListings');
+        let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
+
+        const listingIndex = savedListingsArray.findIndex(item => item.postId === postId);
+        if (listingIndex !== -1) {
+            savedListingsArray.splice(listingIndex, 1); 
+        } else {
+            const listing = savedListings.find(item => item.postId === postId);
+            if (listing) {
+                savedListingsArray.push(listing); 
+            }
+        }
+
+        await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
+        setSavedListings(savedListingsArray);
+    } catch (error) {
+        console.error("Error saving listing:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <MenuSearchBar showSearchBar={false} />
@@ -18,22 +59,25 @@ const SavedListingsScreen = () => {
       </View>
       <SearchbarComponent />
       <View style={styles.listingsContainer}>
-        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-          {ListingsData.map((listing) => (
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        {savedListings.length > 0 ? (
+          savedListings.map((listing, index) => (
             <ListingCard
-              key={listing.id}
+              key={listing.postId || `listing-${index}`} 
+              id={listing.postId}
               address={listing.address}
               date={listing.date}
-              startTime={listing.startTime}
-              endTime={listing.endTime}
-              image={listing.image}
               ppHour={listing.ppHour}
               listingURL={listing.listingURL}
-              isAvailable={listing.id !== 2 && listing.id !== 3}
               showSavedIcon={true}
+              isSaved={true}
+              onSavePress={() => handleSavePress(listing.postId)}
             />
-          ))}
-        </ScrollView>
+          ))
+        ) : (
+          <Text style={styles.noListingsText}>No saved listings yet.</Text>
+        )}
+      </ScrollView>
       </View>
     </View>
   );
@@ -63,6 +107,13 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     alignItems: 'center',
     paddingBottom: '8%',
+  },
+  noListingsText: {
+    fontSize: 18,
+    marginTop: "5%",
+    fontFamily: "NotoSansTaiTham-Bold",
+    color: '#000000',
+    textAlign: 'center',
   },
 });
 
