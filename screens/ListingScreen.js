@@ -18,7 +18,7 @@ const { width, height } = Dimensions.get('window');
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, userID, date, postId, isSaved:initialIsSaved} = route.params || {};
+    const { address, ppHour, userID, date, postId, isSaved:initialIsSaved, startTime, endTime} = route.params || {};
 
     const [post, setPost] = useState(null);
     const [user, setUser] = useState(null);
@@ -27,15 +27,12 @@ const ListingScreen = ({ route }) => {
     const [isSaved, setIsSaved] = useState(initialIsSaved || false);
 
     const displayAddress = address ? address.split(',')[0] : 'No address available';
-
+    
     const formatCostText = (cost) => {
-        if (cost.includes('hr')) {
-            return cost.replace('hr', 'hour');
-        } else if (cost.includes('sem')) {
-            return cost.replace('sem', 'semester');
-        }
-        return cost;
-    };
+        if (!cost) return "";
+        
+        return cost.replace('hr', 'hour').replace('semstr', 'semester');
+    };    
 
     const removeSpaces = (text) => {
         return text.replace(/\s/g, '');
@@ -206,7 +203,7 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.listingInfo}>Listing Information</Text>
                         <Text style={styles.infoLabels}>Available from:</Text>
                         <View style={styles.border}>
-                            <Text style={styles.dateText}>8/29/23 - 05/02/24</Text>
+                            <Text style={styles.dateText}>{startTime} - {endTime}</Text>
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                         <View style={styles.border}>
