@@ -169,7 +169,11 @@ function PostScreen({ navigation, route }) {
       return;
     }
 
-    createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, startTime, endTime)
+    createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
+      { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
+      { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
+      sizeOfCar
+    )  
     .then((docRef) => {
         navigation.navigate('PostConfirmationScreen', { postId: docRef.id });
     })

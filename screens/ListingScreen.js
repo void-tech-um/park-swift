@@ -11,14 +11,13 @@ import Save from '../assets/Save.png';
 import SaveIcon2 from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from '../components/MenuSearchBar';
-import { getDoc, doc } from "firebase/firestore";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, userID, date, postId, isSaved:initialIsSaved, startTime, endTime} = route.params || {};
+    const { address, ppHour, userID, date, postId, isSaved:initialIsSaved, startDate, endDate} = route.params || {};
 
     const [post, setPost] = useState(null);
     const [user, setUser] = useState(null);
@@ -203,7 +202,7 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.listingInfo}>Listing Information</Text>
                         <Text style={styles.infoLabels}>Available from:</Text>
                         <View style={styles.border}>
-                            <Text style={styles.dateText}>{startTime} - {endTime}</Text>
+                            <Text style={styles.dateText}>{startDate} - {endDate}</Text>
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                         <View style={styles.border}>
@@ -368,7 +367,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     dateText: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'NotoSansTaiTham-Regular',
     },
     costText: {
