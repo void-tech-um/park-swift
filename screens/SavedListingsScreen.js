@@ -6,20 +6,13 @@ import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
 
 const formatDate = (date) => {
-  if (!date) return "No date available";
-
-  let parsedDate;
-
-  if (typeof date === "string") {
-      parsedDate = new Date(date + "T00:00:00Z");
-  } else if (date.toDate) {
-      parsedDate = date.toDate();
-  } else {
-      parsedDate = new Date(date);
+  if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return "Invalid date";
   }
 
-  return isNaN(parsedDate.getTime()) ? "Invalid date" : parsedDate.toISOString().split('T')[0];
+  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 };
+
 
 const SavedListingsScreen = () => {
   const [savedListings, setSavedListings] = useState([]);
@@ -27,17 +20,18 @@ const SavedListingsScreen = () => {
     const fetchSavedListings = async () => {
         try {
             const storedListings = await AsyncStorage.getItem('savedListings');
+            console.log("Raw stored listings:", storedListings); // Debugging output
+
             if (storedListings) {
                 let parsedListings = JSON.parse(storedListings);
+                // Convert date strings back into Date objects
+                parsedListings = parsedListings.map(listing => ({
+                    ...listing,
+                    startDate: listing.startDate ? new Date(listing.startDate) : null,
+                    endDate: listing.endDate ? new Date(listing.endDate) : null,
+                }));
 
-                parsedListings = parsedListings.map(listing => {
-                    return {
-                        ...listing,
-                        startDate: formatDate(listing.startDate),
-                        endDate: formatDate(listing.endDate),
-                    };
-                });
-
+                console.log("Parsed listings after conversion:", parsedListings); // Debugging output
                 setSavedListings(parsedListings);
             }
         } catch (error) {
@@ -48,27 +42,36 @@ const SavedListingsScreen = () => {
     fetchSavedListings();
 }, []);
 
-  const handleSavePress = async (postId) => {
-    try {
+const handleSavePress = async (listing) => {
+  try {
       let savedListings = await AsyncStorage.getItem('savedListings');
       let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
 
-      const listingIndex = savedListingsArray.findIndex(item => item.postId === postId);
-      if (listingIndex !== -1) {
-        savedListingsArray.splice(listingIndex, 1); 
-      } else {
-        const listing = savedListingsArray.find(item => item.postId === postId);
-        if (listing) {
-          savedListingsArray.push(listing); 
-        }
-      }
+      const existingIndex = savedListingsArray.findIndex(item => item.postId === listing.postId);
 
+      if (existingIndex !== -1) {
+          // Remove listing if it's already saved (un-save)
+          savedListingsArray.splice(existingIndex, 1);
+      } else {
+          // Ensure startDate and endDate exist
+          savedListingsArray.push({
+              ...listing,
+              startDate: listing.startDate 
+                  ? new Date(listing.startDate).toISOString() 
+                  : new Date().toISOString(), // Default to today if missing
+              endDate: listing.endDate 
+                  ? new Date(listing.endDate).toISOString() 
+                  : new Date().toISOString(), // Default to today if missing
+          });
+      }
       await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
       setSavedListings(savedListingsArray);
-    } catch (error) {
+
+      console.log("Updated saved listings:", savedListingsArray); // Debugging output
+  } catch (error) {
       console.error("Error saving listing:", error);
-    }
-  };
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -84,22 +87,24 @@ const SavedListingsScreen = () => {
       <View style={styles.listingsContainer}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {savedListings.length > 0 ? (
-          savedListings.map((listing, index) => (
-            <ListingCard
-              key={listing.postId || `listing-${index}`} 
-              id={listing.postId}
-              address={listing.address}
-              startDate={listing.startDate}
-              endDate={listing.endDate}
-              ppHour={listing.ppHour}
-              listingURL={listing.listingURL}
-              showSavedIcon={true}
-              isSaved={true}
-              onSavePress={() => handleSavePress(listing.postId)}
-          />
-          ))
+            savedListings.map((listing, index) => (
+                <ListingCard
+                    key={listing.postId || `listing-${index}`} 
+                    id={listing.postId}
+                    userID={listing.userID}
+                    address={listing.address}
+                    date={listing.date}
+                    ppHour={listing.ppHour}
+                    listingURL={listing.listingURL}
+                    startDate={listing.startDate ? new Date(listing.startDate) : null}  // Ensure proper date object
+                    endDate={listing.endDate ? new Date(listing.endDate) : null}  // Ensure proper date object
+                    isAvailable={listing.isAvailable}
+                    showSavedIcon={true}
+                    onSavePress={() => handleSavePress(listing)}
+                />
+            ))
         ) : (
-          <Text style={styles.noListingsText}>No saved listings yet.</Text>
+            <Text style={styles.noListingsText}>No saved listings yet.</Text>
         )}
       </ScrollView>
       </View>

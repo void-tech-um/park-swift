@@ -100,7 +100,6 @@ const ListingScreen = ({ route }) => {
     const textSpacing = textContactSpacing();
 
     useEffect(() => {
-        // Load saved state from AsyncStorage
         const checkSavedState = async () => {
             try {
                 const savedListings = await AsyncStorage.getItem('savedListings');
@@ -145,26 +144,44 @@ const ListingScreen = ({ route }) => {
         } catch (error) {
             console.error('Error saving listing:', error);
         }
-    };
-      
-    const isValidDate = (date) => {
-        if (!date) return false;
-        const parsedDate = date.toDate ? date.toDate() : new Date(date);
-        return !isNaN(parsedDate.getTime());
-    };
-    const formatDate = (date, addOneDay = false) => {
+    };      
+
+    const formatDate = (date) => {
         if (!date) return "Invalid date";
-    
         let parsedDate = date.toDate ? date.toDate() : new Date(date);
         if (isNaN(parsedDate.getTime())) return "Invalid date";
+        return `${parsedDate.getMonth() + 1}/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
+    };
     
-        if (addOneDay) {
-            parsedDate.setDate(parsedDate.getDate() + 1);
+    const getFormattedEndDate = (startDate, endDate) => {
+        let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
+        let start = startDate?.toDate ? startDate.toDate() : new Date(startDate);
+    
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            console.warn("Invalid startDate or endDate:", startDate, endDate);
+            return "Invalid date"; 
         }
     
-        return `${parsedDate.getMonth() + 1}/${parsedDate.getDate()+1}/${parsedDate.getFullYear()}`;
+        let shouldIncrementEnd = false;
+    
+        if ((end - start) / (1000 * 60 * 60 * 24) > 1) {
+            shouldIncrementEnd = true;
+        }
+    
+        const startWeek = Math.ceil(start.getDate() / 7);
+        const endWeek = Math.ceil(end.getDate() / 7);
+    
+        if (start.getMonth() === end.getMonth() && startWeek !== endWeek) {
+            shouldIncrementEnd = true;
+        }
+    
+        if (shouldIncrementEnd) {
+            end.setDate(end.getDate() + 1);
+        }
+    
+        return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
     };
-      
+          
     return (
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
@@ -229,9 +246,13 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.listingInfo}>Listing Information</Text>
                         <Text style={styles.infoLabels}>Available from:</Text>
                         <View style={styles.border}>
-                        <Text style={styles.dateText}>
-                            {`${startDate && isValidDate(startDate) ? formatDate(startDate) : "Invalid Date"} - ${endDate && isValidDate(endDate) ? formatDate(endDate, startDate) : "Invalid Date"}`}
-                        </Text>
+                        <Text style={styles.description}>
+                                {startDate
+                                    ? `${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()+1}/${new Date(startDate).getFullYear()}`
+                                    : "Invalid date"}{" "}
+                                -{" "}
+                                {getFormattedEndDate(startDate, endDate)}
+                            </Text>
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                         <View style={styles.border}>
