@@ -6,18 +6,16 @@ import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
-function formatDate(dateString) {
+const formatDate = (dateString, addDays = 1) => {
     if (!dateString) return "No date available";
 
-    // Split the string manually (YYYY-MM-DD)
-    const [year, month, day] = dateString.split('-').map(Number);
+    let date = new Date(dateString);
+    if (isNaN(date)) return "Invalid date";
 
-    // Create a new Date object in LOCAL TIME (avoids UTC conversion issues)
-    const date = new Date(year, month - 1, day); // Month is 0-indexed
+    date.setDate(date.getDate() + addDays); 
 
     return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
-}
-
+};
 
 const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
     const navigation = useNavigation();
@@ -62,7 +60,7 @@ const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime,
                         <View style={styles.content}>
                             <Text style={styles.price}>{ppHour}</Text>
                             <Text style={styles.description}>x minutes away</Text>
-                            <Text style={styles.description}>{formatDate(startDate)} - {formatDate(endDate)}</Text> 
+                            <Text style={styles.description}>{formatDate(startDate)} - {formatDate(endDate, 2)}</Text> 
                         </View>
                         {!isAvailable && <UnavailableBadge />}
                         {isAvailable && (
