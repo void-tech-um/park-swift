@@ -59,9 +59,9 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
         rentalPeriod: rentalPeriod, 
         price: price,
         negotiable: negotiable,
-        firstDate: firstDate,
-        lastDate: lastDate,
-        createdAt: new Date().toISOString(), 
+        firstDate : firstDate,
+        lastDate : lastDate,
+        createdAt: new Date().toISOString(),
     };
     return addDoc(postsCollectionRef, postData)
         .then((docRef) => {

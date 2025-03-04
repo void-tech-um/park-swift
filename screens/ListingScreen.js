@@ -202,7 +202,19 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.listingInfo}>Listing Information</Text>
                         <Text style={styles.infoLabels}>Available from:</Text>
                         <View style={styles.border}>
-                            <Text style={styles.dateText}>{startDate} - {endDate}</Text>
+                        <Text style={styles.dateText}>
+                            {startDate?.toDate ? startDate.toDate().toISOString().split('T')[0] : startDate} - 
+                            {(() => {
+                                let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
+                                let start = startDate?.toDate ? startDate.toDate() : new Date(startDate);
+
+                                if ((end - start) / (1000 * 60 * 60 * 24) > 1) {
+                                    end.setDate(end.getDate() + 1);
+                                }
+
+                                return end.toISOString().split('T')[0];
+                            })()}
+                        </Text>
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                         <View style={styles.border}>

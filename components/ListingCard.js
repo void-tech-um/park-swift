@@ -6,15 +6,10 @@ import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
-const formatDate = (dateString, addDays = 1) => {
-    if (!dateString) return "No date available";
-
-    let date = new Date(dateString);
-    if (isNaN(date)) return "Invalid date";
-
-    date.setDate(date.getDate() + addDays); 
-
-    return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear()}`;
+const formatDate = (date) => {
+    if (!date) return '';
+    const adjustedDate = date.toDate ? date.toDate() : new Date(date);
+    return adjustedDate.toLocaleDateString('en-CA'); // YYYY-MM-DD format in local timezone
 };
 
 const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
@@ -60,7 +55,19 @@ const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime,
                         <View style={styles.content}>
                             <Text style={styles.price}>{ppHour}</Text>
                             <Text style={styles.description}>x minutes away</Text>
-                            <Text style={styles.description}>{formatDate(startDate)} - {formatDate(endDate, 2)}</Text> 
+                            <Text style={styles.description}>
+                                {startDate?.toDate ? startDate.toDate().toISOString().split('T')[0] : startDate} - 
+                                {(() => {
+                                    let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
+                                    let start = startDate?.toDate ? startDate.toDate() : new Date(startDate);
+
+                                    if ((end - start) / (1000 * 60 * 60 * 24) > 1) {
+                                        end.setDate(end.getDate() + 1);
+                                    }
+                                    return end.toISOString().split('T')[0];
+                                })()}
+                            </Text>
+
                         </View>
                         {!isAvailable && <UnavailableBadge />}
                         {isAvailable && (
