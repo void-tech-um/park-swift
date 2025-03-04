@@ -6,6 +6,36 @@ import SavedIcon from '../assets/Vector.png';
 import Car from '../assets/car.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 
+const getFormattedEndDate = (startDate, endDate) => {
+    let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
+    let start = startDate?.toDate ? startDate.toDate() : new Date(startDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        console.warn("Invalid startDate or endDate:", startDate, endDate);
+        return "Invalid date"; 
+    }
+
+    let shouldIncrementEnd = false;
+
+    if ((end - start) / (1000 * 60 * 60 * 24) > 1) {
+        shouldIncrementEnd = true;
+    }
+
+    const startWeek = Math.ceil(start.getDate() / 7);
+    const endWeek = Math.ceil(end.getDate() / 7);
+
+    if (start.getMonth() === end.getMonth() && startWeek !== endWeek) {
+        shouldIncrementEnd = true;
+    }
+
+    if (shouldIncrementEnd) {
+        end.setDate(end.getDate() + 1);
+    }
+
+    return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
+
+};
+
 const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
     const navigation = useNavigation();
 
@@ -50,23 +80,11 @@ const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime,
                             <Text style={styles.price}>{ppHour}</Text>
                             <Text style={styles.description}>x minutes away</Text>
                             <Text style={styles.description}>
-                                {startDate?.toDate ? startDate.toDate().toISOString().split('T')[0] : startDate}{" "}
+                                {startDate
+                                    ? `${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()+1}/${new Date(startDate).getFullYear()}`
+                                    : "Invalid date"}{" "}
                                 -{" "}
-                                {(() => {
-                                    let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
-                                    let start = startDate?.toDate ? startDate.toDate() : new Date(startDate);
-                                    
-                                    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
-                                        console.warn("Invalid startDate or endDate:", startDate, endDate);
-                                        return "Invalid date"; 
-                                    }
-
-                                    if ((end - start) / (1000 * 60 * 60 * 24) > 1) {
-                                        end.setDate(end.getDate() + 1);
-                                    }
-
-                                    return end.toISOString().split('T')[0];
-                                })()}
+                                {getFormattedEndDate(startDate, endDate)}
                             </Text>
                         </View>
                         {!isAvailable && <UnavailableBadge />}
