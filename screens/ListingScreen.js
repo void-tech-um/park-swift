@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
 import User from '../assets/profile.png';
 import FitsAllModels from '../assets/FitsAllModels.png'; 
@@ -17,13 +17,23 @@ const { width, height } = Dimensions.get('window');
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
-    const { address, ppHour, userID, date, postId, isSaved:initialIsSaved, startDate, endDate} = route.params || {};
+    const { 
+        address, 
+        ppHour, 
+        userID,  
+        postId, 
+        startDate, 
+        endDate, 
+        isAvailable,
+        isSaved: initialIsSaved 
+    } = route.params || {};
+
+    const [isSaved, setIsSaved] = useState(initialIsSaved || false);
 
     const [post, setPost] = useState(null);
     const [user, setUser] = useState(null);
     const [firstName, setFirstName] = useState('First');
     const [lastName, setLastName] = useState('Last');
-    const [isSaved, setIsSaved] = useState(initialIsSaved || false);
 
     const displayAddress = address ? address.split(',')[0] : 'No address available';
     
@@ -104,53 +114,41 @@ const ListingScreen = ({ route }) => {
             try {
                 const savedListings = await AsyncStorage.getItem('savedListings');
                 const savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-
-                if (savedListingsArray.some((item) => item.postId === postId)) {
-                    setIsSaved(true);
-                }
+                const listingSaved = savedListingsArray.some(item => item.postId === postId);
+                setIsSaved(listingSaved); 
             } catch (error) {
                 console.error("Error loading saved state:", error);
             }
         };
 
         checkSavedState();
-    }, [postId]);
+    }, [postId]); 
 
     const handleSavePress = async () => {
         try {
-            let savedListings = await AsyncStorage.getItem('savedListings');
+            const savedListings = await AsyncStorage.getItem('savedListings');
             let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-    
+
             if (isSaved) {
-                savedListingsArray = savedListingsArray.filter((item) => item.postId !== postId);
+                savedListingsArray = savedListingsArray.filter(item => item.postId !== postId);
             } else {
                 savedListingsArray.push({
+                    postId,
                     address,
                     ppHour,
+                    startDate: startDate ? new Date(startDate).toISOString() : null,
+                    endDate: endDate ? new Date(endDate).toISOString() : null,
+                    isAvailable,
                     userID,
-                    date,
-                    postId,
-                    startDate: startDate?.toDate 
-                        ? startDate.toDate().toISOString() 
-                        : (startDate ? new Date(startDate).toISOString() : null),
-                    endDate: endDate?.toDate 
-                        ? endDate.toDate().toISOString() 
-                        : (endDate ? new Date(endDate).toISOString() : null),
                 });
             }
-    
+
+            console.log("Updated saved listings:", savedListingsArray); // Debugging output
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
-            setIsSaved(!isSaved);
+            setIsSaved(!isSaved); // Toggle the local state
         } catch (error) {
             console.error('Error saving listing:', error);
         }
-    };      
-
-    const formatDate = (date) => {
-        if (!date) return "Invalid date";
-        let parsedDate = date.toDate ? date.toDate() : new Date(date);
-        if (isNaN(parsedDate.getTime())) return "Invalid date";
-        return `${parsedDate.getMonth() + 1}/${parsedDate.getDate()}/${parsedDate.getFullYear()}`;
     };
     
     const getFormattedEndDate = (startDate, endDate) => {

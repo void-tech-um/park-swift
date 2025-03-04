@@ -35,7 +35,7 @@ const getFormattedEndDate = (startDate, endDate) => {
     return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
 };
 
-const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {
+const ListingCard = ({ id, userID, address, startDate, endDate, startTime, endTime, image, ppHour, isAvailable=true, showSavedIcon, isSaved, handleSavePress}) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
@@ -43,15 +43,14 @@ const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime,
             id, 
             userID,
             address, 
-            date,
             ppHour, 
-            listingURL, 
             startTime,
             endTime,
             startDate, 
             endDate,
             isAvailable,
-            showSavedIcon,
+            postId: id, 
+            isSaved,
         });
     };
 
@@ -61,12 +60,6 @@ const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime,
                 <View style={styles.contentContainer}>
                     <View style={styles.topSection}>
                         <Text style={styles.address}>{address}</Text>
-                        {showSavedIcon && (
-                            <Image
-                                source={SavedIcon}
-                                style={styles.savedIcon}
-                            />
-                        )}
                     </View>
                     <View style={styles.imageContainer}>
                         <Image
