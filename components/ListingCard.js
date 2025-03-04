@@ -33,7 +33,6 @@ const getFormattedEndDate = (startDate, endDate) => {
     }
 
     return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
-
 };
 
 const ListingCard = ({ id, userID, address, date, startDate, endDate, startTime, endTime, image, ppHour, listingURL, isAvailable=true, showSavedIcon}) => {

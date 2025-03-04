@@ -152,21 +152,18 @@ const ListingScreen = ({ route }) => {
         const parsedDate = date.toDate ? date.toDate() : new Date(date);
         return !isNaN(parsedDate.getTime());
     };
-    const formatDate = (date) => {
-        if (!date) return "No date available";
+    const formatDate = (date, addOneDay = false) => {
+        if (!date) return "Invalid date";
     
-        let parsedDate;
+        let parsedDate = date.toDate ? date.toDate() : new Date(date);
+        if (isNaN(parsedDate.getTime())) return "Invalid date";
     
-        if (typeof date === "string") {
-            parsedDate = new Date(date + "T00:00:00Z");
-        } else if (date.toDate) {
-            parsedDate = date.toDate();
-        } else {
-            parsedDate = new Date(date);
+        if (addOneDay) {
+            parsedDate.setDate(parsedDate.getDate() + 1);
         }
     
-        return isNaN(parsedDate.getTime()) ? "Invalid date" : parsedDate.toISOString().split('T')[0];
-    };    
+        return `${parsedDate.getMonth() + 1}/${parsedDate.getDate()+1}/${parsedDate.getFullYear()}`;
+    };
       
     return (
         <View style={styles.container}>
