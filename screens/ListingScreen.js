@@ -121,23 +121,53 @@ const ListingScreen = ({ route }) => {
         try {
             let savedListings = await AsyncStorage.getItem('savedListings');
             let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-
+    
             if (isSaved) {
-                // Remove listing if already saved
                 savedListingsArray = savedListingsArray.filter((item) => item.postId !== postId);
             } else {
-                // Save new listing
-                savedListingsArray.push({ address, ppHour, userID, date, postId });
+                savedListingsArray.push({
+                    address,
+                    ppHour,
+                    userID,
+                    date,
+                    postId,
+                    startDate: startDate?.toDate 
+                        ? startDate.toDate().toISOString() 
+                        : (startDate ? new Date(startDate).toISOString() : null),
+                    endDate: endDate?.toDate 
+                        ? endDate.toDate().toISOString() 
+                        : (endDate ? new Date(endDate).toISOString() : null),
+                });
             }
-
+    
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
             setIsSaved(!isSaved);
         } catch (error) {
             console.error('Error saving listing:', error);
         }
     };
+      
+    const isValidDate = (date) => {
+        if (!date) return false;
+        const parsedDate = date.toDate ? date.toDate() : new Date(date);
+        return !isNaN(parsedDate.getTime());
+    };
+    const formatDate = (date) => {
+        if (!date) return "No date available";
     
-
+        let parsedDate;
+    
+        if (typeof date === "string") {
+            parsedDate = new Date(date + "T00:00:00Z");
+        } else if (date.toDate) {
+            parsedDate = date.toDate();
+        } else {
+            parsedDate = new Date(date);
+        }
+    
+        return isNaN(parsedDate.getTime()) ? "Invalid date" : parsedDate.toISOString().split('T')[0];
+    };    
+      
     return (
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
@@ -203,17 +233,7 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.infoLabels}>Available from:</Text>
                         <View style={styles.border}>
                         <Text style={styles.dateText}>
-                            {startDate?.toDate ? startDate.toDate().toISOString().split('T')[0] : startDate} - 
-                            {(() => {
-                                let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
-                                let start = startDate?.toDate ? startDate.toDate() : new Date(startDate);
-
-                                if ((end - start) / (1000 * 60 * 60 * 24) > 1) {
-                                    end.setDate(end.getDate() + 1);
-                                }
-
-                                return end.toISOString().split('T')[0];
-                            })()}
+                            {`${startDate && isValidDate(startDate) ? formatDate(startDate) : "Invalid Date"} - ${endDate && isValidDate(endDate) ? formatDate(endDate, startDate) : "Invalid Date"}`}
                         </Text>
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>

@@ -5,57 +5,48 @@ import SearchbarComponent from '../components/SearchBar';
 import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
 
-function formatDate(date) {
-  if (!(date instanceof Date) || isNaN(date.getTime())) {
-    return "Invalid date";
+const formatDate = (date) => {
+  if (!date) return "No date available";
+
+  let parsedDate;
+
+  if (typeof date === "string") {
+      parsedDate = new Date(date + "T00:00:00Z");
+  } else if (date.toDate) {
+      parsedDate = date.toDate();
+  } else {
+      parsedDate = new Date(date);
   }
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-}
+
+  return isNaN(parsedDate.getTime()) ? "Invalid date" : parsedDate.toISOString().split('T')[0];
+};
 
 const SavedListingsScreen = () => {
   const [savedListings, setSavedListings] = useState([]);
   useEffect(() => {
     const fetchSavedListings = async () => {
-      try {
-        const storedListings = await AsyncStorage.getItem('savedListings');
-        if (storedListings) {
-          let parsedListings = JSON.parse(storedListings);
-          parsedListings = parsedListings.map(listing => {
-            console.log("Raw listing.date:", listing.date);
-          
-            let startDate = "No date available";
-            let endDate = "No date available";
-          
-            if (listing.date && typeof listing.date === 'string') {
-              const dateParts = listing.date.split(" - ");
-              console.log("Split dateParts:", dateParts);
-          
-              if (dateParts.length === 2) {
-                const parsedStartDate = new Date(dateParts[0]);
-                const parsedEndDate = new Date(dateParts[1]);
-          
-                console.log("Parsed startDate:", parsedStartDate);
-                console.log("Parsed endDate:", parsedEndDate);
-          
-                startDate = isNaN(parsedStartDate.getTime()) ? "Invalid date" : formatDate(parsedStartDate);
-                endDate = isNaN(parsedEndDate.getTime()) ? "Invalid date" : formatDate(parsedEndDate);
-              }
+        try {
+            const storedListings = await AsyncStorage.getItem('savedListings');
+            if (storedListings) {
+                let parsedListings = JSON.parse(storedListings);
+
+                parsedListings = parsedListings.map(listing => {
+                    return {
+                        ...listing,
+                        startDate: formatDate(listing.startDate),
+                        endDate: formatDate(listing.endDate),
+                    };
+                });
+
+                setSavedListings(parsedListings);
             }
-          
-            return {
-              ...listing,
-              startDate: startDate,
-              endDate: endDate,
-            };
-          });          
-          setSavedListings(parsedListings);
+        } catch (error) {
+            console.error("Error fetching saved listings:", error);
         }
-      } catch (error) {
-        console.error("Error fetching saved listings:", error);
-      }
     };
+
     fetchSavedListings();
-  }, []);        
+}, []);
 
   const handleSavePress = async (postId) => {
     try {
