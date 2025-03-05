@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
 import { useNavigation, } from '@react-navigation/native';
 import Back from '../assets/Back.png'; 
@@ -25,13 +26,10 @@ const ListingScreen = ({ route }) => {
         startDate, 
         endDate, 
         isAvailable,
-        isSaved: initialIsSaved 
     } = route.params || {};
 
-    const [isSaved, setIsSaved] = useState(initialIsSaved || false);
+    const [isSaved, setIsSaved] = useState(false);
 
-    const [post, setPost] = useState(null);
-    const [user, setUser] = useState(null);
     const [firstName, setFirstName] = useState('First');
     const [lastName, setLastName] = useState('Last');
 
@@ -109,38 +107,42 @@ const ListingScreen = ({ route }) => {
     const backMarginLeft = backButtonMarginLeft();
     const textSpacing = textContactSpacing();
 
-    useEffect(() => {
-        const checkSavedState = async () => {
-            try {
-                const savedListings = await AsyncStorage.getItem('savedListings');
-                const savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-                const listingSaved = savedListingsArray.some(item => item.postId === postId);
-                setIsSaved(listingSaved); 
-            } catch (error) {
-                console.error("Error loading saved state:", error);
-            }
-        };
-
-        checkSavedState();
-    }, [postId]); 
+    useFocusEffect(
+        React.useCallback(() => {
+            const checkSavedState = async () => {
+                try {
+                    const savedListings = await AsyncStorage.getItem('savedListings');
+                    const savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
+                    const listingSaved = savedListingsArray.some(item => item.postId === postId);
+                    setIsSaved(listingSaved);
+                } catch (error) {
+                    console.error("Error loading saved state:", error);
+                }
+            };
+    
+            checkSavedState();
+        }, [postId])
+    );
 
     const handleSavePress = async () => {
         try {
             const savedListings = await AsyncStorage.getItem('savedListings');
             let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-
+    
             if (isSaved) {
                 savedListingsArray = savedListingsArray.filter(item => item.postId !== postId);
             } else {
-                savedListingsArray.push({
-                    postId: postId || `${Date.now()}-${Math.random()}`, // Generate a unique ID if postId is missing
-                    address,
-                    ppHour,
-                    startDate: startDate ? new Date(startDate).toISOString() : null,
-                    endDate: endDate ? new Date(endDate).toISOString() : null,
-                    isAvailable,
-                    userID,
-                });
+                if (!savedListingsArray.some(item => item.postId === postId)) {
+                    savedListingsArray.push({
+                        postId,
+                        address,
+                        ppHour,
+                        startDate: startDate ? new Date(startDate).toISOString() : null,
+                        endDate: endDate ? new Date(endDate).toISOString() : null,
+                        isAvailable,
+                        userID,
+                    });
+                }
             }
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
             setIsSaved(!isSaved);

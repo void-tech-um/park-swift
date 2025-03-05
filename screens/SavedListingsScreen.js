@@ -31,18 +31,6 @@ const SavedListingsScreen = () => {
     }, [])
   );
 
-  const handleSavePress = async (listing) => {
-    try {
-        const savedListings = await AsyncStorage.getItem('savedListings');
-        let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-        savedListingsArray = savedListingsArray.filter(item => item.postId !== listing.postId);
-        await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
-        setSavedListings(savedListingsArray); 
-    } catch (error) {
-        console.error('Error unsaving listing:', error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <MenuSearchBar showSearchBar={false} />
@@ -69,8 +57,8 @@ const SavedListingsScreen = () => {
                 endDate={listing.endDate}
                 isAvailable={listing.isAvailable}
                 showSavedIcon={true}
-                isSaved={true} // Ensure the ListingCard shows as saved
-                onSavePress={() => handleSavePress(listing)} // Handle unsaving
+                isSaved={true} 
+                handleSavePress={() => handleSavePress(listing)}
               />
             ))
         ) : (
