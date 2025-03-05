@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
 import { useNavigation, } from '@react-navigation/native';
+import { getUser } from '../firebaseFunctions/firebaseFirestore';
 import Back from '../assets/Back.png'; 
 import User from '../assets/profile.png';
 import FitsAllModels from '../assets/FitsAllModels.png'; 
@@ -29,9 +30,7 @@ const ListingScreen = ({ route }) => {
     } = route.params || {};
 
     const [isSaved, setIsSaved] = useState(false);
-
-    const [firstName, setFirstName] = useState('First');
-    const [lastName, setLastName] = useState('Last');
+    const [fullName, setFullName] = useState('User Name');
 
     const displayAddress = address ? address.split(',')[0] : 'No address available';
     
@@ -107,6 +106,26 @@ const ListingScreen = ({ route }) => {
     const backMarginLeft = backButtonMarginLeft();
     const textSpacing = textContactSpacing();
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            if (userID) {
+                try {
+                    const userData = await getUser(userID);
+                    if (userData?.fullName) {
+                        setFullName(userData.fullName);
+                    } else {
+                        setFullName("User Name");
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    setFullName("User Name");
+                }
+            }
+        };
+    
+        fetchUserData();
+    }, [userID]);
+    
     useFocusEffect(
         React.useCallback(() => {
             const checkSavedState = async () => {
@@ -119,7 +138,6 @@ const ListingScreen = ({ route }) => {
                     console.error("Error loading saved state:", error);
                 }
             };
-    
             checkSavedState();
         }, [postId])
     );
@@ -132,17 +150,15 @@ const ListingScreen = ({ route }) => {
             if (isSaved) {
                 savedListingsArray = savedListingsArray.filter(item => item.postId !== postId);
             } else {
-                if (!savedListingsArray.some(item => item.postId === postId)) {
-                    savedListingsArray.push({
-                        postId,
-                        address,
-                        ppHour,
-                        startDate: startDate ? new Date(startDate).toISOString() : null,
-                        endDate: endDate ? new Date(endDate).toISOString() : null,
-                        isAvailable,
-                        userID,
-                    });
-                }
+                savedListingsArray.push({
+                    postId,
+                    address,
+                    ppHour,
+                    startDate: startDate ? new Date(startDate).toISOString() : null,
+                    endDate: endDate ? new Date(endDate).toISOString() : null,
+                    isAvailable,
+                    userID,
+                });
             }
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
             setIsSaved(!isSaved);
@@ -215,7 +231,7 @@ const ListingScreen = ({ route }) => {
                             style={styles.UserImage}
                         />
                         <View style={styles.userInfoTextContainer}>
-                            <Text style={styles.listedUser}>Listed by {firstName} {lastName}</Text>
+                            <Text style={styles.listedUser}>Listed by {fullName}</Text>
                             <Text style={styles.listingDate}>Listing since 2024</Text>
                         </View>
                     </View>

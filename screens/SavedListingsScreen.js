@@ -12,22 +12,23 @@ const SavedListingsScreen = () => {
     React.useCallback(() => {
       const fetchSavedListings = async () => {
         try {
-          const storedListings = await AsyncStorage.getItem('savedListings');
-          if (storedListings) {
-            let parsedListings = JSON.parse(storedListings);
-            parsedListings = parsedListings.map(listing => ({
-              ...listing,
-              startDate: listing.startDate ? new Date(listing.startDate) : null,
-              endDate: listing.endDate ? new Date(listing.endDate) : null,
-            }));
-            setSavedListings(parsedListings);
-          }
+            const storedListings = await AsyncStorage.getItem('savedListings');
+            if (storedListings) {
+                let parsedListings = JSON.parse(storedListings);
+                parsedListings = parsedListings.map(listing => ({
+                    ...listing,
+                    startDate: listing.startDate ? new Date(listing.startDate) : null,
+                    endDate: listing.endDate ? new Date(listing.endDate) : null,
+                }));
+                setSavedListings(parsedListings);
+            } else {
+                setSavedListings([]);
+            }
         } catch (error) {
-          console.error("Error fetching saved listings:", error);
+            console.error("Error fetching saved listings:", error);
         }
-      };
-  
-      fetchSavedListings();
+    };
+        fetchSavedListings();
     }, [])
   );
 

@@ -16,6 +16,11 @@ function EditProfileScreen({ navigation, route }) {
     });
     const [modalVisible, setModalVisible] = React.useState(false);
     const handleSave = () => {
+        if (!updatedUser.fullName.trim()) {
+            alert("Display name is required.");
+            return;
+        }
+    
         updateUser(updatedUser)
             .then(() => {
                 onProfileUpdate(updatedUser);
@@ -24,7 +29,7 @@ function EditProfileScreen({ navigation, route }) {
             .catch((error) => {
                 console.error('Error updating profile:', error);
             });
-    };
+    };    
 
     const handleInputChange = (field, value) => {
         setUpdatedUser({ ...updatedUser, [field]: value });

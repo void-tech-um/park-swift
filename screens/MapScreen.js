@@ -10,7 +10,6 @@ const markerSize = Math.min(width, height) * 0.1;
 const MapComponent = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [address, setAddress] = useState('');
   const [pinLocation, setPinLocation] = useState(null); 
   const [searchQuery, setSearchQuery] = useState('');
   const mapRef = useRef(null);
@@ -78,7 +77,7 @@ const MapComponent = () => {
   return (
     <View style={styles.container}>
       <MenuSearchBar 
-        showSearchBar 
+        showSearchBar
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
         onSubmitEditing={handleGeoCode}

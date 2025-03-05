@@ -54,10 +54,10 @@ const MenuSearchBar = ({ showSearchBar = true }) => {
     return (
         <TouchableWithoutFeedback onPress={() => setSuggestions([])}>
             <View style={styles_searchbar.container}>
-                <TouchableOpacity style={styles_searchbar.iconContainer} onPress={toggleMenu}>
+                {/*<TouchableOpacity style={styles_searchbar.iconContainer} onPress={toggleMenu}>
                     <MaterialCommunityIcons name="menu" color={'white'} size={48} />
                 </TouchableOpacity>
-                <HamburgerMenu isVisible={isMenuVisible} onClose={toggleMenu} />
+                <HamburgerMenu isVisible={isMenuVisible} onClose={toggleMenu} />*/}
                 
                 {showSearchBar && (
                     <View style={{ flex: 1 }}>
@@ -98,7 +98,8 @@ const styles_searchbar = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#052658',
         padding: '3%',
-        paddingTop: '12.5%',
+        paddingTop: '14.5%',
+        height: '14%',
     },
     iconContainer: {
         marginLeft: 10,
@@ -107,9 +108,7 @@ const styles_searchbar = StyleSheet.create({
         backgroundColor: '#f5f5f5',
         alignSelf: 'center',
         height: 41,
-        width: width * 0.70,
-        marginLeft: 'auto',
-        marginRight: '4.5%',
+        width: width * 0.80,
     },
     inputText: {
         fontSize: 20,
