@@ -133,7 +133,7 @@ const ListingScreen = ({ route }) => {
                 savedListingsArray = savedListingsArray.filter(item => item.postId !== postId);
             } else {
                 savedListingsArray.push({
-                    postId,
+                    postId: postId || `${Date.now()}-${Math.random()}`, // Generate a unique ID if postId is missing
                     address,
                     ppHour,
                     startDate: startDate ? new Date(startDate).toISOString() : null,
@@ -142,10 +142,8 @@ const ListingScreen = ({ route }) => {
                     userID,
                 });
             }
-
-            console.log("Updated saved listings:", savedListingsArray); // Debugging output
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
-            setIsSaved(!isSaved); // Toggle the local state
+            setIsSaved(!isSaved);
         } catch (error) {
             console.error('Error saving listing:', error);
         }

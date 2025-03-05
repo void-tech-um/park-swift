@@ -1,56 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 import SearchbarComponent from '../components/SearchBar';
 import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
 
-const formatDate = (date) => {
-  if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
-      return "Invalid date";
-  }
-
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-};
-
-
 const SavedListingsScreen = () => {
   const [savedListings, setSavedListings] = useState([]);
-  // In SavedListingsScreen.js
-  // In SavedListingsScreen.js
-useEffect(() => {
-  const fetchSavedListings = async () => {
-      try {
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchSavedListings = async () => {
+        try {
           const storedListings = await AsyncStorage.getItem('savedListings');
-          console.log("Raw stored listings:", storedListings); // Debugging output
-
           if (storedListings) {
-              let parsedListings = JSON.parse(storedListings);
-              // Convert date strings back into Date objects
-              parsedListings = parsedListings.map(listing => ({
-                  ...listing,
-                  startDate: listing.startDate ? new Date(listing.startDate) : null,
-                  endDate: listing.endDate ? new Date(listing.endDate) : null,
-              }));
-
-              console.log("Parsed listings after conversion:", parsedListings); // Debugging output
-              setSavedListings(parsedListings);
+            let parsedListings = JSON.parse(storedListings);
+            parsedListings = parsedListings.map(listing => ({
+              ...listing,
+              startDate: listing.startDate ? new Date(listing.startDate) : null,
+              endDate: listing.endDate ? new Date(listing.endDate) : null,
+            }));
+            setSavedListings(parsedListings);
           }
-      } catch (error) {
+        } catch (error) {
           console.error("Error fetching saved listings:", error);
-      }
-  };
-
-  fetchSavedListings();
-}, []);
+        }
+      };
+  
+      fetchSavedListings();
+    }, [])
+  );
 
   const handleSavePress = async (listing) => {
     try {
         const savedListings = await AsyncStorage.getItem('savedListings');
         let savedListingsArray = savedListings ? JSON.parse(savedListings) : [];
-
         savedListingsArray = savedListingsArray.filter(item => item.postId !== listing.postId);
-
         await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
         setSavedListings(savedListingsArray); 
     } catch (error) {
@@ -74,7 +59,7 @@ useEffect(() => {
         {savedListings.length > 0 ? (
             savedListings.map((listing, index) => (
               <ListingCard
-                key={listing.postId || `listing-${index}`}
+                key={listing.postId ? listing.postId : `listing-${index}`}
                 id={listing.postId}
                 userID={listing.userID}
                 address={listing.address}
