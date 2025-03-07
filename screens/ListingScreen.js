@@ -15,8 +15,6 @@ import CarImage from '../assets/CarImage.png';
 import MenuSearchBar from '../components/MenuSearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const { width, height } = Dimensions.get('window');
-
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
     const { 
@@ -43,68 +41,6 @@ const ListingScreen = ({ route }) => {
     const removeSpaces = (text) => {
         return text.replace(/\s/g, '');
     };
-
-    const getImageMargins = () => {
-        if (width > 447) {
-            return {
-                firstImageMarginLeft: '-0.20%',
-                secondImageMarginLeft:'-5%',
-            };
-        }if ((width === 432 && height === 840)) {
-            return {
-                firstImageMarginLeft: '3.6%',
-                secondImageMarginLeft: '2.%',
-            };
-        }else if (width > 411){
-            return {
-                firstImageMarginLeft: '8.9%',
-                secondImageMarginLeft: '12.4%',
-            };
-        }else if(width > 392){
-            return {
-                firstImageMarginLeft: '14.%',
-                secondImageMarginLeft: '22.4%',
-            };
-        }
-        else{
-            return {
-                firstImageMarginLeft: '8%',
-                secondImageMarginLeft: '11%',
-            };
-        }
-    };
-
-    const backButtonMarginLeft = () => {
-        if(width > 447){
-            return 2.8;
-        }if ((width === 432 && height === 840)) {
-            return 2.5;
-        }else if(width > 411){
-            return 2.7;  
-        }else if(width > 392){
-            return 2.7;
-        }
-        else{
-            return 0;
-        }
-    };
-
-    const textContactSpacing = () => {
-        if(width > 447){
-            return -3;
-        }if ((width === 432 && height === 840)) {
-            return -1.8;
-        }else if(width > 411){
-            return 0;
-        }else if(width > 392){
-            return 1.6;
-        }else{
-            return 0;
-        }
-    };
-    const { firstImageMarginLeft, secondImageMarginLeft } = getImageMargins();
-    const backMarginLeft = backButtonMarginLeft();
-    const textSpacing = textContactSpacing();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -205,7 +141,7 @@ const ListingScreen = ({ route }) => {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Image
                                 source={Back}
-                                style={[styles.Back, { marginLeft: backMarginLeft}]}
+                                style={styles.Back}
                             />
                         </TouchableOpacity>
                         <Text style={styles.listingHeading}>{displayAddress}</Text>
@@ -217,11 +153,11 @@ const ListingScreen = ({ route }) => {
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             <Image
                                 source={CarImage}
-                                style={[styles.FirstImage, { marginLeft: firstImageMarginLeft }]}
+                                style={styles.FirstImage}
                             />
                             <Image
                                 source={CarImage}
-                                style={[styles.SecondImage, { marginLeft: secondImageMarginLeft }]}
+                                style={styles.SecondImage}
                             />
                         </ScrollView>
                     </View>
@@ -235,7 +171,7 @@ const ListingScreen = ({ route }) => {
                             <Text style={styles.listingDate}>Listing since 2024</Text>
                         </View>
                     </View>
-                    <View style={styles.iconRow}>
+                    {/*<View style={styles.iconRow}>
                         <Image
                             source={FitsAllModels}
                             style={styles.modelIcon}
@@ -254,7 +190,7 @@ const ListingScreen = ({ route }) => {
                             source={PrivateProperty}
                             style={styles.privacyIcon}
                         />
-                    </View>
+                    </View>*/}
 
                     <View style={styles.listingInfoSection}>
                         <Text style={styles.listingInfo}>Listing Information</Text>
@@ -288,8 +224,8 @@ const ListingScreen = ({ route }) => {
                     </View>
                     <View style={styles.contactBorder}>
                         <View style={styles.textContainer}>
-                            <Text style={[styles.boldCostText, { marginLeft: textSpacing }]}>{removeSpaces(formatCostText(ppHour))}</Text>
-                            <Text style={[styles.negotiableText, { marginLeft: textSpacing }]}>Negotiable</Text>
+                            <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHour))}</Text>
+                            <Text style={styles.negotiableText}>Negotiable</Text>
                         </View>
                         <TouchableOpacity>
                             <View style={styles.contactButton}>
@@ -308,10 +244,12 @@ const ListingScreen = ({ route }) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
+        paddingBottom:"3%",
     },
     header: {
         flexDirection: 'row',

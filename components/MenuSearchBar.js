@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, FlatList, Text, Dimensions, TouchableWithoutFeedback } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Searchbar } from 'react-native-paper';
-import HamburgerMenu from './HamburgerMenu.js';
+//import HamburgerMenu from './HamburgerMenu.js';
 
 const { width } = Dimensions.get('window');
 
@@ -58,7 +57,7 @@ const MenuSearchBar = ({ showSearchBar = true }) => {
                     <MaterialCommunityIcons name="menu" color={'white'} size={48} />
                 </TouchableOpacity>
                 <HamburgerMenu isVisible={isMenuVisible} onClose={toggleMenu} />*/}
-                
+
                 {showSearchBar && (
                     <View style={{ flex: 1 }}>
                         <Searchbar
@@ -98,8 +97,8 @@ const styles_searchbar = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#052658',
         padding: '3%',
-        paddingTop: '14.5%',
-        height: '14%',
+        paddingTop: '11.5%',
+        height: 110,
     },
     iconContainer: {
         marginLeft: 10,

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'rea
 import { useState } from 'react';
 import { getUser } from '../firebaseFunctions/firebaseFirestore';
 import { getDocs, collection, query, where } from 'firebase/firestore';
-import { database } from '../firebaseFunctions/firebaseFirestore';  // Make sure this is correctly initialized
+import { database } from '../firebaseFunctions/firebaseFirestore'; 
 import MenuSearchBar from '../components/MenuSearchBar';
 import { useFocusEffect } from '@react-navigation/native';
 import ListingCard from '../components/ListingCard';
@@ -31,7 +31,7 @@ function ProfileScreen({ navigation, route }) {
     async function fetchUserListings(userId) {
         try {
             const postsCollectionRef = collection(database, "posts");
-            const q = query(postsCollectionRef, where("userID", "==", userId)); // Fetch only user’s listings
+            const q = query(postsCollectionRef, where("userID", "==", userId)); 
             const querySnapshot = await getDocs(q);
 
             const userPosts = querySnapshot.docs.map((doc) => ({

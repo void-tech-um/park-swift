@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Text, TouchableWithoutFeedback, Keyboard, Dimensions,Image, TextInput, Button,} from 'react-native';
+import { View, StyleSheet, Text, Dimensions, Image} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import MenuSearchBar from '../components/MenuSearchBar.js';

@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
-import MenuSearchBar from '../components/MenuSearchBar';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
-import { useIsFocused } from '@react-navigation/native';
 
 function PostScreen({ navigation, route }) {
   const [location, setLocation] = React.useState('');
@@ -126,8 +124,6 @@ function PostScreen({ navigation, route }) {
     setTags(newTags);
   };
 
-  const isFocused = useIsFocused();
-
   const resetForm = () => {
     setLocation('');
     setStartTime({ hours: '', minutes: '' });
@@ -147,8 +143,7 @@ function PostScreen({ navigation, route }) {
     const unsubscribe = navigation.addListener('focus', () => {
       resetForm();
     });
-
-    return unsubscribe; // Cleanup listener on unmount
+    return unsubscribe;
   }, [navigation]);
 
   const onPostPress = () => {
@@ -185,7 +180,7 @@ function PostScreen({ navigation, route }) {
 
   return (
     <View style={styles.container}>
-        <MenuSearchBar showSearchBar={false} />
+      <View style={styles.bar}></View>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text style={styles.title}>List Your Space</Text>
         <Text style={styles.subHeading}>Location</Text>
@@ -409,12 +404,13 @@ function PostScreen({ navigation, route }) {
                   },
                   inputAndroid: {
                     fontSize: 16,
-                    paddingVertical: 8,
+                    paddingVertical: 10,
                     paddingHorizontal: 10,
                     borderRadius: 17,
                     backgroundColor: '#E9E9E9',
                     height: 40,
                     width: 110,
+                    paddingLeft: '3.5%',
                   },
                   iconContainer: {
                     top: '40%',
@@ -483,12 +479,13 @@ function PostScreen({ navigation, route }) {
               },
               inputAndroid: {
                 fontSize: 16,
-                paddingVertical: 8,
+                paddingVertical: 10,
                 paddingHorizontal: 10,
                 borderRadius: 17,
                 backgroundColor: '#E9E9E9',
                 height: 40,
-                width: 110,
+                width: 100,
+                paddingLeft: '3.5%',
               },
               iconContainer: {
                 top: '40%',
@@ -539,6 +536,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  bar: {
+    backgroundColor: '#052658',
+    height: 110,
+    width: '100%',
   },
   scrollViewContent: {
     paddingBottom: '8%', 
@@ -787,55 +789,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'transparent',
-    borderRadius: 15,
-    color: 'black',
-    paddingRight: 30,
-    backgroundColor: '#f0f0f0',
-    height: 45,
-    marginTop: 6,
-    width: 100,
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: 'transparent',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30,
-    backgroundColor: '#f0f0f0',
-    height: 45,
-    marginTop: -5,
-    width: 125,
-  },
-  iconContainer: {
-    top: '50%',
-    right: 0,
-    transform: [{ translateY: -10 }], 
-  },
-  button: {
-   alignItems: 'center',
-   justifyContent: 'center',
-   paddingVertical: 12,
-   paddingHorizontal: 32,
-   borderRadius: 4,
-   elevation: 3,
-   backgroundColor: 'black',
- },
- text: {
-   fontSize: 16,
-   lineHeight: 21,
-   fontWeight: 'bold',
-   letterSpacing: 0.25,
-   color: 'white',
- },
- });
 export default PostScreen;

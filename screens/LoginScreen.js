@@ -3,7 +3,7 @@ import { Image, Text, TextInput, TouchableOpacity, View, StyleSheet } from 'reac
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {loginUser} from '../firebaseFunctions/firebaseFirestore';
 
-export default function LoginScreen({navigation, setUser}) {
+export default function LoginScreen({navigation}) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 

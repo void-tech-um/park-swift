@@ -4,7 +4,7 @@ import { getDocs, collection, database} from '../firebaseFunctions/firebaseFires
 import { useIsFocused } from '@react-navigation/native';
 import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
-import CurrentlyRentingCard from '../components/CurrentlyRenting';
+//import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from '../components/MenuSearchBar.js';
 import Car from '../assets/car.png'; 
 
