@@ -20,13 +20,13 @@ const PostConfirmationScreen = () => {
       <Text style={styles.thankYouText}>Thank You!</Text>
       <Text style={styles.additionalText}>Your listing has been posted.</Text>
       <TouchableOpacity
-        style={styles.button}
+        style={styles.listButton}
         onPress={handleListAnother}
       >
         <Text style={styles.buttonText}>List another</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.button}
+        style={styles.returnButton}
         onPress={handleReturnHome}
       >
         <Text style={styles.buttonText}>Return back to home</Text>
@@ -51,10 +51,19 @@ const styles = StyleSheet.create({
     fontFamily: "NotoSansTaiTham-Bold",
     marginBottom: 30,
   },
-  button: {
+  listButton: {
     marginTop: 20,
     borderRadius: 20, 
-    width: 400, 
+    width: "85%", 
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#FED869",
+  },
+  returnButton: {
+    marginTop: 20,
+    borderRadius: 20, 
+    width: "85%", 
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
