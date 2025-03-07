@@ -8,14 +8,14 @@ const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyDy0sdb0KP2qAp9bQbYT1NeOAucFyCBI1w'; // Replace with your correct API Key
 
 const MenuSearchBar = ({ showSearchBar = true }) => {
-    const [isMenuVisible, setMenuVisible] = useState(false);
+    //const [isMenuVisible, setMenuVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState('');
 
-    const toggleMenu = () => {
+    {/*const toggleMenu = () => {
         setMenuVisible(!isMenuVisible);
-    };
+    }; */}
 
     const fetchAddressSuggestions = async (query) => {
         if (!query) {
@@ -28,7 +28,7 @@ const MenuSearchBar = ({ showSearchBar = true }) => {
                 `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${API_KEY}&types=address`
             );
             const json = await response.json();
-            console.log("API Response:", json); // Debug log
+            console.log("API Response:", json); 
     
             if (json.error_message) {
                 console.error("Google API Error:", json.error_message);

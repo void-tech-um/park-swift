@@ -224,12 +224,16 @@ const FilterScreen = () => {
     
     const TagsModal = ({ isVisible, onClose }) => {
         const tagOptions = [
-          'Parallel parking',
+          'Fits all models',
+          'Paved entrance',
+          'Weather protected',
+          'Private Property',
           'Handicap',
           'Parking garage',
           'Shaded',
-          'On street parking',
-          'Driveway'
+          'On-street parking',
+          'Driveway',
+          'Parrallel parking',
         ];
         
         return (
@@ -662,8 +666,8 @@ const styles = StyleSheet.create({
     modalContent: {
         backgroundColor: 'white',
         borderRadius: 17,
-        width: '92%',
-        height: 440,
+        width: '90%',
+        height: '58%',
         paddingTop: '2%',
     },
     modalTitle: {

@@ -9,8 +9,8 @@ import FitsAllModels from '../assets/FitsAllModels.png';
 import WeatherProtected from '../assets/WeatherProtected.png'; 
 import PavedEntrance from '../assets/PavedEntrance.png'; 
 import PrivateProperty from '../assets/PrivateProperty.png';  
-import Save from '../assets/Save.png'; 
-import SaveIcon2 from '../assets/saved_icon.png';
+import Unsave from '../assets/Save.png'; 
+import Save from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from '../components/MenuSearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -234,7 +234,7 @@ const ListingScreen = ({ route }) => {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handleSavePress}>
                             <Image
-                                source={isSaved ? SaveIcon2 : Save}
+                                source={isSaved ? Save : Unsave}
                                 style={styles.saveIcon}
                             />
                         </TouchableOpacity>
