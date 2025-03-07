@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
         marginLeft: 19,
     },
     scrollViewContainer: {
-        paddingBottom: '8%',
+        paddingBottom: '5%',
     },
     listingsContainer: {
         alignItems: 'center',
