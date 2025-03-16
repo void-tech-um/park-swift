@@ -4,6 +4,7 @@ import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
+import { TagsModal, useTagsModal } from './FilterScreen';
 
 function PostScreen({ navigation, route }) {
   const [location, setLocation] = React.useState('');
@@ -18,6 +19,8 @@ function PostScreen({ navigation, route }) {
   const [tags, setTags] = React.useState([]);
   const [notes, setNotes] = React.useState('');
   const [selectedDates, setSelectedDates] = React.useState({});
+
+  const { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection } = useTagsModal();
   
   const handleDateSelect = (date) => {
     const dateString = date.dateString;
@@ -114,8 +117,8 @@ function PostScreen({ navigation, route }) {
     setSelectedDates(updatedSelectedDates);
 };
 
-  const handleAddTag = () => {
-    setTags([...tags, 'New Tag']);
+  const handleAddTag = (selectedTag) => {
+    setTags([...tags, selectedTag]);
   };
 
   const handleRemoveTag = (index) => {
@@ -502,6 +505,9 @@ function PostScreen({ navigation, route }) {
 
         <Text style={styles.subHeading}>Tags</Text>
         <View style={styles.tagsContainer}>
+          <TouchableOpacity style={styles.addTagButton} onPress={() => setIsTagsModalOpen(true)}>
+            <Text style={styles.addTagButtonText}>+ Add</Text>
+          </TouchableOpacity>
           {tags.map((tag, index) => (
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{tag}</Text>
@@ -510,10 +516,16 @@ function PostScreen({ navigation, route }) {
               </TouchableOpacity>
             </View>
           ))}
-          <TouchableOpacity style={styles.addTagButton} onPress={handleAddTag}>
+          {/* <TouchableOpacity style={styles.addTagButton} onPress={handleAddTag}>
             <Text style={styles.addTagButtonText}>+ Add</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
+        <TagsModal 
+          isVisible={isTagsModalOpen} 
+          onClose={() => {setIsTagsModalOpen(false); handleAddTag(selectedTag);}}
+          selectedTag={selectedTag}
+          handleTagSelection={handleTagSelection}
+        />
 
         <Text style={styles.subHeading}>Additional Notes</Text>
         <TextInput
