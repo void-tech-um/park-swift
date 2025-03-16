@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Text, Dimensions, Image} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import MenuSearchBar from '../components/MenuSearchBar.js';
@@ -7,107 +7,69 @@ import MenuSearchBar from '../components/MenuSearchBar.js';
 const { width, height } = Dimensions.get('window');
 const markerSize = Math.min(width, height) * 0.1; 
 
-const MapComponent = () => {
+const MapScreen = ({ route }) => {
   const [userLocation, setUserLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [pinLocation, setPinLocation] = useState(null); 
-  const [searchQuery, setSearchQuery] = useState('');
-  const mapRef = useRef(null);
+  const [listingLocation, setListingLocation] = useState(null);
+  
+  const { latitude, longitude} = route.params || {};
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+      if (latitude && longitude) {
+        // If listing coordinates are provided, use them
+        setListingLocation({ latitude, longitude });
+      } else {
+        // Otherwise, fetch user's current location
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          console.error('Permission to access location was denied');
+          return;
+        }
 
-      try {
-        const location = await Location.getCurrentPositionAsync({});
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-      } catch (error) {
-        setErrorMsg('Error fetching location');
-        console.error(error);
+        try {
+          const location = await Location.getCurrentPositionAsync({});
+          setUserLocation({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        } catch (error) {
+          console.error('Error fetching location:', error);
+        }
       }
     })();
-  }, []);
+  }, [latitude, longitude]);
 
-  const handleGeoCode = async () => {
-    if (!searchQuery.trim()) {
-      setErrorMsg('Please enter a valid address');
-      return;
-    }
-
-    try {
-      console.log('Attempting to geocode:', searchQuery);
-      const geocodedLocation = await Location.geocodeAsync(searchQuery.trim());
-      console.log('Geocoding result:', geocodedLocation);
-      
-      if (geocodedLocation.length > 0) {
-        const { latitude, longitude } = geocodedLocation[0];
-        setPinLocation({ latitude, longitude });
-        if (mapRef.current) {
-          mapRef.current.animateToRegion({
-            latitude,
-            longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }, 1000);
-        }
-      } else {
-        setErrorMsg('No location found for this address');
-      }
-    } catch (error) {
-      console.error('Geocoding Error:', error);
-      setErrorMsg('Error in geocoding');
-    }
-  };
-
-  if (errorMsg) {
-    return <Text>{errorMsg}</Text>;
-  }
-
-  if (!userLocation) {
+  if (!userLocation && !listingLocation) {
     return <Text>Loading...</Text>;
   }
 
   return (
     <View style={styles.container}>
-      <MenuSearchBar 
-        showSearchBar
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        onSubmitEditing={handleGeoCode}
-      />
-      
+      <MenuSearchBar />
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
+          latitude: listingLocation ? listingLocation.latitude : userLocation.latitude,
+          longitude: listingLocation ? listingLocation.longitude : userLocation.longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
       >
-        <Marker coordinate={userLocation} title="You are here">
-          <View>
+        {userLocation && (
+          <Marker coordinate={userLocation} title="You are here">
             <Image
               source={require('../assets/user-marker.png')}
               style={{ width: markerSize, height: markerSize }}
             />
-          </View>
-        </Marker>
-        {pinLocation && (
-          <Marker coordinate={pinLocation} title="Pinned Location">
-            <View>
-              <Image
-                source={require('../assets/pin-marker.png')}
-                style={{ width: markerSize, height: markerSize }}
-              />
-            </View>
+          </Marker>
+        )}
+
+        {listingLocation && (
+          <Marker coordinate={listingLocation} title="Listing Location">
+            <Image
+              source={require('../assets/map-pin.png')}
+              style={{ width: markerSize, height: markerSize }}
+            />
           </Marker>
         )}
       </MapView>
@@ -122,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapComponent;
+export default MapScreen;

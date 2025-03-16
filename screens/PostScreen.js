@@ -1,24 +1,55 @@
-import React, { useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView,FlatList, Dimensions} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
 import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
+import { Searchbar } from 'react-native-paper';
+const { width } = Dimensions.get('window');
+const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w'; 
 
 function PostScreen({ navigation, route }) {
-  const [location, setLocation] = React.useState('');
-  const [startTime, setStartTime] = React.useState({ hours: '', minutes: '' });
-  const [endTime, setEndTime] = React.useState({ hours: '', minutes: '' });
-  const [startPeriod, setStartPeriod] = React.useState('AM');
-  const [endPeriod, setEndPeriod] = React.useState('AM');
-  const [price, setPrice] = React.useState('');
-  const [rentalPeriod, setRentalPeriod] = React.useState('hour');
-  const [isNegotiable, setIsNegotiable] = React.useState(null);
-  const [sizeOfCar, setSize] = React.useState('sedan');
-  const [tags, setTags] = React.useState([]);
-  const [notes, setNotes] = React.useState('');
-  const [selectedDates, setSelectedDates] = React.useState({});
-  
+  const [location, setLocation] = useState('');
+  const [startTime, setStartTime] = useState({ hours: '', minutes: '' });
+  const [endTime, setEndTime] = useState({ hours: '', minutes: '' });
+  const [startPeriod, setStartPeriod] = useState('AM');
+  const [endPeriod, setEndPeriod] = useState('AM');
+  const [price, setPrice] = useState('');
+  const [rentalPeriod, setRentalPeriod] = useState('hour');
+  const [isNegotiable, setIsNegotiable] = useState(null);
+  const [sizeOfCar, setSize] = useState('sedan');
+  const [tags, setTags] = useState([]);
+  const [notes, setNotes] = useState('');
+  const [selectedDates, setSelectedDates] = useState({});
+  const [suggestions, setSuggestions] = useState([]);
+
+  const fetchAddressSuggestions = async (query) => {
+    if (!query) {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${API_KEY}&types=geocode&components=country:us`
+      );
+      const json = await response.json();
+      console.log("API Response:", json);
+
+      if (json.predictions) {
+        setSuggestions(json.predictions);
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error("Error fetching address suggestions:", error);
+    }
+  };
+
+  const handleSelectAddress = (address) => {
+    setLocation(address);
+    setSuggestions([]); // Hide suggestions after selection
+  };
   const handleDateSelect = (date) => {
     const dateString = date.dateString;
     let updatedSelectedDates = { ...selectedDates };
@@ -152,7 +183,7 @@ function PostScreen({ navigation, route }) {
     const lastDate = Object.keys(selectedDates)[Object.keys(selectedDates).length - 1];
 
     if (!location.trim()) {
-        alert("Please enter a location.");
+        alert("Please enter your address.");
         return;
     }
     if (!firstDate || !lastDate) {
@@ -184,13 +215,33 @@ function PostScreen({ navigation, route }) {
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <Text style={styles.title}>List Your Space</Text>
         <Text style={styles.subHeading}>Location</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Address"
-          placeholderTextColor="#A8A8A8"
-          value={location}
-          onChangeText={setLocation}
-        />
+        <View>
+            <Searchbar
+              placeholder="Search Address"
+              onChangeText={(query) => {
+                setLocation(query);
+                fetchAddressSuggestions(query);
+              }}
+              value={location}
+              style={styles.searchInput}
+              inputStyle={styles.searchText}
+              placeholderTextColor="#A8A8A8"
+            />
+            {suggestions.length > 0 && (
+            <View style={styles.suggestionsContainer}>
+              {suggestions.map((item, index) => (
+                <TouchableOpacity key={item.place_id} onPress={() => handleSelectAddress(item.description)}>
+                  <Text style={[
+                    styles.suggestionItem,
+                    index === suggestions.length - 1 && { borderBottomWidth: 0 }
+                  ]}>
+                    {item.description}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
         <Text style={styles.subHeading}>Start Time</Text>
         <View style={styles.timeContainer}>
           <TextInput
@@ -786,6 +837,33 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     color: 'black',
+  },
+  searchInput: {
+      backgroundColor: '#E9E9E9',
+      alignSelf: 'center',
+      height: 40,
+      width: width * 0.925,
+  },
+  searchText: {
+      fontSize: 16,
+      marginVertical: -10,
+      color: "#000"
+  },
+  suggestionsContainer: {
+      position: 'absolute',
+      top: 45,
+      width: width * 0.925,
+      alignSelf: 'center', 
+      backgroundColor: '#E9E9E9',
+      borderRadius: 15,
+      overflow: 'hidden',
+      zIndex: 2,
+  },
+  suggestionItem: {
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#000',
+      fontSize: 16,
   },
 });
 

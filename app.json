@@ -12,26 +12,17 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "config": {
-        "googleMapsApiKey": "AIzaSyAoIxy7B-Yn7WLvzXPpwBVFhjkc22-7MrI",
-        "placesApiKey": "AIzaSyCji2-QddGTOiDYXzhBcpsSzpuPt9I1-pw"
-      }
+      "googleMaps": {
+          "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
+        }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "package": "com.voidtech.parkswift",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyDy0sdb0KP2qAp9bQbYT1NeOAucFyCBI1w",
-          "placesApiKey": "AIzaSyCji2-QddGTOiDYXzhBcpsSzpuPt9I1-pw"
+          "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
         }
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font",
