@@ -22,10 +22,12 @@ function PostScreen({ navigation, route }) {
   const [notes, setNotes] = useState('');
   const [selectedDates, setSelectedDates] = useState({});
   const [suggestions, setSuggestions] = useState([]);
+  const [isAddressSelected, setIsAddressSelected] = useState(false);
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {
       setSuggestions([]);
+      setIsAddressSelected(false);
       return;
     }
 
@@ -38,6 +40,7 @@ function PostScreen({ navigation, route }) {
 
       if (json.predictions) {
         setSuggestions(json.predictions);
+        setIsAddressSelected(false);
       } else {
         setSuggestions([]);
       }
@@ -48,6 +51,7 @@ function PostScreen({ navigation, route }) {
 
   const handleSelectAddress = (address) => {
     setLocation(address);
+    setIsAddressSelected(true);
     setSuggestions([]); // Hide suggestions after selection
   };
   const handleDateSelect = (date) => {
@@ -177,14 +181,14 @@ function PostScreen({ navigation, route }) {
     return unsubscribe;
   }, [navigation]);
 
-  const onPostPress = () => {
+  const onPostPress = async () => {
     const userId = route.params.userId;
     const firstDate = Object.keys(selectedDates)[0];
     const lastDate = Object.keys(selectedDates)[Object.keys(selectedDates).length - 1];
 
-    if (!location.trim()) {
-        alert("Please enter your address.");
-        return;
+    if (!location.trim() || !isAddressSelected) {
+      alert("Please select an address from the suggestions.");
+      return;
     }
     if (!firstDate || !lastDate) {
       alert("Please select valid calendar dates.");
@@ -195,18 +199,36 @@ function PostScreen({ navigation, route }) {
       return;
     }
 
-    createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
-      { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
-      { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
-      sizeOfCar
-    )  
-    .then((docRef) => {
+    try {
+        // Step 1: Convert address to latitude & longitude using Google Geocoding API
+        const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${API_KEY}`
+        );
+        const data = await response.json();
+
+        if (data.status !== "OK" || !data.results.length) {
+            alert("Unable to find location. Please enter a valid address.");
+            return;
+        }
+
+        const { lat, lng } = data.results[0].geometry.location;
+
+        // Step 2: Create post and store coordinates
+        const docRef = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
+          { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
+          { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
+          sizeOfCar,
+          lat,  // Store latitude
+          lng   // Store longitude
+        );
+
+        // Step 3: Navigate to confirmation screen (not MapScreen)
         navigation.navigate('PostConfirmationScreen', { postId: docRef.id });
-    })
-    .catch((error) => {
+
+    } catch (error) {
         console.error('Error creating post:', error);
         alert('Error creating post. Please try again.');
-    });
+    }
   };
 
   return (

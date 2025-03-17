@@ -47,7 +47,7 @@ export function loginUser(email, password) {
         });
 }
 
-export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate) {
+export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate, startTime, endTime, sizeOfCar, latitude, longitude) {
     if (!location || !firstDate || !lastDate) {
         alert('All parameters must be provided');
         return Promise.reject(new Error('Missing required parameters'));
@@ -59,8 +59,13 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
         rentalPeriod: rentalPeriod, 
         price: price,
         negotiable: negotiable,
-        firstDate : firstDate,
-        lastDate : lastDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        startTime: startTime,
+        endTime: endTime,
+        sizeOfCar: sizeOfCar,
+        latitude: latitude,  // Store latitude
+        longitude: longitude, // Store longitude
         createdAt: new Date().toISOString(),
     };
     return addDoc(postsCollectionRef, postData)
@@ -154,13 +159,22 @@ export function filterByPrice(minPrice, maxPrice) {
 export function getAllPosts() {
     const postsCollectionRef = collection(database, 'posts');
     return getDocs(postsCollectionRef)
-        .then((querySnapshot) => {
-            const posts = [];
-            querySnapshot.forEach((doc) => {
-                posts.push(doc.data());
+    .then((querySnapshot) => {
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            posts.push({
+                ...data,
+                latitude: data.latitude || null,
+                longitude: data.longitude || null,
             });
-            return posts;
         });
+        return posts;
+    })
+    .catch((error) => {
+        console.error("Error fetching posts:", error);
+        return [];
+    });
 }
 
 export function getPost(postID) {

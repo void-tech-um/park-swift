@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { getAllPosts } from '../firebaseFunctions/firebaseFirestore';
 import MenuSearchBar from '../components/MenuSearchBar.js';
 
 const { width, height } = Dimensions.get('window');
@@ -9,37 +10,43 @@ const markerSize = Math.min(width, height) * 0.1;
 
 const MapScreen = ({ route }) => {
   const [userLocation, setUserLocation] = useState(null);
-  const [listingLocation, setListingLocation] = useState(null);
-  
-  const { latitude, longitude} = route.params || {};
+  const [posts, setPosts] = useState([]); // Store listing locations
 
   useEffect(() => {
-    (async () => {
-      if (latitude && longitude) {
-        // If listing coordinates are provided, use them
-        setListingLocation({ latitude, longitude });
-      } else {
-        // Otherwise, fetch user's current location
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          console.error('Permission to access location was denied');
-          return;
-        }
-
-        try {
-          const location = await Location.getCurrentPositionAsync({});
-          setUserLocation({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-          });
-        } catch (error) {
-          console.error('Error fetching location:', error);
-        }
+    // Fetch user's current location
+    const fetchUserLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
       }
-    })();
-  }, [latitude, longitude]);
 
-  if (!userLocation && !listingLocation) {
+      try {
+        const location = await Location.getCurrentPositionAsync({});
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+      } catch (error) {
+        console.error('Error fetching user location:', error);
+      }
+    };
+
+    // Fetch all listing locations from Firestore
+    const fetchListings = async () => {
+      try {
+        const allPosts = await getAllPosts(); // Fetch posts from Firestore
+        setPosts(allPosts);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchUserLocation();
+    fetchListings();
+  }, []);
+
+  if (!userLocation) {
     return <Text>Loading...</Text>;
   }
 
@@ -49,29 +56,35 @@ const MapScreen = ({ route }) => {
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: listingLocation ? listingLocation.latitude : userLocation.latitude,
-          longitude: listingLocation ? listingLocation.longitude : userLocation.longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
         }}
       >
-        {userLocation && (
-          <Marker coordinate={userLocation} title="You are here">
-            <Image
-              source={require('../assets/user-marker.png')}
-              style={{ width: markerSize, height: markerSize }}
-            />
-          </Marker>
-        )}
+        {/* Show user's current location */}
+        <Marker coordinate={userLocation} title="You are here">
+          <Image
+            source={require('../assets/user-marker.png')}
+            style={{ width: markerSize, height: markerSize }}
+          />
+        </Marker>
 
-        {listingLocation && (
-          <Marker coordinate={listingLocation} title="Listing Location">
-            <Image
-              source={require('../assets/map-pin.png')}
-              style={{ width: markerSize, height: markerSize }}
-            />
-          </Marker>
-        )}
+        {/* Show all listing locations */}
+        {posts.map((post, index) => (
+          post.latitude && post.longitude ? (
+            <Marker 
+              key={index}
+              coordinate={{ latitude: post.latitude, longitude: post.longitude }} 
+              title={post.location}
+            >
+              <Image
+                source={require('../assets/map-pin.png')}
+                style={{ width: markerSize, height: markerSize }}
+              />
+            </Marker>
+          ) : null
+        ))}
       </MapView>
     </View>
   );
