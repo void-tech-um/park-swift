@@ -22,6 +22,11 @@ const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppH
         });
     };
 
+    const formatTime = (time) => {
+        if (!time || typeof time !== 'object') return '';
+        return `${time.hours}:${time.minutes} ${time.period}`;
+    };
+
     return (
         <TouchableOpacity onPress={handleSeeMorePress}>
             <View style={styles.container}>
@@ -47,7 +52,9 @@ const ListingCard = ({ id, userID, address, date, startTime, endTime, image, ppH
                             <Text style={styles.description}>x minutes away</Text>
                             {date ? <Text style={styles.description}>{date}</Text> : null}
                             {startTime && endTime && (
-                                <Text style={styles.description}>{startTime} - {endTime}</Text>
+                                <Text style={styles.description}>
+                                    {formatTime(startTime)} - {formatTime(endTime)}
+                                </Text>
                             )}
                         </View>
                         {!isAvailable && <UnavailableBadge />}
