@@ -20,7 +20,7 @@ function PostScreen({ navigation, route }) {
   const [notes, setNotes] = React.useState('');
   const [selectedDates, setSelectedDates] = React.useState({});
 
-  const { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection } = useTagsModal();
+  const { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection, tagOptions, setSelectedTag, updateSelectedTag, numTags } = useTagsModal();
   
   const handleDateSelect = (date) => {
     const dateString = date.dateString;
@@ -117,8 +117,12 @@ function PostScreen({ navigation, route }) {
     setSelectedDates(updatedSelectedDates);
 };
 
+  useEffect(() => {
+    handleAddTag(selectedTag)
+  }, [selectedTag]);
+
   const handleAddTag = (selectedTag) => {
-    setTags([...tags, selectedTag]);
+    setTags([...tags, ...selectedTag]);
   };
 
   const handleRemoveTag = (index) => {
@@ -516,15 +520,14 @@ function PostScreen({ navigation, route }) {
               </TouchableOpacity>
             </View>
           ))}
-          {/* <TouchableOpacity style={styles.addTagButton} onPress={handleAddTag}>
-            <Text style={styles.addTagButtonText}>+ Add</Text>
-          </TouchableOpacity> */}
         </View>
+
         <TagsModal 
           isVisible={isTagsModalOpen} 
-          onClose={() => {setIsTagsModalOpen(false); handleAddTag(selectedTag);}}
-          selectedTag={selectedTag}
+          onClose={() => {updateSelectedTag(selectedTag); setIsTagsModalOpen(false);}}
           handleTagSelection={handleTagSelection}
+          tagOptions={tagOptions}
+          numTags={numTags}
         />
 
         <Text style={styles.subHeading}>Additional Notes</Text>
