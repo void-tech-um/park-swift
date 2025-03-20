@@ -65,7 +65,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <MenuSearchBar/>
+      <MenuSearchBar showSearchBar={false}/>
       {/*<CurrentlyRentingCard />*/}
       <View style={styles.headerContainer}>
         <View style={styles.listingsHeaderContainer}>
