@@ -47,31 +47,45 @@ export function loginUser(email, password) {
         });
 }
 
-export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate) {
+export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate, startTime, endTime, sizeOfCar, latitude, longitude) {
     if (!location || !firstDate || !lastDate) {
         alert('All parameters must be provided');
         return Promise.reject(new Error('Missing required parameters'));
     }
+
     const postsCollectionRef = collection(database, 'posts');
-    const postData = {
-        userID: userID,
-        location: location,
-        rentalPeriod: rentalPeriod, 
-        price: price,
-        negotiable: negotiable,
-        firstDate : firstDate,
-        lastDate : lastDate,
+
+    return addDoc(postsCollectionRef, {
+        userID,
+        location,
+        rentalPeriod, 
+        price,
+        negotiable,
+        firstDate,
+        lastDate,
+        startTime,
+        endTime,
+        sizeOfCar,
+        latitude, 
+        longitude,
         createdAt: new Date().toISOString(),
-    };
-    return addDoc(postsCollectionRef, postData)
-        .then((docRef) => {
-            const userPostsDocRef = doc(database, 'users', userID, 'posts', docRef.id);
-            return setDoc(userPostsDocRef, { id: docRef.id }).then(() => docRef);
-        })
-        .catch((error) => {
-            alert('Error creating post:', error);
-            throw error;
-        });
+    })
+    .then(async (docRef) => {
+        const postID = docRef.id;  // The unique Firestore-generated ID
+        
+        // Update the post document with its own ID
+        await setDoc(doc(database, 'posts', postID), { id: postID }, { merge: true });
+
+        // Create a reference inside the user's 'posts' subcollection
+        const userPostsDocRef = doc(database, 'users', userID, 'posts', postID);
+        await setDoc(userPostsDocRef, { id: postID });
+
+        return postID;
+    })
+    .catch((error) => {
+        console.error('Error creating post:', error);
+        throw error;
+    });
 }
 
 export function getUserPosts(userID) {
@@ -154,13 +168,22 @@ export function filterByPrice(minPrice, maxPrice) {
 export function getAllPosts() {
     const postsCollectionRef = collection(database, 'posts');
     return getDocs(postsCollectionRef)
-        .then((querySnapshot) => {
-            const posts = [];
-            querySnapshot.forEach((doc) => {
-                posts.push(doc.data());
+    .then((querySnapshot) => {
+        const posts = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            posts.push({
+                ...data,
+                latitude: data.latitude || null,
+                longitude: data.longitude || null,
             });
-            return posts;
         });
+        return posts;
+    })
+    .catch((error) => {
+        console.error("Error fetching posts:", error);
+        return [];
+    });
 }
 
 export function getPost(postID) {

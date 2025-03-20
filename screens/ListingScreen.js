@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView } from "react-native";
 import { useNavigation, } from '@react-navigation/native';
-import { getUser } from '../firebaseFunctions/firebaseFirestore';
+import { getUser, getPost } from '../firebaseFunctions/firebaseFirestore';
 import Back from '../assets/Back.png'; 
 import User from '../assets/profile.png';
 import FitsAllModels from '../assets/FitsAllModels.png'; 
@@ -14,19 +14,21 @@ import Save from '../assets/saved_icon.png';
 import CarImage from '../assets/CarImage.png'; 
 import MenuSearchBar from '../components/MenuSearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from "firebase/auth";
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
     const { 
         address, 
         ppHour, 
-        userID,  
+        userID, 
         postId, 
         startDate, 
         endDate, 
         isAvailable,
     } = route.params || {};
 
+    const [currentUserId, setCurrentUserId] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
     const [fullName, setFullName] = useState('User Name');
 
@@ -41,6 +43,41 @@ const ListingScreen = ({ route }) => {
     const removeSpaces = (text) => {
         return text.replace(/\s/g, '');
     };
+
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            if (user) {
+                setCurrentUserId(user.uid); // Set the logged-in user ID
+            }
+        };
+        fetchCurrentUser();
+    }, []);
+
+    useEffect(() => {
+        if (route.params?.refresh && postId) {
+            console.log("Refreshing ListingScreen after edit/delete...");
+            
+        getPost(postId)
+            .then((updatedPost) => {
+                if (updatedPost) {
+                    setAddress(updatedPost.location);
+                    setPrice(updatedPost.price);
+                    setStartDate(updatedPost.firstDate);
+                    setEndDate(updatedPost.lastDate);
+                    setIsAvailable(updatedPost.isAvailable);
+                } else {
+                    // If post is deleted, navigate away from ListingScreen
+                    alert("Listing has been deleted.");
+                    navigation.navigate("HomeScreen"); // Redirect user to HomeScreen
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching updated post:", error);
+            });
+        }
+    }, [route.params?.refresh, postId]);   
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -146,9 +183,24 @@ const ListingScreen = ({ route }) => {
                         </TouchableOpacity>
                         <Text style={styles.listingHeading}>{displayAddress}</Text>
                     </View>
-                    <TouchableOpacity style={styles.editListingButton}>
-                        <Text style={styles.editListingText}>Edit Listing</Text>
-                    </TouchableOpacity>
+                    {currentUserId === userID && (
+                        <TouchableOpacity 
+                            onPress={() => {
+                                console.log("Navigating to EditListingScreen with postId:", postId);
+                                navigation.navigate('EditListingScreen', { 
+                                    postId, 
+                                    userId: userID, 
+                                    address, 
+                                    ppHour, 
+                                    startDate, 
+                                    endDate, 
+                                    isAvailable 
+                                });
+                            }}
+                        >
+                            <Text style={styles.editListingText}>Edit Listing</Text>
+                        </TouchableOpacity>
+                    )}
                     <View style={styles.carImagesContainer}>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                             <Image

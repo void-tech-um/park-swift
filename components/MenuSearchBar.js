@@ -5,13 +5,12 @@ import { Searchbar } from 'react-native-paper';
 
 const { width } = Dimensions.get('window');
 
-const API_KEY = 'AIzaSyDy0sdb0KP2qAp9bQbYT1NeOAucFyCBI1w'; // Replace with your correct API Key
+const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w'; // Your correct API key
 
 const MenuSearchBar = ({ showSearchBar = true }) => {
     //const [isMenuVisible, setMenuVisible] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
-    const [selectedAddress, setSelectedAddress] = useState('');
 
     {/*const toggleMenu = () => {
         setMenuVisible(!isMenuVisible);
@@ -23,30 +22,25 @@ const MenuSearchBar = ({ showSearchBar = true }) => {
             return;
         }
     
-        try {
-            const response = await fetch(
-                `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${API_KEY}&types=address`
-            );
-            const json = await response.json();
-            console.log("API Response:", json); 
+        const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${query}&key=${API_KEY}&types=geocode&components=country:us`;
     
-            if (json.error_message) {
-                console.error("Google API Error:", json.error_message);
-            }
+        try {
+            const response = await fetch(url);
+            const json = await response.json();
+            console.log("API Response:", json);
     
             if (json.predictions) {
                 setSuggestions(json.predictions);
             } else {
-                console.log("No predictions returned.");
+                setSuggestions([]);
             }
         } catch (error) {
-            console.error("Network or API Error:", error);
+            console.error("Error fetching address suggestions:", error);
         }
-    };    
+    };  
 
     const handleSelectAddress = (address) => {
         setSearchQuery(address);
-        setSelectedAddress(address);
         setSuggestions([]);
     };
 
@@ -76,9 +70,14 @@ const MenuSearchBar = ({ showSearchBar = true }) => {
                                 <FlatList
                                     data={suggestions}
                                     keyExtractor={(item) => item.place_id}
-                                    renderItem={({ item }) => (
+                                    renderItem={({ item, index }) => (
                                         <TouchableOpacity onPress={() => handleSelectAddress(item.description)}>
-                                            <Text style={styles_searchbar.suggestionItem}>{item.description}</Text>
+                                            <Text style={[
+                                                styles_searchbar.suggestionItem,
+                                                index === suggestions.length - 1 && { borderBottomWidth: 0 } // Remove border for last item
+                                            ]}>
+                                                {item.description}
+                                            </Text>
                                         </TouchableOpacity>
                                     )}
                                 />
@@ -99,35 +98,30 @@ const styles_searchbar = StyleSheet.create({
         padding: '3%',
         paddingTop: '11.5%',
         height: 110,
-    },
-    iconContainer: {
-        marginLeft: 10,
+        zIndex: 2,
     },
     input: {
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#FFF',
         alignSelf: 'center',
         height: 41,
-        width: width * 0.80,
+        width: width * 0.90,
     },
     inputText: {
-        fontSize: 20,
+        fontSize: 16,
         marginVertical: -10,
     },
     suggestionsContainer: {
         position: 'absolute',
         top: 45,
-        left: 0,
         width: '100%',
         backgroundColor: '#fff',
-        zIndex: 1000,
-        elevation: 5,
-        borderRadius: 5,
+        borderRadius: 15,
         overflow: 'hidden',
     },
     suggestionItem: {
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
+        borderBottomColor: '#000',
         fontSize: 16,
     },
 });

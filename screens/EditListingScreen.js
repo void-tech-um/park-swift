@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
-import { createPost } from '../firebaseFunctions/firebaseFirestore';
+import { createPost, updateDoc, doc, deleteDoc } from '../firebaseFunctions/firebaseFirestore';
+import { getAuth } from "firebase/auth";
 import RNPickerSelect from 'react-native-picker-select';
 import { Searchbar } from 'react-native-paper';
 const { width } = Dimensions.get('window');
-const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
-import { TagsModal, useTagsModal } from './FilterScreen';
+const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w'; 
 
-function PostScreen({ navigation, route }) {
+function EditListingScreen({ navigation, route }) {
   const [location, setLocation] = useState('');
   const [startTime, setStartTime] = useState({ hours: '', minutes: '' });
   const [endTime, setEndTime] = useState({ hours: '', minutes: '' });
@@ -24,8 +24,6 @@ function PostScreen({ navigation, route }) {
   const [selectedDates, setSelectedDates] = useState({});
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
-
-  const { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection, tagOptions, setSelectedTag, updateSelectedTag, numTags } = useTagsModal();
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {
@@ -152,12 +150,8 @@ function PostScreen({ navigation, route }) {
     setSelectedDates(updatedSelectedDates);
 };
 
-  useEffect(() => {
-    handleAddTag(selectedTag)
-  }, [selectedTag]);
-
-  const handleAddTag = (selectedTag) => {
-    setTags([...tags, ...selectedTag]);
+  const handleAddTag = () => {
+    setTags([...tags, 'New Tag']);
   };
 
   const handleRemoveTag = (index) => {
@@ -187,9 +181,28 @@ function PostScreen({ navigation, route }) {
     });
     return unsubscribe;
   }, [navigation]);
+  
+  useEffect(() => {
+      console.log("Route Params in EditListingScreen:", route.params);
+  }, [route.params]);
 
   const onPostPress = async () => {
-    const userId = route.params.userId;
+    const userId = route.params?.userId;
+    if (!userId) {
+        const auth = getAuth();
+        const user = auth.currentUser;
+        if (user) {
+            userId = user.uid; 
+        }
+    }
+
+    if (!userId) {
+        alert("Error: User ID is missing.");
+        return;
+    }
+
+    console.log("User ID being used:", userId);
+
     const firstDate = Object.keys(selectedDates)[0];
     const lastDate = Object.keys(selectedDates)[Object.keys(selectedDates).length - 1];
 
@@ -220,22 +233,73 @@ function PostScreen({ navigation, route }) {
 
         const { lat, lng } = data.results[0].geometry.location;
 
-        // Step 2: Create post and store coordinates
-        const docRef = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
-          { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
-          { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
-          sizeOfCar,
-          lat,  // Store latitude
-          lng   // Store longitude
-        );
+        // If editing, update the post instead of creating a new one
+        if (route.params?.postId) {
+          const postRef = doc(database, "posts", route.params.postId);
+          await updateDoc(postRef, {
+              location,
+              rentalPeriod,
+              price,
+              isNegotiable,
+              firstDate,
+              lastDate,
+              startTime: { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
+              endTime: { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
+              sizeOfCar,
+              latitude: lat,
+              longitude: lng
+          });
 
-        // Step 3: Navigate to confirmation screen (not MapScreen)
-        navigation.navigate('PostConfirmationScreen', { postId });
+          alert("Listing updated successfully!");
+          navigation.navigate("ListingScreen", { postId: route.params.postId, refresh: true }); // Refresh listing
+      } else {
+          // Create new post if no postId exists
+          const docRef = await createPost(
+              userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate,
+              { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
+              { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
+              sizeOfCar, lat, lng
+          );
 
+          navigation.navigate("PostConfirmationScreen", { postId: docRef.id });
+      }
     } catch (error) {
-        console.error('Error creating post:', error);
-        alert('Error creating post. Please try again.');
+        console.error("Error updating post:", error);
+        alert("Error updating post. Please try again.");
     }
+  };
+
+  const handleDeletePost = async () => {
+    if (!route.params?.postId) {
+        alert("Error: Post ID is missing.");
+        return;
+    }
+
+    // Show confirmation alert before deleting
+    Alert.alert(
+        "Delete Listing",
+        "Are you sure you want to delete this listing? This action cannot be undone.",
+        [
+            {
+                text: "Cancel",
+                style: "cancel"
+            },
+            {
+                text: "Delete",
+                style: "destructive",
+                onPress: async () => {
+                    try {
+                        await deleteDoc(doc(database, "posts", route.params.postId));
+                        alert("Listing deleted successfully!");
+                        navigation.navigate("HomeScreen"); // Navigate to home after deletion
+                    } catch (error) {
+                        console.error("Error deleting post:", error);
+                        alert("Error deleting post. Please try again.");
+                    }
+                }
+            }
+        ]
+    );
   };
 
   return (
@@ -582,9 +646,6 @@ function PostScreen({ navigation, route }) {
 
         <Text style={styles.subHeading}>Tags</Text>
         <View style={styles.tagsContainer}>
-          <TouchableOpacity style={styles.addTagButton} onPress={() => setIsTagsModalOpen(true)}>
-            <Text style={styles.addTagButtonText}>+ Add</Text>
-          </TouchableOpacity>
           {tags.map((tag, index) => (
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{tag}</Text>
@@ -593,15 +654,10 @@ function PostScreen({ navigation, route }) {
               </TouchableOpacity>
             </View>
           ))}
+          <TouchableOpacity style={styles.addTagButton} onPress={handleAddTag}>
+            <Text style={styles.addTagButtonText}>+ Add</Text>
+          </TouchableOpacity>
         </View>
-
-        <TagsModal 
-          isVisible={isTagsModalOpen} 
-          onClose={() => {updateSelectedTag(selectedTag); setIsTagsModalOpen(false);}}
-          handleTagSelection={handleTagSelection}
-          tagOptions={tagOptions}
-          numTags={numTags}
-        />
 
         <Text style={styles.subHeading}>Additional Notes</Text>
         <TextInput
@@ -612,8 +668,11 @@ function PostScreen({ navigation, route }) {
           value={notes}
           onChangeText={setNotes}
         />
-        <TouchableOpacity style={styles.listButton} onPress={onPostPress}>
-          <Text style={styles.listButtonText}>List</Text>
+        <TouchableOpacity style={styles.saveButton} onPress={onPostPress}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDeletePost}>
+          <Text style={styles.deleteButtonText}>Delete</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -779,7 +838,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
   },
-  listButton: {
+  saveButton: {
     backgroundColor: '#0653A1',
     borderRadius: 999,
     width: 191,
@@ -789,7 +848,22 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: '5%',
   },
-  listButtonText: {
+  deleteButton: {
+    backgroundColor: '#6D0608',
+    borderRadius: 999,
+    width: 191,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: '5%',
+  },
+  saveButtonText: {
+    color: '#ffffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  deleteButtonText: {
     color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
@@ -904,4 +978,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostScreen;
+export default EditListingScreen;

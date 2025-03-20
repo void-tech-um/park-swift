@@ -15,7 +15,8 @@ import RegistrationScreen from './screens/RegistrationScreen.js';
 import ListingScreen from './screens/ListingScreen.js';
 import FilterScreen from './screens/FilterScreen.js';
 import EditProfileScreen from './screens/EditProfileScreen.js';
-
+import EditListingScreen from './screens/EditListingScreen.js';
+import MapScreen from './screens/MapScreen.js';
 const Stack = createStackNavigator();
 
 const loadFontsAndAssets = async () => {
@@ -66,6 +67,8 @@ function App() {
           <Stack.Screen name="PostScreen" component={PostScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{ headerShown: false }}/>
           <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="EditListingScreen" component={EditListingScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="MapScreen" component={MapScreen} options={{ headerShown: false }} />
           <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }} />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
