@@ -25,7 +25,7 @@ function PostScreen({ navigation, route }) {
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
 
-  const { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection, tagOptions, setSelectedTag, updateSelectedTag, numTags } = useTagsModal();
+  const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, tagOptions, setSelectedTags, updateSelectedTags, numTags } = useTagsModal();
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {
@@ -153,11 +153,11 @@ function PostScreen({ navigation, route }) {
 };
 
   useEffect(() => {
-    handleAddTag(selectedTag)
-  }, [selectedTag]);
+    handleAddTag(selectedTags)
+  }, [selectedTags]);
 
-  const handleAddTag = (selectedTag) => {
-    setTags([...tags, ...selectedTag]);
+  const handleAddTag = (selectedTags) => {
+    setTags([...tags, ...selectedTags]);
   };
 
   const handleRemoveTag = (index) => {
@@ -597,7 +597,7 @@ function PostScreen({ navigation, route }) {
 
         <TagsModal 
           isVisible={isTagsModalOpen} 
-          onClose={() => {updateSelectedTag(selectedTag); setIsTagsModalOpen(false);}}
+          onClose={() => {updateSelectedTags(selectedTags); setIsTagsModalOpen(false);}}
           handleTagSelection={handleTagSelection}
           tagOptions={tagOptions}
           numTags={numTags}

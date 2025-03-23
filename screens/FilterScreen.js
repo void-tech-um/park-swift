@@ -62,7 +62,7 @@ export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, 
 };
 
 export const useTagsModal = () => {
-    const [selectedTag, setSelectedTag] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
     const [numTags, setNumTags] = useState(0);
 
@@ -91,25 +91,39 @@ export const useTagsModal = () => {
             else {
                 setNumTags(numTags + 1);
             }
-            console.log(numTags);
 
             return newOptions;
         });
     };
 
-    const updateSelectedTag = () => {
+    const updateSelectedTags = () => {
         const newTag = [];
         for (const key of tagOptions.keys()) {
             if (tagOptions.get(key)) {
                 newTag.push(key);
             }
         }
-        
-        setSelectedTag(newTag);
-        console.log(selectedTag);
+        setSelectedTags(newTag);
     }
 
-    return { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection, tagOptions, setSelectedTag, updateSelectedTag, numTags };
+    const resetSelectedTags = () => {
+        setTagOptions(new Map([
+            ['Fits all models', false],
+            ['Paved entrance', false],
+            ['Weather protected', false],
+            ['Private Property', false],
+            ['Handicap', false],
+            ['Parking garage', false],
+            ['Shaded', false],
+            ['On-street parking', false],
+            ['Driveway', false],
+            ['Parallel parking', false],
+        ]));
+        setSelectedTags([]);
+        setNumTags(0);
+    }
+
+    return { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, tagOptions, setSelectedTags, updateSelectedTags, numTags, resetSelectedTags };
 }
 
 const FilterScreen = () => {
@@ -121,7 +135,7 @@ const FilterScreen = () => {
     });
     
 
-    const { isTagsModalOpen, setIsTagsModalOpen, selectedTag, handleTagSelection, tagOptions, setSelectedTag, updateSelectedTag, numTags } = useTagsModal();
+    const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, tagOptions, setSelectedTags, updateSelectedTags, numTags, resetSelectedTags } = useTagsModal();
     
     const [selectedDates, setSelectedDates] = useState({});
     const [selectedTimeFrames, setSelectedTimeFrames] = useState({});
@@ -293,6 +307,23 @@ const FilterScreen = () => {
         setSelectedDates({});
         setSelectedTimeFrames({});
     };
+
+    // const resetSelectedTags = () => {
+    //     setTagOptions(new Map([
+    //         ['Fits all models', false],
+    //         ['Paved entrance', false],
+    //         ['Weather protected', false],
+    //         ['Private Property', false],
+    //         ['Handicap', false],
+    //         ['Parking garage', false],
+    //         ['Shaded', false],
+    //         ['On-street parking', false],
+    //         ['Driveway', false],
+    //         ['Parallel parking', false],
+    //     ]));
+    //     setSelectedTags([]);
+    //     setNumTags(0);
+    // }
     
     const timeFrames = [
         "Morning (6:00AM to 12:00PM)",
@@ -307,7 +338,7 @@ const FilterScreen = () => {
         resetDateTimeFilter();
         resetDistanceFilter();
         resetPricingFilter();
-        setSelectedTag([]);
+        resetSelectedTags();
     };
 
     const resetDistanceFilter = () => {
@@ -566,7 +597,7 @@ const FilterScreen = () => {
                 </TouchableWithoutFeedback>
                 <TagsModal 
                     isVisible={isTagsModalOpen} 
-                    onClose={() => {updateSelectedTag(selectedTag); setIsTagsModalOpen(false);}}
+                    onClose={() => {updateSelectedTags(selectedTags); setIsTagsModalOpen(false);}}
                     handleTagSelection={handleTagSelection}
                     tagOptions={tagOptions}
                     numTags={numTags}
