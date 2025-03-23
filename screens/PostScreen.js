@@ -221,7 +221,7 @@ function PostScreen({ navigation, route }) {
         const { lat, lng } = data.results[0].geometry.location;
 
         // Step 2: Create post and store coordinates
-        const docRef = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
+        const postId = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
           { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
           { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
           sizeOfCar,

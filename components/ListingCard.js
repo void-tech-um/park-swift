@@ -35,12 +35,13 @@ const getFormattedEndDate = (startDate, endDate) => {
     return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
 };
 
-const ListingCard = ({ id, userID, address, startDate, endDate, startTime, endTime, image, ppHour, isAvailable=true}) => {
+const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTime, endTime, image, ppHour, isAvailable=true}) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
         navigation.navigate('Listing', { 
-            id, 
+            id: postId,
+            postId,
             userID,
             address, 
             ppHour, 
@@ -49,7 +50,6 @@ const ListingCard = ({ id, userID, address, startDate, endDate, startTime, endTi
             startDate, 
             endDate,
             isAvailable,
-            postId: id, 
         });
     };
 

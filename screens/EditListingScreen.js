@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
-import { createPost, updateDoc, doc, deleteDoc } from '../firebaseFunctions/firebaseFirestore';
+import { createPost, updateDoc, doc, deletePost, database } from '../firebaseFunctions/firebaseFirestore';
 import { getAuth } from "firebase/auth";
 import RNPickerSelect from 'react-native-picker-select';
 import { Searchbar } from 'react-native-paper';
+
 const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w'; 
 
@@ -187,7 +188,7 @@ function EditListingScreen({ navigation, route }) {
   }, [route.params]);
 
   const onPostPress = async () => {
-    const userId = route.params?.userId;
+    let userId = route.params?.userId;
     if (!userId) {
         const auth = getAuth();
         const user = auth.currentUser;
@@ -270,37 +271,44 @@ function EditListingScreen({ navigation, route }) {
   };
 
   const handleDeletePost = async () => {
+    console.log("ROUTE PARAMS IN DELETE:", route.params);
     if (!route.params?.postId) {
-        alert("Error: Post ID is missing.");
-        return;
+      alert("Error: Post ID is missing.");
+      return;
     }
-
-    // Show confirmation alert before deleting
+  
+    let userId = route.params?.userId;
+    if (!userId) {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (user) {
+        userId = user.uid;
+      }
+    }
+  
     Alert.alert(
-        "Delete Listing",
-        "Are you sure you want to delete this listing? This action cannot be undone.",
-        [
-            {
-                text: "Cancel",
-                style: "cancel"
-            },
-            {
-                text: "Delete",
-                style: "destructive",
-                onPress: async () => {
-                    try {
-                        await deleteDoc(doc(database, "posts", route.params.postId));
-                        alert("Listing deleted successfully!");
-                        navigation.navigate("HomeScreen"); // Navigate to home after deletion
-                    } catch (error) {
-                        console.error("Error deleting post:", error);
-                        alert("Error deleting post. Please try again.");
-                    }
-                }
+      "Delete Listing",
+      "Are you sure you want to delete this listing? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deletePost(route.params.postId);
+              alert("Listing deleted successfully!");
+              navigation.navigate("HomeScreen", { refresh: true }); // Pass refresh flag
+            } catch (error) {
+              console.error("Error deleting post:", error);
+              alert("Error deleting post. Please try again.");
             }
-        ]
+          },
+        },
+      ]
     );
   };
+  
 
   return (
     <View style={styles.container}>

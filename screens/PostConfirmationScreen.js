@@ -1,18 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PostConfirmationScreen = () => {
   const navigation = useNavigation();
-
+  const route = useRoute();
+  const { postId } = route.params || {};
   const handleListAnother = () => {
     // Navigate to PostScreen as a new screen
     navigation.navigate('List Your Space');
   };
 
   const handleReturnHome = () => {
-    // Navigate back to HomeScreen
-    navigation.navigate('Home');
+    if (postId) {
+      navigation.navigate('Home', { postId }); 
+    } else {
+      navigation.navigate('Home');
+    }
   };
 
   return (

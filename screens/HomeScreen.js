@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ScrollView, } from 'react-native';
 import { getDocs, collection, database} from '../firebaseFunctions/firebaseFirestore';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 //import CurrentlyRentingCard from '../components/CurrentlyRenting';
@@ -11,6 +11,14 @@ import Car from '../assets/car.png';
 const HomeScreen = () => {
   const [posts, setPosts] = useState([]);
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
+  const route = useRoute();
+
+  useEffect(() => {
+    if (isFocused || route.params?.refresh) {
+      fetchPosts(); // re-fetch every time we land
+    }
+  }, [isFocused, route.params?.refresh]);
   
   async function fetchPosts() {
     try {
@@ -88,6 +96,7 @@ const HomeScreen = () => {
         posts.map((post) => (
           <ListingCard
             key={post.id}
+            id={post.id}
             address={post.address || 'No address available'}
             startDate={post.startDate}
             endDate={post.endDate}
