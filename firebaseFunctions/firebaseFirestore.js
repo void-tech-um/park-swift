@@ -1,5 +1,5 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
 import { app } from '../services/configFirestore';
 
 const auth = getAuth();
@@ -209,3 +209,15 @@ export function getUser(userId) {
             }
         });
 }
+
+export async function deletePost(postId) {
+    try {
+      console.log("Attempting to delete post:", postId);
+      await deleteDoc(doc(database, 'posts', postId));
+      console.log(`Successfully deleted post ${postId}`);
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      throw error;
+    }
+}
+  
