@@ -25,7 +25,7 @@ function PostScreen({ navigation, route }) {
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
 
-  const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, tagOptions, setSelectedTags, updateSelectedTags, numTags } = useTagsModal();
+  const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags } = useTagsModal();
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {
@@ -153,18 +153,18 @@ function PostScreen({ navigation, route }) {
 };
 
   useEffect(() => {
-    handleAddTag(selectedTags)
+    handleTags(selectedTags)
   }, [selectedTags]);
 
-  const handleAddTag = (selectedTags) => {
-    setTags([...tags, ...selectedTags]);
+  const handleTags = (selectedTags) => {
+    setTags([...selectedTags]);
   };
 
-  const handleRemoveTag = (index) => {
-    const newTags = [...tags];
-    newTags.splice(index, 1);
-    setTags(newTags);
-  };
+  // const handleRemoveTag = (index) => {
+  //   const newTags = [...tags];
+  //   newTags.splice(index, 1);
+  //   setTags(newTags);
+  // };
 
   const resetForm = () => {
     setLocation('');
@@ -588,9 +588,9 @@ function PostScreen({ navigation, route }) {
           {tags.map((tag, index) => (
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{tag}</Text>
-              <TouchableOpacity onPress={() => handleRemoveTag(index)}>
+              {/* <TouchableOpacity onPress={() => handleRemoveTag(index)}>
                 <Text style={styles.removeTagText}>×</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           ))}
         </View>

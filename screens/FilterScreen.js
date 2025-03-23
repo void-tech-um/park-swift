@@ -123,7 +123,7 @@ export const useTagsModal = () => {
         setNumTags(0);
     }
 
-    return { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, tagOptions, setSelectedTags, updateSelectedTags, numTags, resetSelectedTags };
+    return { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags };
 }
 
 const FilterScreen = () => {
@@ -135,7 +135,7 @@ const FilterScreen = () => {
     });
     
 
-    const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, tagOptions, setSelectedTags, updateSelectedTags, numTags, resetSelectedTags } = useTagsModal();
+    const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags } = useTagsModal();
     
     const [selectedDates, setSelectedDates] = useState({});
     const [selectedTimeFrames, setSelectedTimeFrames] = useState({});
@@ -307,23 +307,6 @@ const FilterScreen = () => {
         setSelectedDates({});
         setSelectedTimeFrames({});
     };
-
-    // const resetSelectedTags = () => {
-    //     setTagOptions(new Map([
-    //         ['Fits all models', false],
-    //         ['Paved entrance', false],
-    //         ['Weather protected', false],
-    //         ['Private Property', false],
-    //         ['Handicap', false],
-    //         ['Parking garage', false],
-    //         ['Shaded', false],
-    //         ['On-street parking', false],
-    //         ['Driveway', false],
-    //         ['Parallel parking', false],
-    //     ]));
-    //     setSelectedTags([]);
-    //     setNumTags(0);
-    // }
     
     const timeFrames = [
         "Morning (6:00AM to 12:00PM)",
