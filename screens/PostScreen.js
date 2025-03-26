@@ -6,7 +6,8 @@ import { createPost } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
 import { Searchbar } from 'react-native-paper';
 const { width } = Dimensions.get('window');
-const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w'; 
+const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
+import { TagsModal, useTagsModal } from './FilterScreen';
 
 function PostScreen({ navigation, route }) {
   const [location, setLocation] = useState('');
@@ -23,6 +24,8 @@ function PostScreen({ navigation, route }) {
   const [selectedDates, setSelectedDates] = useState({});
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
+
+  const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags } = useTagsModal();
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {
@@ -149,15 +152,19 @@ function PostScreen({ navigation, route }) {
     setSelectedDates(updatedSelectedDates);
 };
 
-  const handleAddTag = () => {
-    setTags([...tags, 'New Tag']);
+  useEffect(() => {
+    handleTags(selectedTags)
+  }, [selectedTags]);
+
+  const handleTags = (selectedTags) => {
+    setTags([...selectedTags]);
   };
 
-  const handleRemoveTag = (index) => {
-    const newTags = [...tags];
-    newTags.splice(index, 1);
-    setTags(newTags);
-  };
+  // const handleRemoveTag = (index) => {
+  //   const newTags = [...tags];
+  //   newTags.splice(index, 1);
+  //   setTags(newTags);
+  // };
 
   const resetForm = () => {
     setLocation('');
@@ -575,18 +582,26 @@ function PostScreen({ navigation, route }) {
 
         <Text style={styles.subHeading}>Tags</Text>
         <View style={styles.tagsContainer}>
+          <TouchableOpacity style={styles.addTagButton} onPress={() => setIsTagsModalOpen(true)}>
+            <Text style={styles.addTagButtonText}>+ Add</Text>
+          </TouchableOpacity>
           {tags.map((tag, index) => (
             <View key={index} style={styles.tag}>
               <Text style={styles.tagText}>{tag}</Text>
-              <TouchableOpacity onPress={() => handleRemoveTag(index)}>
+              {/* <TouchableOpacity onPress={() => handleRemoveTag(index)}>
                 <Text style={styles.removeTagText}>×</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           ))}
-          <TouchableOpacity style={styles.addTagButton} onPress={handleAddTag}>
-            <Text style={styles.addTagButtonText}>+ Add</Text>
-          </TouchableOpacity>
         </View>
+
+        <TagsModal 
+          isVisible={isTagsModalOpen} 
+          onClose={() => {updateSelectedTags(selectedTags); setIsTagsModalOpen(false);}}
+          handleTagSelection={handleTagSelection}
+          tagOptions={tagOptions}
+          numTags={numTags}
+        />
 
         <Text style={styles.subHeading}>Additional Notes</Text>
         <TextInput

@@ -9,6 +9,123 @@ import TabDown from '../assets/FilterDown.png';
 import WhiteDropdown from '../assets/whitedropdown.png';
 import Location from '../assets/location.png';
 
+export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, numTags }) => {
+    if (!(tagOptions instanceof Map)) {
+        return null;
+    }
+    
+    return (
+      isVisible && (
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add tags</Text>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+              <TouchableOpacity 
+                style={styles.modalOption}>
+                <View style={styles.radioButtonContainer}>
+                  <View style={styles.radioButton}>
+                    {numTags == 0 && <View style={styles.radioButtonInner} />}
+                  </View>
+                  <Text style={styles.modalNone}>None</Text>
+                </View>
+              </TouchableOpacity>
+              {[...tagOptions.keys()].map((tag, index) => (
+                <TouchableOpacity 
+                  key={index} 
+                  style={styles.modalOption}
+                  onPress={() => handleTagSelection(tag)}
+                >
+                  <View style={styles.radioButtonContainer}>
+                    <View style={styles.radioButton}>
+                      {tagOptions.get(tag) && <View style={styles.radioButtonInner} />}
+                    </View>
+                    <View style={styles.tagBackground}>
+                      <Text style={styles.modalOptionText}>{tag}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <TouchableOpacity 
+              style={styles.modalSaveButton} 
+              onPress={() => {{
+                onClose();
+                }
+              }}
+            >
+              <Text style={styles.modalSaveButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )
+    );
+};
+
+export const useTagsModal = () => {
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
+    const [numTags, setNumTags] = useState(0);
+
+    const [tagOptions, setTagOptions] = useState(new Map([
+        ['Fits all models', false],
+        ['Paved entrance', false],
+        ['Weather protected', false],
+        ['Private Property', false],
+        ['Handicap', false],
+        ['Parking garage', false],
+        ['Shaded', false],
+        ['On-street parking', false],
+        ['Driveway', false],
+        ['Parallel parking', false],
+      ]));
+
+    const handleTagSelection = (tag) => {
+        setTagOptions((prevOptions) => {
+            const newOptions = new Map(prevOptions);
+            const pressed = newOptions.get(tag);
+            newOptions.set(tag, !pressed);
+            
+            if (pressed) {
+                setNumTags(numTags - 1);
+            }
+            else {
+                setNumTags(numTags + 1);
+            }
+
+            return newOptions;
+        });
+    };
+
+    const updateSelectedTags = () => {
+        const newTag = [];
+        for (const key of tagOptions.keys()) {
+            if (tagOptions.get(key)) {
+                newTag.push(key);
+            }
+        }
+        setSelectedTags(newTag);
+    }
+
+    const resetSelectedTags = () => {
+        setTagOptions(new Map([
+            ['Fits all models', false],
+            ['Paved entrance', false],
+            ['Weather protected', false],
+            ['Private Property', false],
+            ['Handicap', false],
+            ['Parking garage', false],
+            ['Shaded', false],
+            ['On-street parking', false],
+            ['Driveway', false],
+            ['Parallel parking', false],
+        ]));
+        setSelectedTags([]);
+        setNumTags(0);
+    }
+
+    return { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags };
+}
+
 const FilterScreen = () => {
     const navigation = useNavigation();
     const [filterStates, setFilterStates] = useState({
@@ -16,8 +133,10 @@ const FilterScreen = () => {
         pricing: false,
         dateTime: false,
     });
-    const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
-    const [selectedTag, setSelectedTag] = useState(null);
+    
+
+    const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags } = useTagsModal();
+    
     const [selectedDates, setSelectedDates] = useState({});
     const [selectedTimeFrames, setSelectedTimeFrames] = useState({});
     const [addressInput, setAddressInput] = useState('');
@@ -53,9 +172,9 @@ const FilterScreen = () => {
         }));
     };
 
-    const handleTagSelection = (tag) => {
-        setSelectedTag(tag === selectedTag ? null : tag);
-    };
+    
+    
+
 
     const toggleTimeFrame = (timeFrame) => {
         setSelectedTimeFrames(prev => ({ ...prev, [timeFrame]: !prev[timeFrame] }));
@@ -202,7 +321,7 @@ const FilterScreen = () => {
         resetDateTimeFilter();
         resetDistanceFilter();
         resetPricingFilter();
-        handleTagSelection(null)
+        resetSelectedTags();
     };
 
     const resetDistanceFilter = () => {
@@ -222,67 +341,7 @@ const FilterScreen = () => {
         setPricePer('Hour');
     };
     
-    const TagsModal = ({ isVisible, onClose }) => {
-        const tagOptions = [
-          'Fits all models',
-          'Paved entrance',
-          'Weather protected',
-          'Private Property',
-          'Handicap',
-          'Parking garage',
-          'Shaded',
-          'On-street parking',
-          'Driveway',
-          'Parrallel parking',
-        ];
-        
-        return (
-          isVisible && (
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Add tags</Text>
-                <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                  <TouchableOpacity 
-                    style={styles.modalOption}
-                    onPress={() => handleTagSelection(null)}
-                  >
-                    <View style={styles.radioButtonContainer}>
-                      <View style={styles.radioButton}>
-                        {selectedTag === null && <View style={styles.radioButtonInner} />}
-                      </View>
-                      <Text style={styles.modalNone}>None</Text>
-                    </View>
-                  </TouchableOpacity>
-                  {tagOptions.map((tag, index) => (
-                    <TouchableOpacity 
-                      key={index} 
-                      style={styles.modalOption}
-                      onPress={() => handleTagSelection(tag)}
-                    >
-                      <View style={styles.radioButtonContainer}>
-                        <View style={styles.radioButton}>
-                          {selectedTag === tag && <View style={styles.radioButtonInner} />}
-                        </View>
-                        <View style={styles.tagBackground}>
-                          <Text style={styles.modalOptionText}>{tag}</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-                <TouchableOpacity 
-                  style={styles.modalSaveButton} 
-                  onPress={() => {
-                    onClose();
-                  }}
-                >
-                  <Text style={styles.modalSaveButtonText}>Save Changes</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )
-        );
-    };
+    
 
     return (
         <KeyboardAvoidingView
@@ -521,7 +580,10 @@ const FilterScreen = () => {
                 </TouchableWithoutFeedback>
                 <TagsModal 
                     isVisible={isTagsModalOpen} 
-                    onClose={() => setIsTagsModalOpen(false)}
+                    onClose={() => {updateSelectedTags(selectedTags); setIsTagsModalOpen(false);}}
+                    handleTagSelection={handleTagSelection}
+                    tagOptions={tagOptions}
+                    numTags={numTags}
                 />
             </View>
         </KeyboardAvoidingView>
