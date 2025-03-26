@@ -168,6 +168,9 @@ const ListingScreen = ({ route }) => {
     
         return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
     };
+
+    // Extract the year from startDate
+    const listedYear = startDate ? new Date(startDate).getFullYear() : "Invalid date";
           
     return (
         <View style={styles.container}>
@@ -220,7 +223,7 @@ const ListingScreen = ({ route }) => {
                         />
                         <View style={styles.userInfoTextContainer}>
                             <Text style={styles.listedUser}>Listed by {fullName}</Text>
-                            <Text style={styles.listingDate}>Listing since 2024</Text>
+                            <Text style={styles.listingDate}>Listing since {listedYear}</Text>
                         </View>
                     </View>
                     {/*<View style={styles.iconRow}>
