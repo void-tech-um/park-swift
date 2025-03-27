@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, KeyboardAvoidingView, Platform } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
@@ -8,6 +8,7 @@ import TabUp from '../assets/FilterUp.png';
 import TabDown from '../assets/FilterDown.png';
 import WhiteDropdown from '../assets/whitedropdown.png';
 import Location from '../assets/location.png';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, numTags }) => {
     if (!(tagOptions instanceof Map)) {
@@ -49,6 +50,7 @@ export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, 
             <TouchableOpacity 
               style={styles.modalSaveButton} 
               onPress={() => {{
+                handleSavePress();
                 onClose();
                 }
               }}
@@ -153,6 +155,57 @@ const FilterScreen = () => {
     const [timeRangeChecked, setTimeRangeChecked] = useState(false);
     const [mileRangeChecked, setMileRangeChecked] = useState(false);
     const [priceChecked, setPriceChecked] = useState(false);
+    const [isSaved, setIsSaved] = useState(false);
+
+    useEffect(() => {
+        const loadSavedStates = async () => {
+            try {
+                const savedUseAddressChecked = await AsyncStorage.getItem('useAddressChecked');
+                const savedInputAddress = await AsyncStorage.getItem('inputAddress');
+                const savedUseCurrentLocationChecked = await AsyncStorage.getItem('useCurrentLocationChecked');
+                const savedTimeRangeChecked = await AsyncStorage.getItem('timeRangeChecked');
+                const savedMileRangeChecked = await AsyncStorage.getItem('mileRangeChecked');
+                const savedPriceChecked = await AsyncStorage.getItem('priceChecked');
+                const saveMaxPrice = await AsyncStorage.getItem('maxPrice');
+                const savedSelectedDates = await AsyncStorage.getItem('selectedDates');
+                const savedSelectedTimeFrames = await AsyncStorage.getItem('selectedTimeFrames');
+
+                if (savedUseAddressChecked !== null) setUseAddressChecked(JSON.parse(savedUseAddressChecked));
+                if (savedInputAddress !== null) setAddressInput(savedInputAddress);
+                if (savedUseCurrentLocationChecked !== null) setUseCurrentLocationChecked(JSON.parse(savedUseCurrentLocationChecked));
+                if (savedTimeRangeChecked !== null) setTimeRangeChecked(JSON.parse(savedTimeRangeChecked));
+                if (savedMileRangeChecked !== null) setMileRangeChecked(JSON.parse(savedMileRangeChecked));
+                if (savedPriceChecked !== null) setPriceChecked(JSON.parse(savedPriceChecked));
+                if (saveMaxPrice !== null) setMaxPrice(saveMaxPrice);
+                if (savedSelectedDates !== null) setSelectedDates(JSON.parse(savedSelectedDates));
+                if (savedSelectedTimeFrames !== null) setSelectedTimeFrames(JSON.parse(savedSelectedTimeFrames));
+            } catch (error) {
+                console.error('Failed to load saved states:', error);
+            }
+        };
+
+        loadSavedStates();
+    }, []);
+
+    const handleSavePress = async () => {
+        try {
+            await AsyncStorage.setItem('useAddressChecked', JSON.stringify(useAddressChecked));
+            await AsyncStorage.setItem('inputAddress', addressInput);
+            await AsyncStorage.setItem('useCurrentLocationChecked', JSON.stringify(useCurrentLocationChecked));
+            await AsyncStorage.setItem('timeRangeChecked', JSON.stringify(timeRangeChecked));
+            await AsyncStorage.setItem('mileRangeChecked', JSON.stringify(mileRangeChecked));
+            await AsyncStorage.setItem('priceChecked', JSON.stringify(priceChecked));
+            await AsyncStorage.setItem('maxPrice', maxPrice);
+            await AsyncStorage.setItem('selectedDates', JSON.stringify(selectedDates));
+            await AsyncStorage.setItem('selectedTimeFrames', JSON.stringify(selectedTimeFrames));
+
+            setIsSaved(true);
+            setTimeout(() => setIsSaved(false), 3000);
+        } catch (error) {
+            console.error('Failed to save states:', error);
+        }
+    };
+
     const handleBackPress = () => {
         navigation.goBack();
     };
@@ -359,10 +412,10 @@ const FilterScreen = () => {
                         </View>
                         <View style={styles.buttonContainer}>
                             <View style={styles.buttonRow}>
-                                <TouchableOpacity style={styles.saveButton}>
+                                <TouchableOpacity style={styles.saveButton} onPress={handleSavePress}>
                                     <Text style={styles.saveButtonText}>Save Changes</Text>
                                 </TouchableOpacity>
-                                <Text style={styles.savedText}>All Changes Saved</Text>
+                                {isSaved && <Text style={styles.savedText}>All Changes Saved</Text>}
                             </View>
                             <TouchableOpacity style={styles.resetButton} onPress={resetAllFilters}>
                                 <Text style={styles.resetText}>Reset All Filters</Text>
