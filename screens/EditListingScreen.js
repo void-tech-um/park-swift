@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, Alert} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
 import { createPost, updateDoc, doc, deletePost, database } from '../firebaseFunctions/firebaseFirestore';
@@ -296,9 +296,17 @@ function EditListingScreen({ navigation, route }) {
           style: "destructive",
           onPress: async () => {
             try {
-              await deletePost(route.params.postId);
+              await deletePost(route.params.postId, userId);
+              try {
+                const saved = await AsyncStorage.getItem('savedListings');
+                const savedArray = saved ? JSON.parse(saved) : [];
+                const updatedArray = savedArray.filter(item => item.postId !== route.params.postId);
+                await AsyncStorage.setItem('savedListings', JSON.stringify(updatedArray));
+              } catch (e) {
+                console.warn("Couldn't update saved listings after deletion:", e);
+              }
               alert("Listing deleted successfully!");
-              navigation.navigate("HomeScreen", { refresh: true }); // Pass refresh flag
+              navigation.navigate("Home", { refresh: true });            
             } catch (error) {
               console.error("Error deleting post:", error);
               alert("Error deleting post. Please try again.");

@@ -50,7 +50,7 @@ export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, 
             <TouchableOpacity 
               style={styles.modalSaveButton} 
               onPress={() => {{
-                handleSavePress();
+
                 onClose();
                 }
               }}
