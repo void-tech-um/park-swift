@@ -47,7 +47,7 @@ export function loginUser(email, password) {
         });
 }
 
-export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate, startTime, endTime, sizeOfCar, latitude, longitude) {
+export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate, startTime, endTime, sizeOfCar, latitude, longitude, selectedTags) {
     if (!location || !firstDate || !lastDate) {
         alert('All parameters must be provided');
         return Promise.reject(new Error('Missing required parameters'));
@@ -68,6 +68,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
         sizeOfCar,
         latitude, 
         longitude,
+        selectedTags,
         createdAt: new Date().toISOString(),
     })
     .then(async (docRef) => {
@@ -163,6 +164,35 @@ export function filterByPrice(minPrice, maxPrice) {
             });
             return posts;
         });
+}
+
+export async function filterByTags(selectedTags) {
+    const postsCollectionRef = collection(database, 'posts');
+    const q = query(postsCollectionRef);
+    const querySnapshot = await getDocs(q);
+    const posts = [];
+
+    querySnapshot.forEach((doc) => {
+        const match = true;
+        const docSelectedTags = doc.data().selectedTags;
+        
+        if (docSelectedTags instanceof Array && selectedTags.length == docSelectedTags.length) {
+            for (const i = 0; i < selectedTags.length; i++) {
+                if (selectedTags[i] !== docSelectedTags[i]) {
+                    match = false;
+                }
+            }
+        }
+        else {
+            match = false;
+        }
+
+        if (match) {
+            posts.push(doc.data());
+        }
+    });
+
+    return posts;
 }
 
 export function getAllPosts() {
