@@ -65,12 +65,6 @@ const HomeScreen = () => {
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
   }
 
-  useEffect(() => {
-    if (isFocused) {
-      fetchPosts(); 
-    }
-  }, [isFocused]);
-
   return (
     <View style={styles.container}>
       <MenuSearchBar showSearchBar={false}/>

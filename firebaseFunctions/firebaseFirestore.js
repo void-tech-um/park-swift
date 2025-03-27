@@ -210,14 +210,16 @@ export function getUser(userId) {
         });
 }
 
-export async function deletePost(postId) {
+export async function deletePost(postId, userId) {
     try {
-      console.log("Attempting to delete post:", postId);
       await deleteDoc(doc(database, 'posts', postId));
-      console.log(`Successfully deleted post ${postId}`);
+      if (userId) {
+        await deleteDoc(doc(database, 'users', userId, 'posts', postId));
+      }
     } catch (error) {
       console.error('Error deleting post:', error);
       throw error;
     }
-}
+  }
+  
   
