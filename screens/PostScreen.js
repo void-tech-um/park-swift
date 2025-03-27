@@ -226,7 +226,8 @@ function PostScreen({ navigation, route }) {
           { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
           sizeOfCar,
           lat,  // Store latitude
-          lng   // Store longitude
+          lng,   // Store longitude
+          selectedTags
         );
 
         // Step 3: Navigate to confirmation screen (not MapScreen)
