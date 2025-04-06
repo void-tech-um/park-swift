@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View, StyleSheet, Image } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { Text, TextInput, TouchableOpacity, View, StyleSheet, Image, ScrollView } from 'react-native';
 import { loginUser } from '../firebaseFunctions/firebaseFirestore';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -28,11 +27,7 @@ export default function LoginScreen({ navigation }) {
             <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <Image source={require('../assets/Back.png')} style={styles.backIcon} />
             </TouchableOpacity>
-            <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
-                keyboardShouldPersistTaps="always"
-                contentContainerStyle={styles.scrollContainer}
-            >
+            <View style={styles.content}>
                 <Image source={require('../assets/logo.png')} style={styles.logoImage} resizeMode="contain" />
                 <Text style={styles.loginTitle}>Login</Text>
                 <TextInput
@@ -54,7 +49,7 @@ export default function LoginScreen({ navigation }) {
                         autoCapitalize="none"
                     />
                     <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                        <Ionicons name={showPassword ? "eye-off" : "eye"} size={20} color="#666" />
+                        <Ionicons name={showPassword ? 'eye-off' : 'eye'} size={20} color="#666" />
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.button} onPress={onLoginPress}>
@@ -71,7 +66,7 @@ export default function LoginScreen({ navigation }) {
                         </Text>
                     </Text>
                 </View>
-            </KeyboardAwareScrollView>
+            </View>
         </View>
     );
 }
@@ -81,10 +76,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#052658',
     },
-    scrollContainer: {
+    content: {
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 40,
+        paddingHorizontal: 20,
+        paddingBottom: 40,
     },
     backButton: {
         position: 'absolute',
@@ -148,7 +145,6 @@ const styles = StyleSheet.create({
     },
     footerView: {
         alignItems: 'center',
-        marginTop: 20,
     },
     footerText: {
         fontSize: 14,
