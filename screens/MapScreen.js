@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getAllPosts } from '../firebaseFunctions/firebaseFirestore';
 import MenuSearchBar from '../components/MenuSearchBar.js';
+import ListingScreen from './ListingScreen';
 
 const { width, height } = Dimensions.get('window');
 const markerSize = Math.min(width, height) * 0.1; 
@@ -11,6 +12,7 @@ const markerSize = Math.min(width, height) * 0.1;
 const MapScreen = ({ route }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [posts, setPosts] = useState([]); // Store listing locations
+  const [isListingScreenVisible, setIsListingScreenVisible] = useState(true);
 
   useEffect(() => {
     // Fetch user's current location
@@ -50,6 +52,10 @@ const MapScreen = ({ route }) => {
     return <Text>Loading...</Text>;
   }
 
+  const thing = () => {
+    console.log('Hello');
+  }
+
   return (
     <View style={styles.container}>
       <MenuSearchBar />
@@ -78,14 +84,36 @@ const MapScreen = ({ route }) => {
               coordinate={{ latitude: post.latitude, longitude: post.longitude }} 
               title={post.location}
             >
-              <Image
-                source={require('../assets/map-pin.png')}
-                style={{ width: markerSize, height: markerSize }}
-              />
+              <TouchableOpacity onPress={thing}>
+                <Image
+                  source={require('../assets/map-pin.png')}
+                  style={{ width: markerSize, height: markerSize }}
+                />
+              </TouchableOpacity>
             </Marker>
           ) : null
         ))}
       </MapView>
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={isListingScreenVisible}
+        onRequestClose={() => setIsListingScreenVisible(false)}
+      >
+        <ListingScreen
+          route={{
+            params: {
+              address: null,
+              ppHour: null,
+              userID: null,
+              postId: null,
+              startDate: null,
+              endDate: null,
+              isAvailable: null,
+            }
+          }}
+        />
+      </Modal>
     </View>
   );
 };
