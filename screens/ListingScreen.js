@@ -31,6 +31,7 @@ const ListingScreen = ({ route }) => {
     const [currentUserId, setCurrentUserId] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
     const [fullName, setFullName] = useState('User Name');
+    const [isNegotiable, setIsNegotiable] = useState(false);
 
     const displayAddress = address ? address.split(',')[0] : 'No address available';
     
@@ -95,9 +96,24 @@ const ListingScreen = ({ route }) => {
                 }
             }
         };
-    
+        
+        const fetchPostData = async () => {
+            if(postId){
+                try {
+                    const postData = await getPost(postId);
+                    if (postData?.negotiable){
+                        setIsNegotiable(postData.negotiable);
+                    }
+                } catch (error) {
+                    console.error("Error fetching post data:", error);
+                }
+            }
+
+        };
+
+        fetchPostData();
         fetchUserData();
-    }, [userID]);
+    }, [userID, postId]);
     
     useFocusEffect(
         React.useCallback(() => {
@@ -280,7 +296,7 @@ const ListingScreen = ({ route }) => {
                     <View style={styles.contactBorder}>
                         <View style={styles.textContainer}>
                             <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHour))}</Text>
-                            <Text style={styles.negotiableText}>Negotiable</Text>
+                            <Text style={styles.negotiableText}>{isNegotiable ? "Negotiable" : "Firm price"}</Text>
                         </View>
                         <TouchableOpacity>
                             <View style={styles.contactButton}>
