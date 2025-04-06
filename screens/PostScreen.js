@@ -25,7 +25,7 @@ function PostScreen({ navigation, route }) {
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
 
-  const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags } = useTagsModal();
+  const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags } = useTagsModal();
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {

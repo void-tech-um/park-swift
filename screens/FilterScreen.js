@@ -50,12 +50,10 @@ export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, 
             <TouchableOpacity 
               style={styles.modalSaveButton} 
               onPress={() => {{
-
                 onClose();
                 }
-              }}
-            >
-              <Text style={styles.modalSaveButtonText}>Save Changes</Text>
+              }}>
+              <Text style={styles.modalSaveButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -66,7 +64,6 @@ export const TagsModal = ({ isVisible, onClose, handleTagSelection, tagOptions, 
 export const useTagsModal = () => {
     const [selectedTags, setSelectedTags] = useState([]);
     const [isTagsModalOpen, setIsTagsModalOpen] = useState(false);
-    const [numTags, setNumTags] = useState(0);
 
     const [tagOptions, setTagOptions] = useState(new Map([
         ['Fits all models', false],
@@ -79,23 +76,19 @@ export const useTagsModal = () => {
         ['On-street parking', false],
         ['Driveway', false],
         ['Parallel parking', false],
-      ]));
+    ]));
+
+    const numTags = Array.from(tagOptions.values()).filter(value => value).length;
 
     const handleTagSelection = (tag) => {
         setTagOptions((prevOptions) => {
             const newOptions = new Map(prevOptions);
             const pressed = newOptions.get(tag);
             newOptions.set(tag, !pressed);
-            
-            if (pressed) {
-                setNumTags(numTags - 1);
-            }
-            else {
-                setNumTags(numTags + 1);
-            }
 
             return newOptions;
         });
+
     };
 
     const updateSelectedTags = () => {
@@ -122,10 +115,10 @@ export const useTagsModal = () => {
             ['Parallel parking', false],
         ]));
         setSelectedTags([]);
-        setNumTags(0);
     }
 
-    return { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags };
+    return { isTagsModalOpen, setIsTagsModalOpen, selectedTags, setSelectedTags, handleTagSelection,
+    updateSelectedTags, tagOptions, setTagOptions, resetSelectedTags, numTags };
 }
 
 const FilterScreen = () => {
@@ -137,7 +130,8 @@ const FilterScreen = () => {
     });
     
 
-    const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags, resetSelectedTags } = useTagsModal();
+    const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, setSelectedTags, handleTagSelection,
+    updateSelectedTags, tagOptions, setTagOptions, resetSelectedTags, numTags } = useTagsModal();
     
     const [selectedDates, setSelectedDates] = useState({});
     const [selectedTimeFrames, setSelectedTimeFrames] = useState({});
@@ -169,6 +163,8 @@ const FilterScreen = () => {
                 const saveMaxPrice = await AsyncStorage.getItem('maxPrice');
                 const savedSelectedDates = await AsyncStorage.getItem('selectedDates');
                 const savedSelectedTimeFrames = await AsyncStorage.getItem('selectedTimeFrames');
+                const savedSelectedTags = await AsyncStorage.getItem('selectedTags');
+                const savedTagOptions = await AsyncStorage.getItem('tagOptions');
 
                 if (savedUseAddressChecked !== null) setUseAddressChecked(JSON.parse(savedUseAddressChecked));
                 if (savedInputAddress !== null) setAddressInput(savedInputAddress);
@@ -179,6 +175,11 @@ const FilterScreen = () => {
                 if (saveMaxPrice !== null) setMaxPrice(saveMaxPrice);
                 if (savedSelectedDates !== null) setSelectedDates(JSON.parse(savedSelectedDates));
                 if (savedSelectedTimeFrames !== null) setSelectedTimeFrames(JSON.parse(savedSelectedTimeFrames));
+                if (savedSelectedTags !== null) setSelectedTags(JSON.parse(savedSelectedTags));
+                if (savedTagOptions !== null) {
+                    const tagOptionsPairs = JSON.parse(savedTagOptions);
+                    setTagOptions(new Map(Object.entries(tagOptionsPairs)));
+                }
             } catch (error) {
                 console.error('Failed to load saved states:', error);
             }
@@ -198,6 +199,10 @@ const FilterScreen = () => {
             await AsyncStorage.setItem('maxPrice', maxPrice);
             await AsyncStorage.setItem('selectedDates', JSON.stringify(selectedDates));
             await AsyncStorage.setItem('selectedTimeFrames', JSON.stringify(selectedTimeFrames));
+            await AsyncStorage.setItem('selectedTags', JSON.stringify(selectedTags));
+
+            const tagOptionsPairs = Object.fromEntries(tagOptions);
+            await AsyncStorage.setItem('tagOptions', JSON.stringify(tagOptionsPairs));
 
             setIsSaved(true);
             setTimeout(() => setIsSaved(false), 3000);
