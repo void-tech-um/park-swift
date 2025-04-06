@@ -60,7 +60,7 @@ function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator lazy={true}>
-          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}}/>
           <Stack.Screen name="Registration" component={RegistrationScreen} />
           <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false}} />
