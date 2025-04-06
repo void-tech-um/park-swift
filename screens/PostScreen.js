@@ -595,15 +595,6 @@ function PostScreen({ navigation, route }) {
             </View>
           ))}
         </View>
-
-        <TagsModal 
-          isVisible={isTagsModalOpen} 
-          onClose={() => {updateSelectedTags(selectedTags); setIsTagsModalOpen(false);}}
-          handleTagSelection={handleTagSelection}
-          tagOptions={tagOptions}
-          numTags={numTags}
-        />
-
         <Text style={styles.subHeading}>Additional Notes</Text>
         <TextInput
           style={[styles.input, styles.notesInput]}
@@ -617,6 +608,13 @@ function PostScreen({ navigation, route }) {
           <Text style={styles.listButtonText}>List</Text>
         </TouchableOpacity>
       </ScrollView>
+      <TagsModal 
+          isVisible={isTagsModalOpen} 
+          onClose={() => {updateSelectedTags(selectedTags); setIsTagsModalOpen(false);}}
+          handleTagSelection={handleTagSelection}
+          tagOptions={tagOptions}
+          numTags={numTags}
+        />
     </View>
   );
 }
