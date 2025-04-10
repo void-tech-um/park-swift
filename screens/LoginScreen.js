@@ -9,7 +9,7 @@ export default function LoginScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
 
     const onFooterLinkPress = () => {
-        navigation.navigate('Registration');
+        navigation.navigate('ForgotPasswordScreen');
     };
 
     const onLoginPress = () => {

@@ -11,7 +11,7 @@ import PostConfirmationScreen from './screens/PostConfirmationScreen.js';
 import PostScreen from './screens/PostScreen.js';
 import NavBar from './components/NavBar.js';
 import LoginScreen from './screens/LoginScreen.js';
-import RegistrationScreen from './screens/RegistrationScreen.js';
+import ForgotPasswordScreen from './screens/ForgotPasswordScreen.js';
 import ListingScreen from './screens/ListingScreen.js';
 import FilterScreen from './screens/FilterScreen.js';
 import EditProfileScreen from './screens/EditProfileScreen.js';
@@ -61,7 +61,7 @@ function App() {
       <NavigationContainer>
         <Stack.Navigator lazy={true}>
           <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}}/>
-          <Stack.Screen name="Registration" component={RegistrationScreen} />
+          <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} options={{ headerShown: false}}/>
           <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false}} />
           <Stack.Screen name="PostScreen" component={PostScreen} options={{ headerShown: false }}/>
