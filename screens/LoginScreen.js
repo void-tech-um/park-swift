@@ -9,7 +9,7 @@ export default function LoginScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
 
     const onFooterLinkPress = () => {
-        navigation.navigate('ForgotPasswordScreen');
+        navigation.navigate('CreateAccountScreen');
     };
 
     const onLoginPress = () => {
@@ -55,17 +55,20 @@ export default function LoginScreen({ navigation }) {
                 <TouchableOpacity style={styles.button} onPress={onLoginPress}>
                     <Text style={styles.buttonTitle}>Login</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => alert('Forgot Password Pressed')}>
-                    <Text style={styles.forgotText}>Forgot Password?</Text>
-                </TouchableOpacity>
-                <View style={styles.footerView}>
-                    <Text style={styles.footerText}>
-                        Don’t have an account?{' '}
-                        <Text onPress={onFooterLinkPress} style={styles.footerLink}>
-                            Sign Up
-                        </Text>
-                    </Text>
+                <View style={styles.forgotContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
+                        <Text style={styles.forgotText}>Forgot Password?</Text>
+                    </TouchableOpacity>
                 </View>
+
+            </View>
+            <View style={styles.footerView}>
+                <Text style={styles.footerText}>
+                    Don’t have an account?{' '}
+                    <Text onPress={onFooterLinkPress} style={styles.footerLink}>
+                        Sign Up
+                    </Text>
+                </Text>
             </View>
         </View>
     );
@@ -80,79 +83,85 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: 20,
-        paddingBottom: 40,
     },
     backButton: {
         position: 'absolute',
-        top: 50,
-        left: 20,
-        zIndex: 10,
+        top: "6%",
+        left: "5%",
     },
     backIcon: {
-        width: 40,
-        height: 40,
+        width: 45,
+        height: 45,
     },
     logoImage: {
-        width: 250,
-        height: 180,
-        marginBottom: 20,
+        width: 234,
+        height: 242,
     },
     loginTitle: {
         color: '#FED869',
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 20,
+        fontSize: 32,
+        fontFamily: "NotoSansTaiTham-Bold",
+        marginBottom: "4%",
+        marginTop: "5%",
     },
     input: {
-        height: 50,
+        height: 60,
         backgroundColor: 'white',
-        borderRadius: 12,
-        paddingHorizontal: 16,
+        borderRadius: 10,
+        paddingHorizontal: "4%",
+        fontFamily: "NotoSansTaiTham",
         fontSize: 16,
-        width: '80%',
-        marginBottom: 15,
+        width: '90%',
+        marginBottom: "3.5%",
     },
     passwordContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '80%',
-        marginBottom: 20,
+        width: '90%',
+        marginBottom: "3.5%",
     },
     eyeIcon: {
         position: 'absolute',
-        right: 16,
+        right: "5%",
     },
     button: {
         backgroundColor: '#FED869',
-        width: '80%',
-        borderRadius: 20,
-        height: 50,
+        width: '90%',
+        borderRadius: 18,
+        height: 58,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 15,
+        marginBottom: "3%",
     },
     buttonTitle: {
-        color: '#00214D',
+        color: '#052658',
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: "NotoSansTaiTham-Bold",
     },
     forgotText: {
         color: 'white',
         textAlign: 'right',
         width: '80%',
-        marginBottom: 40,
+        fontSize: 14,
+        fontFamily: "NotoSansTaiTham",
     },
-    footerView: {
-        alignItems: 'center',
+    forgotContainer: {
+        width: '90%',
+        alignItems: 'flex-end',
     },
     footerText: {
         fontSize: 14,
         color: 'white',
+        fontFamily: "NotoSansTaiTham",
     },
     footerLink: {
         color: 'white',
         fontWeight: 'bold',
         textDecorationLine: 'underline',
+        fontFamily: "NotoSansTaiTham-Bold",
     },
+    footerView: {
+        alignItems: 'center',
+        marginBottom: "12.5%",
+    },    
 });
