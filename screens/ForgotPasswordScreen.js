@@ -1,12 +1,37 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function ForgotPasswordScreen({ navigation }) {
     const [email, setEmail] = useState('');
 
     const handleResetPassword = () => {
-        // Add password reset logic here (e.g. Firebase reset password)
-        alert('Password reset link sent (mock)');
+        const auth = getAuth();
+        if (!email) {
+            alert('Please enter your email address');
+            return;
+        }
+
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                alert(
+                    'A reset link was sent to your email. Follow the instructions there to change your password.'
+                );
+                navigation.navigate('ResetConfirmationScreen');
+            })
+            .catch((error) => {
+                console.error(error);
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        alert('Please enter a valid email address.');
+                        break;
+                    case 'auth/user-not-found':
+                        alert('No user found with that email address.');
+                        break;
+                    default:
+                        alert('Something went wrong. Please try again.');
+                }
+            });
     };
 
     return (
@@ -17,7 +42,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
             <View style={styles.content}>
                 <Image
-                    source={require('../assets/lock.png')} // make sure to add a lock icon in assets
+                    source={require('../assets/lock.png')} // make sure this image exists
                     style={styles.lockIcon}
                     resizeMode="contain"
                 />
@@ -65,7 +90,7 @@ const styles = StyleSheet.create({
     lockIcon: {
         width: 127,
         height: 127,
-        marginBottom: "10%",
+        marginBottom: "8%",
     },
     title: {
         fontSize: 32,
@@ -97,7 +122,7 @@ const styles = StyleSheet.create({
         height: 58,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: "3%",
+        marginBottom: "32%",
     },
     buttonText: {
         color: '#052658',
