@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, Alert} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
-import { createPost, updateDoc, doc, deletePost, database } from '../firebaseFunctions/firebaseFirestore';
+import { createPost, updateDoc, doc, deletePost, database, getPost } from '../firebaseFunctions/firebaseFirestore';
 import { getAuth } from "firebase/auth";
 import RNPickerSelect from 'react-native-picker-select';
 import { Searchbar } from 'react-native-paper';
@@ -178,14 +178,71 @@ function EditListingScreen({ navigation, route }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      resetForm();
+      // Only reset form if not editing
+      if (!route.params?.postId) {
+        resetForm();
+      }
     });
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation]);  
   
   useEffect(() => {
-      console.log("Route Params in EditListingScreen:", route.params);
-  }, [route.params]);
+    const fetchListingData = async () => {
+      if (route.params?.postId) {
+        try {
+          const postData = await getPost(route.params.postId);
+          if (postData) {
+            setLocation(postData.location || '');
+            setRentalPeriod(postData.rentalPeriod || 'hour');
+            setPrice(postData.price?.toString() || '');
+            setIsNegotiable(postData.negotiable ?? null);
+            setStartTime(postData.startTime || { hours: '', minutes: '' });
+            setEndTime(postData.endTime || { hours: '', minutes: '' });
+            setStartPeriod(postData.startTime?.period || 'AM');
+            setEndPeriod(postData.endTime?.period || 'AM');
+            setSize(postData.sizeOfCar || 'sedan');
+            setNotes(postData.notes || '');
+            setTags(postData.selectedTags || []);
+  
+            const updatedSelectedDates = {};
+            const startDate = postData.firstDate;
+            const endDate = postData.lastDate;
+  
+            if (startDate && endDate) {
+              const [start, end] = [new Date(startDate), new Date(endDate)];
+              let current = new Date(start);
+              while (current <= end) {
+                const dateStr = current.toISOString().split('T')[0];
+                updatedSelectedDates[dateStr] = {
+                  color: current.getTime() === start.getTime() || current.getTime() === end.getTime()
+                    ? 'rgba(6, 83, 161, 1)' : 'rgba(6, 83, 161, 0.2)',
+                  textColor: '#FFFFFF',
+                  customStyles: {
+                    container: {
+                      backgroundColor: current.getTime() === start.getTime() || current.getTime() === end.getTime()
+                        ? 'rgba(6, 83, 161, 1)' : 'rgba(6, 83, 161, 0.2)',
+                    },
+                    text: {
+                      color: '#FFFFFF',
+                    },
+                  },
+                };
+                if (current.getTime() === start.getTime()) updatedSelectedDates[dateStr].startingDay = true;
+                if (current.getTime() === end.getTime()) updatedSelectedDates[dateStr].endingDay = true;
+                current.setDate(current.getDate() + 1);
+              }
+            }
+            setSelectedDates(updatedSelectedDates);
+            setIsAddressSelected(true);
+          }
+        } catch (err) {
+          console.error("Error loading post data in EditListingScreen:", err);
+        }
+      }
+    };
+  
+    fetchListingData();
+  }, [route.params?.postId]);  
 
   const onPostPress = async () => {
     let userId = route.params?.userId;
@@ -248,11 +305,11 @@ function EditListingScreen({ navigation, route }) {
               endTime: { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
               sizeOfCar,
               latitude: lat,
-              longitude: lng
+              longitude: lng,
+              notes,
+              selectedTags: tags,
           });
-
-          alert("Listing updated successfully!");
-          navigation.navigate("ListingScreen", { postId: route.params.postId, refresh: true }); // Refresh listing
+          navigation.navigate("Listing", { postId: route.params.postId, refresh: true }); // Refresh listing
       } else {
           // Create new post if no postId exists
           const docRef = await createPost(
