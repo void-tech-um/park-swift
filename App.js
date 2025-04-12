@@ -63,20 +63,20 @@ function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator lazy={true}>
-          <Stack.Screen name="LauchScreen" component={LaunchScreen} options={{ headerShown: false}}/>
-          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}}/>
-          <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} options={{ headerShown: false}}/>
-          <Stack.Screen name="CreateAccountScreen" component={CreateAccountScreen} options={{ headerShown: false}}/>
-          <Stack.Screen name="ResetConfirmationScreen" component={ResetConfirmationScreen} options={{ headerShown: false}}/>
-          <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false }} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false}} />
-          <Stack.Screen name="PostScreen" component={PostScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{ headerShown: false }}/>
-          <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="EditListingScreen" component={EditListingScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="MapScreen" component={MapScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="LauchScreen" component={LaunchScreen} options={{ headerShown: false, gestureEnabled: false }}/>
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false, gestureEnabled: false }}/>
+          <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} options={{ headerShown: false, gestureEnabled: false }}/>
+          <Stack.Screen name="CreateAccountScreen" component={CreateAccountScreen} options={{ headerShown: false, gestureEnabled: false }}/>
+          <Stack.Screen name="ResetConfirmationScreen" component={ResetConfirmationScreen} options={{ headerShown: false, gestureEnabled: false}}/>
+          <Stack.Screen name="Tab" component={NavBar} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false, gestureEnabled: false}} />
+          <Stack.Screen name="PostScreen" component={PostScreen} options={{ headerShown: false, gestureEnabled: false }}/>
+          <Stack.Screen name="PostConfirmationScreen" component={PostConfirmationScreen} options={{ headerShown: false, gestureEnabled: false }}/>
+          <Stack.Screen name="Listing" component={ListingScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="EditListingScreen" component={EditListingScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="MapScreen" component={MapScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="FilterScreen" component={FilterScreen} options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false, gestureEnabled: false }} />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

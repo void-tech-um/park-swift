@@ -24,7 +24,6 @@ function PostScreen({ navigation, route }) {
   const [selectedDates, setSelectedDates] = useState({});
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
-
   const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags } = useTagsModal();
 
   const fetchAddressSuggestions = async (query) => {
@@ -206,6 +205,33 @@ function PostScreen({ navigation, route }) {
       return;
     }
 
+    const isStartTimePartial = startTime.hours || startTime.minutes;
+    const isEndTimePartial = endTime.hours || endTime.minutes;
+
+    const isStartTimeComplete = startTime.hours && startTime.minutes;
+    const isEndTimeComplete = endTime.hours && endTime.minutes;
+
+    if ((isStartTimePartial || isEndTimePartial) && (!isStartTimeComplete || !isEndTimeComplete)) {
+      alert("If you include a time, both start and end time must be fully entered.");
+      return;
+    }
+
+    const isValidHour = (val) => /^\d{1,2}$/.test(val) && parseInt(val) >= 1 && parseInt(val) <= 12;
+    const isValidMinute = (val) => /^\d{2}$/.test(val) && parseInt(val) >= 0 && parseInt(val) <= 59;
+
+    if (isStartTimeComplete || isEndTimeComplete) {
+      if (!isValidHour(startTime.hours) || !isValidMinute(startTime.minutes)) {
+        alert("Please enter a valid start time using standard 12-hour clock format.");
+        return;
+      }
+
+      if (!isValidHour(endTime.hours) || !isValidMinute(endTime.minutes)) {
+        alert("Please enter a valid end time using standard 12-hour clock format.");
+        return;
+      }
+    }
+
+    
     try {
         // Step 1: Convert address to latitude & longitude using Google Geocoding API
         const response = await fetch(

@@ -54,9 +54,9 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
     };
 
     const formatTime = (time) => {
-        if (!time || typeof time !== 'object') return '';
+        if (!time || !time.hours || !time.minutes) return '';
         return `${time.hours}:${time.minutes} ${time.period}`;
-    };
+    };    
 
     return (
         <TouchableOpacity onPress={handleSeeMorePress}>
@@ -75,9 +75,11 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
                         <View style={styles.content}>
                             <Text style={styles.price}>{ppHour}</Text>
                             <Text style={styles.description}>x minutes away</Text>
+                            {(formatTime(startTime) && formatTime(endTime)) ? (
                             <Text style={styles.description}>
                                 {formatTime(startTime)} - {formatTime(endTime)}
                             </Text>
+                            ) : null}
                             <Text style={styles.description}>
                                 {startDate
                                     ? `${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()+1}/${new Date(startDate).getFullYear()}`
