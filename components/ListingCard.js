@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity, Image, Platform } from 'react
 import { useNavigation } from '@react-navigation/native';
 import arrow from '../assets/arrow.png'; 
 import SavedIcon from '../assets/Vector.png';
-import Car from '../assets/car.png'; 
+import Car from '../assets/image.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
 import * as Location from 'expo-location';
 import { useEffect, useState } from 'react';

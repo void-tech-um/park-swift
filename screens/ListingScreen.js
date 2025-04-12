@@ -11,11 +11,14 @@ import PavedEntrance from '../assets/PavedEntrance.png';
 import PrivateProperty from '../assets/PrivateProperty.png';  
 import Unsave from '../assets/Save.png'; 
 import Save from '../assets/saved_icon.png';
-import CarImage from '../assets/CarImage.png'; 
+import CarImage from '../assets/image.png'; 
 import MenuSearchBar from '../components/MenuSearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth } from "firebase/auth";
-import { Linking } from 'react-native';
+import { Linking, FlatList, Dimensions } from 'react-native';
+const screenWidth = Dimensions.get('window').width;
+const imageSize = screenWidth * 0.70;
+const imageSpacing = screenWidth * 0.025;
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -39,7 +42,19 @@ const ListingScreen = ({ route }) => {
     const [startDateState, setStartDate] = useState(startDate);
     const [endDateState, setEndDate] = useState(endDate);
     const [availableState, setIsAvailable] = useState(isAvailable);
-
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const images = [CarImage, CarImage];
+    const renderImageItem = ({ item, index }) => (
+        <View
+          style={{
+            marginRight: imageSpacing,
+            marginLeft: index === 0 ? imageSpacing : 0, // only the first image gets left margin
+          }}
+        >
+          <Image source={item} style={[styles.carouselImage, { width: imageSize, height: imageSize }]} />
+        </View>
+      );
+      
     const displayAddress = addressState ? addressState.split(',').slice(0, 3).join(',') : 'No address available';
     const street = addressState?.split(',')[0] || 'No address available';
     const cityState = addressState?.split(',').slice(1, 3).join(',') || '';
@@ -257,18 +272,40 @@ const ListingScreen = ({ route }) => {
                             <Text style={styles.editListingText}>Edit Listing</Text>
                         </TouchableOpacity>
                     )}
-                    <View style={styles.carImagesContainer}>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            <Image
-                                source={CarImage}
-                                style={styles.FirstImage}
-                            />
-                            <Image
-                                source={CarImage}
-                                style={styles.SecondImage}
-                            />
-                        </ScrollView>
+                    <View style={styles.carouselContainer}>
+                    <FlatList
+                        data={images}
+                        renderItem={renderImageItem}
+                        keyExtractor={(_, index) => index.toString()}
+                        horizontal
+                        pagingEnabled={false}
+                        snapToInterval={imageSize + imageSpacing}
+                        decelerationRate="fast"
+                        showsHorizontalScrollIndicator={false}
+                        onScroll={e => {
+                            const index = Math.round(
+                                e.nativeEvent.contentOffset.x / (imageSize + imageSpacing)
+                            );
+                            setCurrentImageIndex(index);
+                        }}
+                        contentContainerStyle={{ paddingHorizontal: imageSpacing / 2 }}
+                    />
+                        <View style={styles.imageCounterOverlay}>
+                            <Text style={styles.imageCounterText}>{currentImageIndex + 1}/{images.length}</Text>
+                        </View>
+                        <View style={styles.dotsContainer}>
+                            {images.map((_, index) => (
+                                <View
+                                    key={index}
+                                    style={[
+                                        styles.dot,
+                                        currentImageIndex === index && styles.activeDot
+                                    ]}
+                                />
+                            ))}
+                        </View>
                     </View>
+
                     <View style={styles.userInfoContainer}>
                         <Image
                             source={User}
@@ -399,16 +436,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginLeft: "3.5%",
-    },
-    FirstImage: {
-        width: 200,
-        height: 200,
-        marginTop: 7,
-    },
-    SecondImage: {
-        width: 200,
-        height: 200,
-        marginTop: 7,
     },
     userInfoContainer: {
         flexDirection: 'row',
@@ -556,6 +583,48 @@ const styles = StyleSheet.create({
         fontFamily: 'NotoSansTaiTham-Regular',
         marginTop: -5,
     },
+    carouselContainer: {
+        marginTop: '1.75%',
+    },
+    carouselImage: {
+        borderRadius: 16,
+    },
+    imageCounterOverlay: {
+        position: 'absolute',
+        top: "3.5%",
+        right: "4%",
+        backgroundColor: 'rgba(102, 102, 102, 100)',
+        borderRadius: 12.5,
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+    },
+    imageCounterText: {
+        color: '#fff',
+        fontSize: 16,
+        fontFamily: 'NotoSansTaiTham',
+    },
+    dotsContainer: {
+        position: 'absolute',
+        bottom: '3.5%',
+        alignSelf: 'center',
+        backgroundColor: 'rgba(102, 102, 102, 0.7)',
+        borderRadius: 20,
+        width: 97,
+        height: 26,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dot: {
+        width: 10,
+        height: 10,
+        borderRadius: 20,
+        backgroundColor: '#E9EEF1',
+        marginHorizontal: "5%",
+    },
+    activeDot: {
+        backgroundColor: '#FED869',
+    }    
 });
 
 export default ListingScreen;
