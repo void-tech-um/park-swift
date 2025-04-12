@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
-import { createPost } from '../firebaseFunctions/firebaseFirestore';
+import { createPost, collection, query, where, getDocs } from '../firebaseFunctions/firebaseFirestore';
 import RNPickerSelect from 'react-native-picker-select';
 import { Searchbar } from 'react-native-paper';
+import { TagsModal, useTagsModal } from './FilterScreen';
+import { database } from '../services/configFirestore'; 
 const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
-import { TagsModal, useTagsModal } from './FilterScreen';
 
 function PostScreen({ navigation, route }) {
   const [location, setLocation] = useState('');
@@ -230,12 +231,11 @@ function PostScreen({ navigation, route }) {
         return;
       }
     }
-
     
     try {
         // Step 1: Convert address to latitude & longitude using Google Geocoding API
         const response = await fetch(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${API_KEY}`
+            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=${API_KEY}&types=geocode&components=country:us`
         );
         const data = await response.json();
 
@@ -244,7 +244,34 @@ function PostScreen({ navigation, route }) {
             return;
         }
 
+        const addressComponents = data.results[0].address_components;
+
+        // Define required types
+        const requiredTypes = ['street_number', 'route', 'locality', 'administrative_area_level_1', 'postal_code'];
+
+        // Check if all required types are present
+        const hasAllParts = requiredTypes.every(type =>
+          addressComponents.some(component => component.types.includes(type))
+        );
+
+        if (!hasAllParts) {
+          alert("Please enter a complete address including house number, street, city, state, and ZIP code.");
+          return;
+        }
+
         const { lat, lng } = data.results[0].geometry.location;
+        const postQuery = query(
+          collection(database, 'posts'),
+          where('userID', '==', userId),
+          where('location', '==', location.trim())
+        );
+
+        const existingPostsSnapshot = await getDocs(postQuery);
+
+        if (!existingPostsSnapshot.empty) {
+          alert('This address is already listed.');
+          return;
+        }
 
         // Step 2: Create post and store coordinates
         const postId = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
