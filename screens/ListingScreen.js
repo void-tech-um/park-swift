@@ -15,6 +15,7 @@ import CarImage from '../assets/CarImage.png';
 import MenuSearchBar from '../components/MenuSearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth } from "firebase/auth";
+import { Linking } from 'react-native';
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -30,8 +31,9 @@ const ListingScreen = ({ route }) => {
 
     const [currentUserId, setCurrentUserId] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
-    const [fullName, setFullName] = useState('User Name');
+    const [fullName, setFullName] = useState('');
     const [isNegotiable, setIsNegotiable] = useState(false);
+    const [userEmail, setUserEmail] = useState('');
 
     const displayAddress = address ? address.split(',')[0] : 'No address available';
     
@@ -85,17 +87,25 @@ const ListingScreen = ({ route }) => {
             if (userID) {
                 try {
                     const userData = await getUser(userID);
+                    
                     if (userData?.fullName) {
                         setFullName(userData.fullName);
                     } else {
                         setFullName("User Name");
                     }
+        
+                    if (userData?.email) {
+                        setUserEmail(userData.email);
+                    } else {
+                        console.warn("Email not found in userData");
+                    }
+        
                 } catch (error) {
                     console.error("Error fetching user data:", error);
                     setFullName("User Name");
                 }
             }
-        };
+        };        
         
         const fetchPostData = async () => {
             if(postId){
@@ -131,6 +141,19 @@ const ListingScreen = ({ route }) => {
         }, [postId])
     );
 
+    const handleContactPress = () => {
+        if (!userEmail) {
+            alert("Email not available.");
+            return;
+        }
+    
+        const subject = `Inquiry about your parking listing`;
+        const body = `Hi ${fullName || ''},\n\nI'm interested in your listing at ${displayAddress}. Could you please provide more details?\n\nThanks!`;
+        const emailUrl = `mailto:${userEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+        Linking.openURL(emailUrl).catch(err => console.error('Error opening email client:', err));
+    };    
+    
     const handleSavePress = async () => {
         try {
             const savedListings = await AsyncStorage.getItem('savedListings');
@@ -298,7 +321,7 @@ const ListingScreen = ({ route }) => {
                             <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHour))}</Text>
                             <Text style={styles.negotiableText}>{isNegotiable ? "Negotiable" : "Firm price"}</Text>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleContactPress}>
                             <View style={styles.contactButton}>
                                 <Text style={styles.contactText}>Contact</Text>
                             </View>
