@@ -30,6 +30,7 @@ const ListingScreen = ({ route }) => {
         startDate, 
         endDate, 
         isAvailable,
+        images: routeImages,
     } = route.params || {};
 
     const [currentUserId, setCurrentUserId] = useState(null);
@@ -43,7 +44,9 @@ const ListingScreen = ({ route }) => {
     const [endDateState, setEndDate] = useState(endDate);
     const [availableState, setIsAvailable] = useState(isAvailable);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const images = [CarImage, CarImage];
+    const images = routeImages && routeImages.length ? routeImages : [CarImage, CarImage];
+    const [userProfileImage, setUserProfileImage] = useState(null);
+
     const renderImageItem = ({ item, index }) => (
         <View
           style={{
@@ -117,7 +120,10 @@ const ListingScreen = ({ route }) => {
                     } else {
                         setFullName("User Name");
                     }
-        
+                    if (userData?.profileImage) {
+                        setUserProfileImage(userData.profileImage);
+                    }
+                    
                     if (userData?.email) {
                         setUserEmail(userData.email);
                     } else {
@@ -310,9 +316,10 @@ const ListingScreen = ({ route }) => {
 
                     <View style={styles.userInfoContainer}>
                         <Image
-                            source={User}
+                            source={userProfileImage ? { uri: userProfileImage } : User}
                             style={styles.UserImage}
                         />
+
                         <View style={styles.userInfoTextContainer}>
                             <Text style={styles.listedUser}>Listed by {fullName}</Text>
                             <Text style={styles.listingDate}>Listing since {listedYear}</Text>
@@ -450,6 +457,7 @@ const styles = StyleSheet.create({
         height: 50,
         marginLeft: 15,
         marginTop: 10,
+        borderRadius: '100%',
     },
     listedUser:{
         fontSize: 24,

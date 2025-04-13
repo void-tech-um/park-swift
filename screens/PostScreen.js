@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, Modal, TouchableWithoutFeedback,} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
 import { createPost, collection, query, where, getDocs } from '../firebaseFunctions/firebaseFirestore';
@@ -7,6 +7,9 @@ import RNPickerSelect from 'react-native-picker-select';
 import { Searchbar } from 'react-native-paper';
 import { TagsModal, useTagsModal } from './FilterScreen';
 import { database } from '../services/configFirestore'; 
+import * as ImagePicker from 'expo-image-picker';
+import UploadIcon from '../assets/upload.png';
+
 const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
 
@@ -26,6 +29,10 @@ function PostScreen({ navigation, route }) {
   const [suggestions, setSuggestions] = useState([]);
   const [isAddressSelected, setIsAddressSelected] = useState(false);
   const { isTagsModalOpen, setIsTagsModalOpen, selectedTags, handleTagSelection, updateSelectedTags, tagOptions, numTags } = useTagsModal();
+  const [images, setImages] = useState([]);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [uploadModalVisible, setUploadModalVisible] = useState(false);
+  const [selectedSlotIndex, setSelectedSlotIndex] = useState(null);
 
   const fetchAddressSuggestions = async (query) => {
     if (!query) {
@@ -165,7 +172,51 @@ function PostScreen({ navigation, route }) {
   //   newTags.splice(index, 1);
   //   setTags(newTags);
   // };
+  const clickOutsideModal = () => {
+      setModalVisible(false);
+  };
 
+  const handleImageChange = (image) => {
+      setUpdatedUser({...updatedUser, profileImage: image});
+      //handleSave();
+  };
+
+  const pickImageForSlot = async (index) => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+  
+      if (!result.canceled && result.assets?.length > 0) {
+        const uri = result.assets[0].uri;
+        setImages((prev) => {
+          const updated = [...prev];
+          updated[index] = uri;
+          return updated;
+        });
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+    } finally {
+      setUploadModalVisible(false);
+    }
+  };  
+  
+  const removeImageFromSlot = () => {
+    if (selectedSlotIndex !== null) {
+      setImages((prev) => {
+        const updated = [...prev];
+        updated[selectedSlotIndex] = null;
+        return updated;
+      });
+    }
+    setUploadModalVisible(false);
+  };  
+
+    
   const resetForm = () => {
     setLocation('');
     setStartTime({ hours: '', minutes: '' });
@@ -179,6 +230,7 @@ function PostScreen({ navigation, route }) {
     setTags([]);
     setNotes('');
     setSelectedDates({});
+    setImages([]);
   };
 
   useEffect(() => {
@@ -273,6 +325,11 @@ function PostScreen({ navigation, route }) {
           return;
         }
 
+        if (images.length < 2) {
+          alert('Please upload at least 2 images.');
+          return;
+        }        
+        
         // Step 2: Create post and store coordinates
         const postId = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
           { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
@@ -284,7 +341,8 @@ function PostScreen({ navigation, route }) {
         );
 
         // Step 3: Navigate to confirmation screen (not MapScreen)
-        navigation.navigate('PostConfirmationScreen', { postId });
+        resetForm();
+        navigation.navigate('PostConfirmationScreen', { postId, images });
 
     } catch (error) {
         console.error('Error creating post:', error);
@@ -648,6 +706,48 @@ function PostScreen({ navigation, route }) {
             </View>
           ))}
         </View>
+        <Text style={styles.subHeading}>Upload Images</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: '3.5%' }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ flexGrow: 0 }}
+            contentContainerStyle={{ flexDirection: 'row' }}
+          >
+            {[...Array(4)].map((_, index) => {
+              const uri = images[index];
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    setSelectedSlotIndex(index);
+                    setUploadModalVisible(true);
+                  }}
+                  style={{
+                    width: 120,
+                    height: 120,
+                    backgroundColor: '#E9E9E9',
+                    borderRadius: 10,
+                    marginRight: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {uri ? (
+                    <Image
+                      source={{ uri }}
+                      style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <Image source={UploadIcon} style={{ width: 40, height: 40 }} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
         <Text style={styles.subHeading}>Additional Notes</Text>
         <TextInput
           style={[styles.input, styles.notesInput]}
@@ -667,7 +767,39 @@ function PostScreen({ navigation, route }) {
           handleTagSelection={handleTagSelection}
           tagOptions={tagOptions}
           numTags={numTags}
-        />
+      />
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={uploadModalVisible}
+        onRequestClose={() => setUploadModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setUploadModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalHeader}>Image Options</Text>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={() => pickImageForSlot(selectedSlotIndex)}
+              >
+                <Text style={styles.modalOptionText}>Upload Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={removeImageFromSlot}
+              >
+                <Text style={styles.modalOptionText}>Remove Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={() => setUploadModalVisible(false)}
+              >
+                <Text style={styles.modalOptionText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 }
@@ -953,6 +1085,43 @@ const styles = StyleSheet.create({
       borderBottomWidth: 1,
       borderBottomColor: '#000',
       fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  modalContent: {
+      width: '85%',
+      backgroundColor: '#FFF',
+      borderRadius: 20,
+      paddingVertical: 24,
+      paddingHorizontal: 24,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 8,
+  },
+  modalHeader: {
+      fontSize: 20,
+      fontWeight: '600',
+      marginBottom: 20,
+      color: '#1A1A1A',
+  },
+  modalOption: {
+      paddingVertical: 16,
+      width: '100%',
+      alignItems: 'center',
+      borderBottomWidth: 1,
+      borderBottomColor: '#F0F0F0',
+  },
+  modalOptionText: {
+      fontSize: 17,
+      color: '#0653A1',
+      fontWeight: '500',
   },
 });
 
