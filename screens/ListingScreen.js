@@ -64,8 +64,8 @@ const ListingScreen = ({ route }) => {
         const readablePeriod = rentalPeriod
             .replace("hr", "hour")
             .replace("semstr", "semester");
-        return `${cost}/${readablePeriod}`;
-    };     
+        return `$${parseFloat(cost).toFixed(2)}/${readablePeriod}`;
+    };    
 
     const removeSpaces = (text) => {
         return text.replace(/\s/g, '');
@@ -192,9 +192,11 @@ const ListingScreen = ({ route }) => {
                     ppHour: ppHourState,
                     startDate: startDateState ? new Date(startDateState).toISOString() : null,
                     endDate: endDateState ? new Date(endDateState).toISOString() : null,
+                    startTime: route.params?.startTime || null,
+                    endTime: route.params?.endTime || null,     
                     isAvailable: availableState,
                     userID,
-                  });                  
+                });                              
             }
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
             setIsSaved(!isSaved);

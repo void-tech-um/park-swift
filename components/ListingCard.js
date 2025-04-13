@@ -141,7 +141,9 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
                     </View>
                     <View style={styles.bottomSection}>
                         <View style={styles.content}>
-                            <Text style={styles.price}>{ppHour}</Text>
+                            <Text style={styles.price}>
+                                {ppHour?.includes('$') ? ppHour : `$${ppHour} /hour`}
+                            </Text>
                             {milesAway && (
                                 <Text style={styles.description}>{milesAway} miles away</Text>
                             )}
@@ -199,8 +201,8 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'absolute',
         left: 0,
-        top: 0,
-        bottom: 0,
+        top: '10%',
+        bottom: "-12%",
         width: 110,
         zIndex: 0,
         overflow: 'hidden',
