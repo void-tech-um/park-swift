@@ -5,6 +5,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import SearchbarComponent from '../components/SearchBar';
 import MenuSearchBar from '../components/MenuSearchBar';
 import ListingCard from '../components/ListingCard';
+import { doc, getDoc } from 'firebase/firestore';
+import { database } from '../firebaseFunctions/firebaseFirestore'; // Adjust path if needed
 
 const SavedListingsScreen = () => {
   const [savedListings, setSavedListings] = useState([]);
@@ -12,22 +14,43 @@ const SavedListingsScreen = () => {
     React.useCallback(() => {
       const fetchSavedListings = async () => {
         try {
-            const storedListings = await AsyncStorage.getItem('savedListings');
-            if (storedListings) {
-                let parsedListings = JSON.parse(storedListings);
-                parsedListings = parsedListings.map(listing => ({
+          const storedListings = await AsyncStorage.getItem('savedListings');
+          if (storedListings) {
+            let parsedListings = JSON.parse(storedListings);
+      
+            const validListings = [];
+      
+            for (let listing of parsedListings) {
+              try {
+                const postRef = doc(database, "posts", listing.postId);
+                const postSnap = await getDoc(postRef);
+                if (postSnap.exists()) {
+                  validListings.push({
                     ...listing,
                     startDate: listing.startDate ? new Date(listing.startDate) : null,
                     endDate: listing.endDate ? new Date(listing.endDate) : null,
-                }));
-                setSavedListings(parsedListings);
-            } else {
-                setSavedListings([]);
+                    startTime: typeof listing.startTime === 'string' 
+                        ? JSON.parse(listing.startTime) 
+                        : listing.startTime,
+                    endTime: typeof listing.endTime === 'string' 
+                        ? JSON.parse(listing.endTime) 
+                        : listing.endTime,
+                  });
+                }
+              } catch (checkErr) {
+                console.warn(`Failed to check listing ${listing.postId}`, checkErr);
+              }
             }
+      
+            await AsyncStorage.setItem('savedListings', JSON.stringify(validListings));
+            setSavedListings(validListings);
+          } else {
+            setSavedListings([]);
+          }
         } catch (error) {
-            console.error("Error fetching saved listings:", error);
+          console.error("Error fetching saved listings:", error);
         }
-    };
+      };
         fetchSavedListings();
     }, [])
   );
@@ -56,6 +79,8 @@ const SavedListingsScreen = () => {
                 listingURL={listing.listingURL}
                 startDate={listing.startDate}
                 endDate={listing.endDate}
+                startTime={listing.startTime}
+                endTime={listing.endTime}   
                 isAvailable={listing.isAvailable}
                 showSavedIcon={true}
                 isSaved={true} 

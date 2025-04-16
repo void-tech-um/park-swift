@@ -156,7 +156,7 @@ function EditProfileScreen({ navigation, route }) {
                                 <Text style={styles.modalOptionText}>Remove Photo</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.modalOption} onPress={() => setModalVisible(false)}>
-                                <Text style={styles.modalOptionText}>Exit</Text>
+                                <Text style={styles.modalOptionText}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

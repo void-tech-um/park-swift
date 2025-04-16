@@ -3,8 +3,10 @@ import { View, StyleSheet, Text, TouchableOpacity, Image, Platform } from 'react
 import { useNavigation } from '@react-navigation/native';
 import arrow from '../assets/arrow.png'; 
 import SavedIcon from '../assets/Vector.png';
-import Car from '../assets/car.png'; 
+import Car from '../assets/image.png'; 
 import UnavailableBadge from '../components/Unavailable'; 
+import * as Location from 'expo-location';
+import { useEffect, useState } from 'react';
 
 const getFormattedEndDate = (startDate, endDate) => {
     let end = endDate?.toDate ? endDate.toDate() : new Date(endDate);
@@ -35,6 +37,27 @@ const getFormattedEndDate = (startDate, endDate) => {
     return `${end.getMonth() + 1}/${end.getDate()+1}/${end.getFullYear()}`;
 };
 
+const getDistanceInMiles = (coord1, coord2) => {
+    const toRad = (value) => (value * Math.PI) / 180;
+
+    const R = 6371; // Radius of Earth in km
+    const dLat = toRad(coord2.latitude - coord1.latitude);
+    const dLon = toRad(coord2.longitude - coord1.longitude);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(coord1.latitude)) *
+            Math.cos(toRad(coord2.latitude)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distanceInKm = R * c;
+    const distanceInMiles = distanceInKm * 0.621371;
+
+    return distanceInMiles.toFixed(1);
+};
+
 const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTime, endTime, image, ppHour, isAvailable=true}) => {
     const navigation = useNavigation();
 
@@ -54,9 +77,54 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
     };
 
     const formatTime = (time) => {
-        if (!time || typeof time !== 'object') return '';
+        if (!time || !time.hours || !time.minutes) return '';
         return `${time.hours}:${time.minutes} ${time.period}`;
-    };
+    };    
+
+    const [currentLocation, setCurrentLocation] = useState(null);
+    const [milesAway, setMilesAway] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                console.warn('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setCurrentLocation({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            });
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (currentLocation && address) {
+            const encodedAddress = encodeURIComponent(address);
+            const apiKey = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w'; // replace with your real key
+    
+            fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${apiKey}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'OK') {
+                        const location = data.results[0].geometry.location;
+                        const destination = {
+                            latitude: location.lat,
+                            longitude: location.lng,
+                        };
+                        const miles = getDistanceInMiles(currentLocation, destination);
+                        setMilesAway(miles);
+                    } else {
+                        console.warn('Geocoding failed:', data.status);
+                    }
+                })
+                .catch(error => console.warn('Geocoding error:', error));
+        }
+    }, [currentLocation, address]);
+    
+
 
     return (
         <TouchableOpacity onPress={handleSeeMorePress}>
@@ -73,11 +141,17 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
                     </View>
                     <View style={styles.bottomSection}>
                         <View style={styles.content}>
-                            <Text style={styles.price}>{ppHour}</Text>
-                            <Text style={styles.description}>x minutes away</Text>
+                            <Text style={styles.price}>
+                                {ppHour?.includes('$') ? ppHour : `$${ppHour} /hour`}
+                            </Text>
+                            {milesAway && (
+                                <Text style={styles.description}>{milesAway} miles away</Text>
+                            )}
+                            {(formatTime(startTime) && formatTime(endTime)) ? (
                             <Text style={styles.description}>
                                 {formatTime(startTime)} - {formatTime(endTime)}
                             </Text>
+                            ) : null}
                             <Text style={styles.description}>
                                 {startDate
                                     ? `${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()+1}/${new Date(startDate).getFullYear()}`
@@ -127,8 +201,8 @@ const styles = StyleSheet.create({
     imageContainer: {
         position: 'absolute',
         left: 0,
-        top: 0,
-        bottom: 0,
+        top: '10%',
+        bottom: "-12%",
         width: 110,
         zIndex: 0,
         overflow: 'hidden',

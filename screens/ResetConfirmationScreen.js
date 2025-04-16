@@ -5,14 +5,16 @@ export default function ResetConfirmationScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <Image
-                style={styles.checkIcon}
+                source={require('../assets/circle-check.png')}
+                style={styles.icon}
+                resizeMode="contain"
             />
 
-            <Text style={styles.title}>Password Reset{'\n'}Successful!</Text>
+            <Text style={styles.title}>Password Reset{"\n"}Successful!</Text>
 
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('LoginScreen')}
+                onPress={() => navigation.navigate('Login')}
             >
                 <Text style={styles.buttonText}>Return to Login</Text>
             </TouchableOpacity>
@@ -23,34 +25,34 @@ export default function ResetConfirmationScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#00245D',
-        alignItems: 'center',
+        backgroundColor: '#052658',
         justifyContent: 'center',
-        paddingHorizontal: 20,
+        alignItems: 'center',
     },
-    checkIcon: {
-        width: 100,
-        height: 100,
-        marginBottom: 40,
-        resizeMode: 'contain',
+    icon: {
+        width: 115,
+        height: 115,
+        marginBottom: "5%",
     },
     title: {
-        fontSize: 24,
-        color: '#FFD766',
-        fontWeight: 'bold',
+        fontSize: 32,
+        fontFamily: "NotoSansTaiTham-Bold",
         textAlign: 'center',
-        marginBottom: 40,
-        lineHeight: 32,
+        color: '#FED869',
+        marginBottom: "15%",
     },
     button: {
-        backgroundColor: '#FFD766',
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 80,
+        backgroundColor: '#FED869',
+        width: '90%',
+        borderRadius: 18,
+        height: 58,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: "20%",
     },
     buttonText: {
-        color: '#00245D',
-        fontWeight: 'bold',
+        color: '#052658',
         fontSize: 18,
+        fontFamily: "NotoSansTaiTham-Bold",
     },
 });

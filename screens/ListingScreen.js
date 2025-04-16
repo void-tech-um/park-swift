@@ -11,10 +11,14 @@ import PavedEntrance from '../assets/PavedEntrance.png';
 import PrivateProperty from '../assets/PrivateProperty.png';  
 import Unsave from '../assets/Save.png'; 
 import Save from '../assets/saved_icon.png';
-import CarImage from '../assets/CarImage.png'; 
+import CarImage from '../assets/image.png'; 
 import MenuSearchBar from '../components/MenuSearchBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAuth } from "firebase/auth";
+import { Linking, FlatList, Dimensions } from 'react-native';
+const screenWidth = Dimensions.get('window').width;
+const imageSize = screenWidth * 0.70;
+const imageSpacing = screenWidth * 0.025;
 
 const ListingScreen = ({ route }) => {
     const navigation = useNavigation();
@@ -26,19 +30,44 @@ const ListingScreen = ({ route }) => {
         startDate, 
         endDate, 
         isAvailable,
+        images: routeImages,
     } = route.params || {};
 
     const [currentUserId, setCurrentUserId] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
-    const [fullName, setFullName] = useState('User Name');
+    const [fullName, setFullName] = useState('');
     const [isNegotiable, setIsNegotiable] = useState(false);
+    const [userEmail, setUserEmail] = useState('');
+    const [addressState, setAddress] = useState(address);
+    const [ppHourState, setPrice] = useState(ppHour);
+    const [startDateState, setStartDate] = useState(startDate);
+    const [endDateState, setEndDate] = useState(endDate);
+    const [availableState, setIsAvailable] = useState(isAvailable);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const images = routeImages && routeImages.length ? routeImages : [CarImage, CarImage];
+    const [userProfileImage, setUserProfileImage] = useState(null);
 
-    const displayAddress = address ? address.split(',')[0] : 'No address available';
-    
-    const formatCostText = (cost) => {
+    const renderImageItem = ({ item, index }) => (
+        <View
+          style={{
+            marginRight: imageSpacing,
+            marginLeft: index === 0 ? imageSpacing : 0, // only the first image gets left margin
+          }}
+        >
+          <Image source={item} style={[styles.carouselImage, { width: imageSize, height: imageSize }]} />
+        </View>
+      );
+      
+    const displayAddress = addressState ? addressState.split(',').slice(0, 3).join(',') : 'No address available';
+    const street = addressState?.split(',')[0] || 'No address available';
+    const cityState = addressState?.split(',').slice(1, 3).join(',') || '';
+
+    const formatCostText = (cost, rentalPeriod = "hour") => {
         if (!cost) return "";
-        
-        return cost.replace('hr', 'hour').replace('semstr', 'semester');
+        const readablePeriod = rentalPeriod
+            .replace("hr", "hour")
+            .replace("semstr", "semester");
+        return `$${parseFloat(cost).toFixed(2)}/${readablePeriod}`;
     };    
 
     const removeSpaces = (text) => {
@@ -56,46 +85,57 @@ const ListingScreen = ({ route }) => {
         fetchCurrentUser();
     }, []);
 
-    useEffect(() => {
-        if (route.params?.refresh && postId) {
-            console.log("Refreshing ListingScreen after edit/delete...");
-            
-        getPost(postId)
-            .then((updatedPost) => {
+    useFocusEffect(
+        React.useCallback(() => {
+          if (postId) {
+            console.log("Refreshing ListingScreen after save...");
+            getPost(postId)
+              .then((updatedPost) => {
                 if (updatedPost) {
-                    setAddress(updatedPost.location);
-                    setPrice(updatedPost.price);
-                    setStartDate(updatedPost.firstDate);
-                    setEndDate(updatedPost.lastDate);
-                    setIsAvailable(updatedPost.isAvailable);
+                  setAddress(updatedPost.location);
+                  setPrice(updatedPost.price);
+                  setStartDate(updatedPost.firstDate);
+                  setEndDate(updatedPost.lastDate);
+                  setIsAvailable(updatedPost.isAvailable);
                 } else {
-                    // If post is deleted, navigate away from ListingScreen
-                    alert("Listing has been deleted.");
-                    navigation.navigate("HomeScreen"); // Redirect user to HomeScreen
+                  alert("Listing has been deleted.");
+                  navigation.navigate("HomeScreen");
                 }
-            })
-            .catch((error) => {
+              })
+              .catch((error) => {
                 console.error("Error fetching updated post:", error);
-            });
-        }
-    }, [route.params?.refresh, postId]);   
+              });
+          }
+        }, [postId])
+      );        
 
     useEffect(() => {
         const fetchUserData = async () => {
             if (userID) {
                 try {
                     const userData = await getUser(userID);
+                    
                     if (userData?.fullName) {
                         setFullName(userData.fullName);
                     } else {
                         setFullName("User Name");
                     }
+                    if (userData?.profileImage) {
+                        setUserProfileImage(userData.profileImage);
+                    }
+                    
+                    if (userData?.email) {
+                        setUserEmail(userData.email);
+                    } else {
+                        console.warn("Email not found in userData");
+                    }
+        
                 } catch (error) {
                     console.error("Error fetching user data:", error);
                     setFullName("User Name");
                 }
             }
-        };
+        };        
         
         const fetchPostData = async () => {
             if(postId){
@@ -131,6 +171,19 @@ const ListingScreen = ({ route }) => {
         }, [postId])
     );
 
+    const handleContactPress = () => {
+        if (!userEmail) {
+            alert("Email not available.");
+            return;
+        }
+    
+        const subject = `Inquiry about your parking listing`;
+        const body = `Hi ${fullName || ''},\n\nI'm interested in your listing at ${displayAddress}. Could you please provide more details?\n\nThanks!`;
+        const emailUrl = `mailto:${userEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+        Linking.openURL(emailUrl).catch(err => console.error('Error opening email client:', err));
+    };    
+    
     const handleSavePress = async () => {
         try {
             const savedListings = await AsyncStorage.getItem('savedListings');
@@ -141,13 +194,15 @@ const ListingScreen = ({ route }) => {
             } else {
                 savedListingsArray.push({
                     postId,
-                    address,
-                    ppHour,
-                    startDate: startDate ? new Date(startDate).toISOString() : null,
-                    endDate: endDate ? new Date(endDate).toISOString() : null,
-                    isAvailable,
+                    address: addressState,
+                    ppHour: ppHourState,
+                    startDate: startDateState ? new Date(startDateState).toISOString() : null,
+                    endDate: endDateState ? new Date(endDateState).toISOString() : null,
+                    startTime: route.params?.startTime || null,
+                    endTime: route.params?.endTime || null,     
+                    isAvailable: availableState,
                     userID,
-                });
+                });                              
             }
             await AsyncStorage.setItem('savedListings', JSON.stringify(savedListingsArray));
             setIsSaved(!isSaved);
@@ -186,7 +241,7 @@ const ListingScreen = ({ route }) => {
     };
 
     // Extract the year from startDate
-    const listedYear = startDate ? new Date(startDate).getFullYear() : "Invalid date";
+    const listedYear = startDateState ? new Date(startDateState).getFullYear() : "Invalid date";
           
     return (
         <View style={styles.container}>
@@ -200,7 +255,12 @@ const ListingScreen = ({ route }) => {
                                 style={styles.Back}
                             />
                         </TouchableOpacity>
-                        <Text style={styles.listingHeading}>{displayAddress}</Text>
+                        <View style={styles.addressContainer}>
+                            <Text style={styles.listingHeading}>{street}</Text>
+                            {cityState ? (
+                                <Text style={styles.cityStateHeading}>{cityState.trim()}</Text>
+                            ) : null}
+                        </View>
                     </View>
                     {currentUserId === userID && (
                         <TouchableOpacity 
@@ -220,23 +280,46 @@ const ListingScreen = ({ route }) => {
                             <Text style={styles.editListingText}>Edit Listing</Text>
                         </TouchableOpacity>
                     )}
-                    <View style={styles.carImagesContainer}>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                            <Image
-                                source={CarImage}
-                                style={styles.FirstImage}
-                            />
-                            <Image
-                                source={CarImage}
-                                style={styles.SecondImage}
-                            />
-                        </ScrollView>
+                    <View style={styles.carouselContainer}>
+                    <FlatList
+                        data={images}
+                        renderItem={renderImageItem}
+                        keyExtractor={(_, index) => index.toString()}
+                        horizontal
+                        pagingEnabled={false}
+                        snapToInterval={imageSize + imageSpacing}
+                        decelerationRate="fast"
+                        showsHorizontalScrollIndicator={false}
+                        onScroll={e => {
+                            const index = Math.round(
+                                e.nativeEvent.contentOffset.x / (imageSize + imageSpacing)
+                            );
+                            setCurrentImageIndex(index);
+                        }}
+                        contentContainerStyle={{ paddingHorizontal: imageSpacing / 2 }}
+                    />
+                        <View style={styles.imageCounterOverlay}>
+                            <Text style={styles.imageCounterText}>{currentImageIndex + 1}/{images.length}</Text>
+                        </View>
+                        <View style={styles.dotsContainer}>
+                            {images.map((_, index) => (
+                                <View
+                                    key={index}
+                                    style={[
+                                        styles.dot,
+                                        currentImageIndex === index && styles.activeDot
+                                    ]}
+                                />
+                            ))}
+                        </View>
                     </View>
+
                     <View style={styles.userInfoContainer}>
                         <Image
-                            source={User}
+                            source={userProfileImage ? { uri: userProfileImage } : User}
                             style={styles.UserImage}
                         />
+
                         <View style={styles.userInfoTextContainer}>
                             <Text style={styles.listedUser}>Listed by {fullName}</Text>
                             <Text style={styles.listingDate}>Listing since {listedYear}</Text>
@@ -267,17 +350,17 @@ const ListingScreen = ({ route }) => {
                         <Text style={styles.listingInfo}>Listing Information</Text>
                         <Text style={styles.infoLabels}>Available from:</Text>
                         <View style={styles.border}>
-                        <Text style={styles.description}>
-                                {startDate
-                                    ? `${new Date(startDate).getMonth() + 1}/${new Date(startDate).getDate()+1}/${new Date(startDate).getFullYear()}`
-                                    : "Invalid date"}{" "}
+                            <Text style={styles.description}>
+                            {startDateState
+                                ? `${new Date(startDateState).getMonth() + 1}/${new Date(startDateState).getDate() + 1}/${new Date(startDateState).getFullYear()}`
+                                : "Invalid date"}{" "}
                                 -{" "}
-                                {getFormattedEndDate(startDate, endDate)}
+                            {getFormattedEndDate(startDateState, endDateState)}
                             </Text>
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                         <View style={styles.border}>
-                            <Text style={styles.costText}>{formatCostText(ppHour)}</Text>
+                            <Text style={styles.costText}>{formatCostText(ppHourState)}</Text>
                         </View>
                         <Text style={styles.additionalNotes}>Additional Notes</Text>
                         <View style={styles.bulletPointContainer}>
@@ -295,10 +378,10 @@ const ListingScreen = ({ route }) => {
                     </View>
                     <View style={styles.contactBorder}>
                         <View style={styles.textContainer}>
-                            <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHour))}</Text>
+                            <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHourState))}</Text>
                             <Text style={styles.negotiableText}>{isNegotiable ? "Negotiable" : "Firm price"}</Text>
                         </View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleContactPress}>
                             <View style={styles.contactButton}>
                                 <Text style={styles.contactText}>Contact</Text>
                             </View>
@@ -332,12 +415,19 @@ const styles = StyleSheet.create({
         height: 45,
         marginTop: -5,
     },
-    listingHeading: {
+    addressContainer: {
         marginLeft: 22,
-        fontSize: 28,
-        fontFamily: "NotoSansTaiTham-Bold",
+      },
+      listingHeading: {
+        fontSize: 24,
+        fontFamily: 'NotoSansTaiTham-Bold',
         letterSpacing: -1,
-    },
+      },
+      cityStateHeading: {
+        fontSize: 18,
+        fontFamily: 'NotoSansTaiTham-Regular',
+        marginTop: "-2.5%",
+      },        
     editListingButton: {
         marginLeft: 17, 
         alignItems: 'left',
@@ -348,21 +438,13 @@ const styles = StyleSheet.create({
         color: '#0653A1',
         fontSize: 15, 
         fontFamily: 'NotoSansTaiTham-Regular', 
+        marginTop: "-2.5%",
+        marginLeft: "3.5%",
     },
     carImagesContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        paddingHorizontal: -10,
-    },
-    FirstImage: {
-        width: 200,
-        height: 200,
-        marginTop: 7,
-    },
-    SecondImage: {
-        width: 200,
-        height: 200,
-        marginTop: 7,
+        marginLeft: "3.5%",
     },
     userInfoContainer: {
         flexDirection: 'row',
@@ -375,6 +457,7 @@ const styles = StyleSheet.create({
         height: 50,
         marginLeft: 15,
         marginTop: 10,
+        borderRadius: '100%',
     },
     listedUser:{
         fontSize: 24,
@@ -510,6 +593,48 @@ const styles = StyleSheet.create({
         fontFamily: 'NotoSansTaiTham-Regular',
         marginTop: -5,
     },
+    carouselContainer: {
+        marginTop: '1.75%',
+    },
+    carouselImage: {
+        borderRadius: 16,
+    },
+    imageCounterOverlay: {
+        position: 'absolute',
+        top: "3.5%",
+        right: "4%",
+        backgroundColor: 'rgba(102, 102, 102, 100)',
+        borderRadius: 12.5,
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+    },
+    imageCounterText: {
+        color: '#fff',
+        fontSize: 16,
+        fontFamily: 'NotoSansTaiTham',
+    },
+    dotsContainer: {
+        position: 'absolute',
+        bottom: '3.5%',
+        alignSelf: 'center',
+        backgroundColor: 'rgba(102, 102, 102, 0.7)',
+        borderRadius: 20,
+        width: 97,
+        height: 26,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    dot: {
+        width: 10,
+        height: 10,
+        borderRadius: 20,
+        backgroundColor: '#E9EEF1',
+        marginHorizontal: "5%",
+    },
+    activeDot: {
+        backgroundColor: '#FED869',
+    }    
 });
 
 export default ListingScreen;

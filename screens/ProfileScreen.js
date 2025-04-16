@@ -66,7 +66,10 @@ function ProfileScreen({ navigation, route }) {
                 <TouchableOpacity onPress={onPostPress}>
                     <Text style={styles.editProfileText}>Edit Profile</Text>
                 </TouchableOpacity>
-                <Image source={User} style={styles.profileImage} />
+                <Image
+                    source={myUser?.profileImage ? { uri: myUser.profileImage } : User}
+                    style={styles.profileImage}
+                />
                 <Text style={styles.userName}>{firstName} {lastName}</Text>
                 <View style={styles.bioContainer}>
                     <Text style={styles.bioText}>
@@ -119,6 +122,7 @@ const styles = StyleSheet.create({
         height: 190,
         alignSelf: 'center',
         marginBottom: 5,
+        borderRadius: "100%",
     },
     userName: {
         fontSize: 28,

@@ -1,104 +1,132 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    Image,
-    ScrollView,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function ForgotPasswordScreen({ navigation }) {
     const [email, setEmail] = useState('');
 
+    const handleResetPassword = () => {
+        const auth = getAuth();
+        if (!email) {
+            alert('Please enter your email address');
+            return;
+        }
+
+        sendPasswordResetEmail(auth, email)
+            .then(() => {
+                alert(
+                    'A reset link was sent to your email. Follow the instructions there to change your password.'
+                );
+                navigation.navigate('ResetConfirmationScreen');
+            })
+            .catch((error) => {
+                console.error(error);
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        alert('Please enter a valid email address.');
+                        break;
+                    case 'auth/user-not-found':
+                        alert('No user found with that email address.');
+                        break;
+                    default:
+                        alert('Something went wrong. Please try again.');
+                }
+            });
+    };
+
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <TouchableOpacity
-                style={styles.backButton}
-                onPress={() => navigation.goBack()}
-            >
+        <View style={styles.container}>
+            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                 <Image source={require('../assets/Back.png')} style={styles.backIcon} />
             </TouchableOpacity>
 
-            
+            <View style={styles.content}>
+                <Image
+                    source={require('../assets/lock.png')} // make sure this image exists
+                    style={styles.lockIcon}
+                    resizeMode="contain"
+                />
 
-            <Text style={styles.title}>Forgot Password?</Text>
-            <Text style={styles.subtitle}>
-                Enter your email below to reset{'\n'}your password.
-            </Text>
+                <Text style={styles.title}>Forgot Password?</Text>
+                <Text style={styles.subtitle}>Enter your email below to reset your password.</Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Email address"
-                placeholderTextColor="#777"
-                value={email}
-                onChangeText={setEmail}
-            />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email address"
+                    placeholderTextColor="#888"
+                    onChangeText={setEmail}
+                    value={email}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
 
-            <TouchableOpacity 
-                style={styles.continueButton}
-                onPress={() => navigation.navigate('ResetPasswordScreen')}
-            >
-                <Text style={styles.continueText}>Continue</Text>
-            </TouchableOpacity>
-        </ScrollView>
+                <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
+                    <Text style={styles.buttonText}>Continue</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
-        backgroundColor: '#00245D',
-        alignItems: 'center',
-        paddingTop: 40,
-        paddingHorizontal: 20,
-        paddingBottom: 30,
+        flex: 1,
+        backgroundColor: '#052658',
     },
     backButton: {
-        alignSelf: 'flex-start',
-        marginBottom: 20,
+        position: 'absolute',
+        top: "6%",
+        left: "5%",
     },
     backIcon: {
-        width: 36,
-        height: 36,
-        resizeMode: 'contain',
+        width: 45,
+        height: 45,
+    },
+    content: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     lockIcon: {
-        width: 100,
-        height: 100,
-        resizeMode: 'contain',
-        marginBottom: 30,
+        width: 127,
+        height: 127,
+        marginBottom: "8%",
     },
     title: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#FFD766',
-        marginBottom: 10,
+        fontSize: 32,
+        color: '#FED869',
+        fontFamily: "NotoSansTaiTham-Bold",
+        marginBottom: "1%",
     },
     subtitle: {
+        fontSize: 14,
         color: 'white',
-        fontSize: 16,
         textAlign: 'center',
-        marginBottom: 30,
+        fontFamily: "NotoSansTaiTham",
+        marginBottom: "10%",
     },
     input: {
-        width: '100%',
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        padding: 14,
+        height: 60,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingHorizontal: "4%",
         fontSize: 16,
-        marginBottom: 20,
+        width: '90%',
+        fontFamily: "NotoSansTaiTham",
+        marginBottom: "3%",
     },
-    continueButton: {
-        backgroundColor: '#FFD766',
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 100,
+    button: {
+        backgroundColor: '#FED869',
+        width: '90%',
+        borderRadius: 18,
+        height: 58,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: "32%",
     },
-    continueText: {
-        color: '#00245D',
-        fontWeight: 'bold',
+    buttonText: {
+        color: '#052658',
         fontSize: 18,
+        fontFamily: "NotoSansTaiTham-Bold",
     },
 });

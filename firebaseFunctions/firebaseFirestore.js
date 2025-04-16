@@ -1,11 +1,11 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, deleteDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import { app } from '../services/configFirestore';
 
 const auth = getAuth();
 const database = getFirestore(app);
 
-export { collection, getDocs, doc, query, where, addDoc, setDoc, getDoc, database };
+export { collection, getDocs, doc, query, where, addDoc, setDoc, getDoc, database, updateDoc };
 
 export const updateUser = async (user) => {
     try {
