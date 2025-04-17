@@ -57,17 +57,25 @@ const MapScreen = ({ route }) => {
   }
 
   const openListing = (currentPost) => {
-    console.log(currentPost.userID);
+    // console.log(currentPost.price && currentPost.rentalPeriod
+    //   ? `$${currentPost.price} /${currentPost.rentalPeriod}`
+    //   : null);
 
 
     const params = {
-      address: currentPost.address,
-      ppHour: currentPost.ppHour,
+      id: currentPost.id,
+      address: currentPost.location,
+      startDate: currentPost.firstDate || null,  
+      endDate: currentPost.lastDate || null, 
+      startTime: currentPost.startTime || null,
+      endTime: currentPost.endTime || null,
+      ppHour: currentPost.price && currentPost.rentalPeriod
+      ? `$${currentPost.price} /${currentPost.rentalPeriod}`
+      : null,
+      isNegotiable: currentPost.negotiable ? 'Negotiable' : 'Fixed Price',
+      carSize: currentPost.sizeOfCar || "Size not specified",
       userID: currentPost.userID,
       postID: currentPost.postID,
-      startDate: currentPost.startDate,
-      endDate: currentPost.endDate,
-      isAvailable: currentPost.isAvailable,
     }
 
     setCurrentParams(params);

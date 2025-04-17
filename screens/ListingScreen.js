@@ -39,7 +39,11 @@ const ListingScreen = ({ route }) => {
     const [isNegotiable, setIsNegotiable] = useState(false);
     const [userEmail, setUserEmail] = useState('');
     const [addressState, setAddress] = useState(address);
-    const [ppHourState, setPrice] = useState(ppHour);
+    // const [ppHourState, setPrice] = useState(ppHour);
+    
+    const [price, setPrice] = useState(null);
+    const [rentalPeriod, setRentalPeriod] = useState(null);
+
     const [startDateState, setStartDate] = useState(startDate);
     const [endDateState, setEndDate] = useState(endDate);
     const [availableState, setIsAvailable] = useState(isAvailable);
@@ -63,6 +67,7 @@ const ListingScreen = ({ route }) => {
     const cityState = addressState?.split(',').slice(1, 3).join(',') || '';
 
     const formatCostText = (cost, rentalPeriod = "hour") => {
+        console.log(cost);
         if (!cost) return "";
         const readablePeriod = rentalPeriod
             .replace("hr", "hour")
@@ -75,6 +80,11 @@ const ListingScreen = ({ route }) => {
     };
 
     useEffect(() => {
+        if (ppHour) {
+            setPrice(ppHour.substring(1, ppHour.indexOf('/') - 1));
+            setRentalPeriod(ppHour.substring(ppHour.indexOf('/') + 1));
+        }
+        
         const fetchCurrentUser = async () => {
             const auth = getAuth();
             const user = auth.currentUser;
@@ -93,7 +103,12 @@ const ListingScreen = ({ route }) => {
               .then((updatedPost) => {
                 if (updatedPost) {
                   setAddress(updatedPost.location);
-                  setPrice(updatedPost.price);
+                
+                    if (updatedPost.ppHour) {
+                        setPrice(updatedPost.ppHour.substring(1, updatedPost.ppHour.indexOf('/') - 1));
+                        setRentalPeriod(updatedPost.ppHour.substring(updatedPost.ppHour.indexOf('/') + 1));
+                    }
+                    
                   setStartDate(updatedPost.firstDate);
                   setEndDate(updatedPost.lastDate);
                   setIsAvailable(updatedPost.isAvailable);
@@ -195,7 +210,9 @@ const ListingScreen = ({ route }) => {
                 savedListingsArray.push({
                     postId,
                     address: addressState,
-                    ppHour: ppHourState,
+                    // ppHour: ppHourState,
+                    price: price,
+                    rentalPeriod: rentalPeriod,
                     startDate: startDateState ? new Date(startDateState).toISOString() : null,
                     endDate: endDateState ? new Date(endDateState).toISOString() : null,
                     startTime: route.params?.startTime || null,
@@ -270,7 +287,7 @@ const ListingScreen = ({ route }) => {
                                     postId, 
                                     userId: userID, 
                                     address, 
-                                    ppHour, 
+                                    ppHour: price, 
                                     startDate, 
                                     endDate, 
                                     isAvailable 
@@ -360,7 +377,7 @@ const ListingScreen = ({ route }) => {
                         </View>
                         <Text style={[styles.infoLabels, { marginTop: 10 }]}>Cost:</Text>
                         <View style={styles.border}>
-                            <Text style={styles.costText}>{formatCostText(ppHourState)}</Text>
+                            <Text style={styles.costText}>{formatCostText(price, rentalPeriod)}</Text>
                         </View>
                         <Text style={styles.additionalNotes}>Additional Notes</Text>
                         <View style={styles.bulletPointContainer}>
@@ -378,7 +395,7 @@ const ListingScreen = ({ route }) => {
                     </View>
                     <View style={styles.contactBorder}>
                         <View style={styles.textContainer}>
-                            <Text style={styles.boldCostText}>{removeSpaces(formatCostText(ppHourState))}</Text>
+                            <Text style={styles.boldCostText}>{removeSpaces(formatCostText(price, rentalPeriod))}</Text>
                             <Text style={styles.negotiableText}>{isNegotiable ? "Negotiable" : "Firm price"}</Text>
                         </View>
                         <TouchableOpacity onPress={handleContactPress}>
