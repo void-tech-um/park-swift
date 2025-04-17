@@ -58,7 +58,7 @@ const getDistanceInMiles = (coord1, coord2) => {
     return distanceInMiles.toFixed(1);
 };
 
-const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTime, endTime, image, ppHour, isAvailable=true}) => {
+const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTime, endTime, image, ppHour, isAvailable=true, images = []}) => {
     const navigation = useNavigation();
 
     const handleSeeMorePress = () => {
@@ -73,6 +73,7 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
             startDate, 
             endDate,
             isAvailable,
+            images,
         });
     };
 
@@ -134,10 +135,7 @@ const ListingCard = ({ id: postId, userID, address, startDate, endDate, startTim
                         <Text style={styles.address}>{address}</Text>
                     </View>
                     <View style={styles.imageContainer}>
-                        <Image
-                            source={Car}
-                            style={styles.image}
-                        />
+                        <Image source={typeof image === 'string' ? { uri: image } : image || Car} style={styles.image} />
                     </View>
                     <View style={styles.bottomSection}>
                         <View style={styles.content}>

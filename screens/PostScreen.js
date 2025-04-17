@@ -9,7 +9,7 @@ import { TagsModal, useTagsModal } from './FilterScreen';
 import { database } from '../services/configFirestore'; 
 import * as ImagePicker from 'expo-image-picker';
 import UploadIcon from '../assets/upload.png';
-
+import image from '../assets/image.png'; 
 const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
 
@@ -325,20 +325,43 @@ function PostScreen({ navigation, route }) {
           return;
         }
 
-        if (images.length < 2) {
+        let finalImages = images.filter(Boolean); // remove any null slots
+
+        if (finalImages.length === 1) {
           alert('Please upload at least 2 images.');
           return;
-        }        
+        }
         
+        // Use default if no images
+        if (finalImages.length === 0) {
+          finalImages = [require('../assets/image.png')]; // 👈 local image fallback
+        }
+
         // Step 2: Create post and store coordinates
-        const postId = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
-          { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
-          { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
+        const postId = await createPost(
+          userId,
+          location,
+          rentalPeriod,
+          price,
+          isNegotiable,
+          firstDate,
+          lastDate,
+          {
+            hours: startTime.hours,
+            minutes: startTime.minutes,
+            period: startPeriod,
+          },
+          {
+            hours: endTime.hours,
+            minutes: endTime.minutes,
+            period: endPeriod,
+          },
           sizeOfCar,
-          lat,  // Store latitude
-          lng,   // Store longitude
-          selectedTags
-        );
+          lat,
+          lng,
+          selectedTags,
+          finalImages 
+        );        
 
         // Step 3: Navigate to confirmation screen (not MapScreen)
         resetForm();

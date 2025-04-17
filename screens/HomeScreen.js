@@ -6,7 +6,6 @@ import SortingButton from '../components/SortingButton.js';
 import ListingCard from '../components/ListingCard';
 //import CurrentlyRentingCard from '../components/CurrentlyRenting';
 import MenuSearchBar from '../components/MenuSearchBar.js';
-import Car from '../assets/car.png'; 
 
 const HomeScreen = () => {
   const [posts, setPosts] = useState([]);
@@ -46,6 +45,8 @@ const HomeScreen = () => {
                 isNegotiable: data.negotiable ? 'Negotiable' : 'Fixed Price',
                 carSize: data.sizeOfCar || "Size not specified",
                 userID: data.userID,
+                image: data.images?.[0],     
+                images: data.images || [],
             };
         });
         setPosts(postList);
@@ -96,7 +97,8 @@ const HomeScreen = () => {
             endDate={post.endDate}
             startTime={post.startTime}
             endTime={post.endTime}
-            image={post.image || Car}
+            image={post.images?.[0]}
+            images={post.images} 
             ppHour={post.ppHour}
             listingURL={post.listingURL || '#'}
             userID={post.userID}

@@ -44,7 +44,11 @@ const ListingScreen = ({ route }) => {
     const [endDateState, setEndDate] = useState(endDate);
     const [availableState, setIsAvailable] = useState(isAvailable);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const images = routeImages && routeImages.length ? routeImages : [CarImage, CarImage];
+    const images = Array.isArray(routeImages) && routeImages.length
+    ? routeImages.map(item => typeof item === 'string' ? { uri: item } : item)
+    : [];
+
+
     const [userProfileImage, setUserProfileImage] = useState(null);
 
     const renderImageItem = ({ item, index }) => (
@@ -242,7 +246,26 @@ const ListingScreen = ({ route }) => {
 
     // Extract the year from startDate
     const listedYear = startDateState ? new Date(startDateState).getFullYear() : "Invalid date";
-          
+    
+    const isDefaultOnly = (imagesArray) => {
+        if (imagesArray.length !== 1) return false;
+      
+        const firstImage = imagesArray[0];
+      
+        // Check if it's a remote image with 'image.png' in the URL (Firebase fallback)
+        if (typeof firstImage === 'object' && firstImage.uri) {
+          return firstImage.uri.includes('image.png');
+        }
+      
+        // Check if it's a local static image (like `CarImage`)
+        if (typeof firstImage === 'number') {
+          return firstImage === CarImage;
+        }
+      
+        return false;
+      };
+      
+      
     return (
         <View style={styles.container}>
             <MenuSearchBar showSearchBar={false} />
@@ -280,39 +303,41 @@ const ListingScreen = ({ route }) => {
                             <Text style={styles.editListingText}>Edit Listing</Text>
                         </TouchableOpacity>
                     )}
-                    <View style={styles.carouselContainer}>
-                    <FlatList
-                        data={images}
-                        renderItem={renderImageItem}
-                        keyExtractor={(_, index) => index.toString()}
-                        horizontal
-                        pagingEnabled={false}
-                        snapToInterval={imageSize + imageSpacing}
-                        decelerationRate="fast"
-                        showsHorizontalScrollIndicator={false}
-                        onScroll={e => {
-                            const index = Math.round(
-                                e.nativeEvent.contentOffset.x / (imageSize + imageSpacing)
-                            );
-                            setCurrentImageIndex(index);
-                        }}
-                        contentContainerStyle={{ paddingHorizontal: imageSpacing / 2 }}
-                    />
-                        <View style={styles.imageCounterOverlay}>
-                            <Text style={styles.imageCounterText}>{currentImageIndex + 1}/{images.length}</Text>
+                    {images.length > 0 && !isDefaultOnly(images) && (
+                        <View style={styles.carouselContainer}>
+                        <FlatList
+                            data={images}
+                            renderItem={renderImageItem}
+                            keyExtractor={(_, index) => index.toString()}
+                            horizontal
+                            pagingEnabled={false}
+                            snapToInterval={imageSize + imageSpacing}
+                            decelerationRate="fast"
+                            showsHorizontalScrollIndicator={false}
+                            onScroll={e => {
+                                const index = Math.round(
+                                    e.nativeEvent.contentOffset.x / (imageSize + imageSpacing)
+                                );
+                                setCurrentImageIndex(index);
+                            }}
+                            contentContainerStyle={{ paddingHorizontal: imageSpacing / 2 }}
+                        />
+                            <View style={styles.imageCounterOverlay}>
+                                <Text style={styles.imageCounterText}>{currentImageIndex + 1}/{images.length}</Text>
+                            </View>
+                            <View style={styles.dotsContainer}>
+                                {images.map((_, index) => (
+                                    <View
+                                        key={index}
+                                        style={[
+                                            styles.dot,
+                                            currentImageIndex === index && styles.activeDot
+                                        ]}
+                                    />
+                                ))}
+                            </View>
                         </View>
-                        <View style={styles.dotsContainer}>
-                            {images.map((_, index) => (
-                                <View
-                                    key={index}
-                                    style={[
-                                        styles.dot,
-                                        currentImageIndex === index && styles.activeDot
-                                    ]}
-                                />
-                            ))}
-                        </View>
-                    </View>
+                    )}
 
                     <View style={styles.userInfoContainer}>
                         <Image
