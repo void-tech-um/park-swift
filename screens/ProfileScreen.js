@@ -95,6 +95,8 @@ function ProfileScreen({ navigation, route }) {
                                 isNegotiable={post.negotiable ? 'Negotiable' : 'Fixed Price'}
                                 carSize={post.sizeOfCar || "Size not specified"}
                                 userID={post.userID}
+                                images={post.images || []}
+                                image={post.images?.[0]}
                             />
                         ))
                     )}
