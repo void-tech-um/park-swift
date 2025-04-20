@@ -9,6 +9,7 @@ import { TagsModal, useTagsModal } from './FilterScreen';
 import { database } from '../services/configFirestore'; 
 import * as ImagePicker from 'expo-image-picker';
 import UploadIcon from '../assets/upload.png';
+import { uploadImageAndGetURL } from '../firebaseFunctions/firebaseFirestore';
 import image from '../assets/image.png'; 
 const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
@@ -337,6 +338,20 @@ function PostScreen({ navigation, route }) {
           finalImages = [require('../assets/image.png')]; // 👈 local image fallback
         }
 
+        let uploadedImageURLs = [];
+
+        try {
+          uploadedImageURLs = await Promise.all(
+            finalImage.map(async (uri, index) => {
+              const filename = `${userId}_${Date.now()}_${index}.jpg`;
+              return await uploadImageAndGetURL(uri, `images/${userId}/${filename}`);
+            })
+          );
+        } catch (err) {
+          console.error("Image upload failed:", err);
+          alert("Failed to upload images. Please try again.");
+          return;
+        }
         // Step 2: Create post and store coordinates
         const postId = await createPost(
           userId,
@@ -360,7 +375,7 @@ function PostScreen({ navigation, route }) {
           lat,
           lng,
           selectedTags,
-          finalImages 
+          uploadedImageURLs
         );        
 
         // Step 3: Navigate to confirmation screen (not MapScreen)

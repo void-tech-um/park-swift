@@ -1,9 +1,11 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import { app } from '../services/configFirestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const auth = getAuth();
 const database = getFirestore(app);
+const storage = getStorage(app);
 
 export { collection, getDocs, doc, query, where, addDoc, setDoc, getDoc, database, updateDoc };
 
@@ -258,5 +260,14 @@ export async function deletePost(postId, userId) {
       throw error;
     }
   }
-  
-  
+
+export const uploadImageAndGetURL = async (uri, path) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const imageRef = ref(storage, path);
+    await uploadBytes(imageRef, blob);
+
+    const downloadURL = await getDownloadURL(imageRef);
+    return downloadURL;
+};

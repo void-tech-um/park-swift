@@ -25,18 +25,22 @@ const SavedListingsScreen = () => {
                 const postRef = doc(database, "posts", listing.postId);
                 const postSnap = await getDoc(postRef);
                 if (postSnap.exists()) {
+                  const postData = postSnap.data();
                   validListings.push({
-                    ...listing,
-                    startDate: listing.startDate ? new Date(listing.startDate) : null,
-                    endDate: listing.endDate ? new Date(listing.endDate) : null,
-                    startTime: typeof listing.startTime === 'string' 
-                        ? JSON.parse(listing.startTime) 
-                        : listing.startTime,
-                    endTime: typeof listing.endTime === 'string' 
-                        ? JSON.parse(listing.endTime) 
-                        : listing.endTime,
+                    postId: listing.postId,
+                    address: postData.location || listing.address,
+                    ppHour: postData.price && postData.rentalPeriod
+                        ? `$${postData.price} /${postData.rentalPeriod}`
+                        : listing.ppHour,
+                    startDate: postData.firstDate ? new Date(postData.firstDate) : null,
+                    endDate: postData.lastDate ? new Date(postData.lastDate) : null,
+                    startTime: postData.startTime || listing.startTime,
+                    endTime: postData.endTime || listing.endTime,
+                    images: postData.images || [],
+                    userID: postData.userID || listing.userID,
+                    isAvailable: postData.isAvailable !== undefined ? postData.isAvailable : listing.isAvailable,
                   });
-                }
+                }                
               } catch (checkErr) {
                 console.warn(`Failed to check listing ${listing.postId}`, checkErr);
               }
@@ -82,6 +86,8 @@ const SavedListingsScreen = () => {
                 startTime={listing.startTime}
                 endTime={listing.endTime}   
                 isAvailable={listing.isAvailable}
+                images={listing.images}
+                image={listing.images?.[0]}
                 showSavedIcon={true}
                 isSaved={true} 
                 handleSavePress={() => handleSavePress(listing)}
