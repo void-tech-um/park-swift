@@ -35,11 +35,7 @@
     "expo-image-picker": "~16.0.6",
     "expo-location": "~18.0.10",
     "expo-modules-autolinking": "~2.0.0",
-<<<<<<< HEAD
-    "expo-splash-screen": "~0.29.24",
-=======
     "expo-splash-screen": "^0.29.24",
->>>>>>> f6bae35b97bc0ca0df0af3c6e43ca010b8a1ba01
     "expo-status-bar": "~2.0.1",
     "firebase": "^11.3.0",
     "lodash": "^4.17.21",
