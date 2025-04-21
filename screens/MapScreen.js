@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getAllPosts } from '../firebaseFunctions/firebaseFirestore';
 import MenuSearchBar from '../components/MenuSearchBar.js';
+import ListingScreen from './ListingScreen';
+import { getRelativeCoords } from 'react-native-reanimated';
+import { BottomNavigation } from 'react-native-paper';
 
 const { width, height } = Dimensions.get('window');
 const markerSize = Math.min(width, height) * 0.1; 
@@ -11,6 +14,9 @@ const markerSize = Math.min(width, height) * 0.1;
 const MapScreen = ({ route }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [posts, setPosts] = useState([]); // Store listing locations
+  const [isListingScreenVisible, setIsListingScreenVisible] = useState(false);
+
+  const [currentParams, setCurrentParams] = useState(null);
 
   useEffect(() => {
     // Fetch user's current location
@@ -50,6 +56,27 @@ const MapScreen = ({ route }) => {
     return <Text>Loading...</Text>;
   }
 
+  const openListing = (currentPost) => {
+    const params = {
+      id: currentPost.id,
+      address: currentPost.location,
+      startDate: currentPost.firstDate || null,  
+      endDate: currentPost.lastDate || null, 
+      startTime: currentPost.startTime || null,
+      endTime: currentPost.endTime || null,
+      ppHour: currentPost.price && currentPost.rentalPeriod
+      ? `$${currentPost.price} /${currentPost.rentalPeriod}`
+      : null,
+      isNegotiable: currentPost.negotiable ? 'Negotiable' : 'Fixed Price',
+      carSize: currentPost.sizeOfCar || "Size not specified",
+      userID: currentPost.userID,
+      postID: currentPost.postID,
+    }
+
+    setCurrentParams(params);
+    setIsListingScreenVisible(true);
+  }
+
   return (
     <View style={styles.container}>
       <MenuSearchBar />
@@ -78,14 +105,29 @@ const MapScreen = ({ route }) => {
               coordinate={{ latitude: post.latitude, longitude: post.longitude }} 
               title={post.location}
             >
-              <Image
-                source={require('../assets/map-pin.png')}
-                style={{ width: markerSize, height: markerSize }}
-              />
+              <TouchableOpacity onPress={() => openListing(post)}>
+                <Image
+                  source={require('../assets/map-pin.png')}
+                  style={{ width: markerSize, height: markerSize }}
+                />
+              </TouchableOpacity>
             </Marker>
           ) : null
         ))}
       </MapView>
+      <Modal
+        animationType='slide'
+        transparent={false}
+        visible={isListingScreenVisible}
+        onRequestClose={() => setIsListingScreenVisible(false)}
+        presentationStyle={'pageSheet'}
+      >
+        <ListingScreen
+          route={{
+            params: currentParams,
+          }}
+        />
+      </Modal>
     </View>
   );
 };

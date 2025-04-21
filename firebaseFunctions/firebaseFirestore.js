@@ -207,6 +207,7 @@ export function getAllPosts() {
             const data = doc.data();
             posts.push({
                 ...data,
+                postID: data.postID | null,
                 latitude: data.latitude || null,
                 longitude: data.longitude || null,
                 images: data.images || [],
