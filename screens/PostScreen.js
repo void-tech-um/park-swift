@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, Modal, TouchableWithoutFeedback,} from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Dimensions, Modal, TouchableWithoutFeedback, KeyboardAvoidingView, Platform} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import Dropdown from '../assets/Down.png';
 import { createPost, collection, query, where, getDocs } from '../firebaseFunctions/firebaseFirestore';
@@ -9,7 +9,8 @@ import { TagsModal, useTagsModal } from './FilterScreen';
 import { database } from '../services/configFirestore'; 
 import * as ImagePicker from 'expo-image-picker';
 import UploadIcon from '../assets/upload.png';
-
+import { uploadImageAndGetURL } from '../firebaseFunctions/firebaseFirestore';
+import image from '../assets/image.png'; 
 const { width } = Dimensions.get('window');
 const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
 
@@ -325,20 +326,57 @@ function PostScreen({ navigation, route }) {
           return;
         }
 
-        if (images.length < 2) {
+        let finalImages = images.filter(Boolean); // remove any null slots
+
+        if (finalImages.length === 1) {
           alert('Please upload at least 2 images.');
           return;
-        }        
+        }
         
+        // Use default if no images
+        if (finalImages.length === 0) {
+          finalImages = [require('../assets/image.png')]; // 👈 local image fallback
+        }
+
+        let uploadedImageURLs = [];
+
+        try {
+          uploadedImageURLs = await Promise.all(
+            finalImage.map(async (uri, index) => {
+              const filename = `${userId}_${Date.now()}_${index}.jpg`;
+              return await uploadImageAndGetURL(uri, `images/${userId}/${filename}`);
+            })
+          );
+        } catch (err) {
+          console.error("Image upload failed:", err);
+          alert("Failed to upload images. Please try again.");
+          return;
+        }
         // Step 2: Create post and store coordinates
-        const postId = await createPost(userId, location, rentalPeriod, price, isNegotiable, firstDate, lastDate, 
-          { hours: startTime.hours, minutes: startTime.minutes, period: startPeriod },
-          { hours: endTime.hours, minutes: endTime.minutes, period: endPeriod },
+        const postId = await createPost(
+          userId,
+          location,
+          rentalPeriod,
+          price,
+          isNegotiable,
+          firstDate,
+          lastDate,
+          {
+            hours: startTime.hours,
+            minutes: startTime.minutes,
+            period: startPeriod,
+          },
+          {
+            hours: endTime.hours,
+            minutes: endTime.minutes,
+            period: endPeriod,
+          },
           sizeOfCar,
-          lat,  // Store latitude
-          lng,   // Store longitude
-          selectedTags
-        );
+          lat,
+          lng,
+          selectedTags,
+          uploadedImageURLs
+        );        
 
         // Step 3: Navigate to confirmation screen (not MapScreen)
         resetForm();
@@ -351,265 +389,94 @@ function PostScreen({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior="position" style ={styles.container}>
       <View style={styles.bar}></View>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <Text style={styles.title}>List Your Space</Text>
-        <Text style={styles.subHeading}>Location</Text>
-        <View>
-            <Searchbar
-              placeholder="Search Address"
-              onChangeText={(query) => {
-                setLocation(query);
-                fetchAddressSuggestions(query);
-              }}
-              value={location}
-              style={styles.searchInput}
-              inputStyle={styles.searchText}
-              placeholderTextColor="#A8A8A8"
-            />
-            {suggestions.length > 0 && (
-            <View style={styles.suggestionsContainer}>
-              {suggestions.map((item, index) => (
-                <TouchableOpacity key={item.place_id} onPress={() => handleSelectAddress(item.description)}>
-                  <Text style={[
-                    styles.suggestionItem,
-                    index === suggestions.length - 1 && { borderBottomWidth: 0 }
-                  ]}>
-                    {item.description}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </View>
-        <Text style={styles.subHeading}>Start Time</Text>
-        <View style={styles.timeContainer}>
-          <TextInput
-            style={styles.timeInput}
-            placeholder="12"
-            placeholderTextColor="#A8A8A8"
-            keyboardType="numeric"
-            value={startTime.hours}
-            onChangeText={(text) => setStartTime({ ...startTime, hours: text })}
-          />
-          <Text style={styles.colon}>:</Text>
-          <TextInput
-            style={styles.timeInput}
-            placeholder="00"
-            placeholderTextColor="#A8A8A8"
-            keyboardType="numeric"
-            value={startTime.minutes}
-            onChangeText={(text) => setStartTime({ ...startTime, minutes: text })}
-          />
-          <View style={styles.dropdownContainer}>
-            <RNPickerSelect
-              onValueChange={(value) => setStartPeriod(value)}
-              items={[
-                { label: 'AM', value: 'AM', color: 'black' },
-                { label: 'PM', value: 'PM', color: 'black' },
-              ]}
-              value={startPeriod}
-              style={{
-                inputIOS: {
-                  fontSize: 16,
-                  color: 'black',
-                  height: 40,
-                  width: 75,
-                  backgroundColor: '#E9E9E9',
-                  borderRadius: 17,
-                  paddingLeft: 15,
-                  paddingRight: 35, 
-                  textAlign: 'left', 
-                },
-                inputAndroid: {
-                  fontSize: 16,
-                  color: 'black',
-                  height: 40,
-                  backgroundColor: '#E9E9E9',
-                  borderRadius: 17,
-                  paddingLeft: 15, 
-                  paddingRight: 35, 
-                  textAlign: 'left', 
-                },
-                iconContainer: {
-                  position: 'absolute',
-                  right: 13, 
-                  top: '50%', 
-                  transform: [{ translateY: '-50%' }], 
-                },
-              }}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{}}
-              Icon={() => (
-                <Image source={Dropdown} style={styles.dropdownImage} />
-              )}
-            />
-          </View>
-        </View>
-
-        <Text style={styles.subHeading}>End Time</Text>
-        <View style={styles.timeContainer}>
-          <TextInput
-            style={styles.timeInput}
-            placeholder="12"
-            placeholderTextColor="#A8A8A8"
-            keyboardType="numeric"
-            value={endTime.hours}
-            onChangeText={(text) => setEndTime({ ...endTime, hours: text })}
-          />
-          <Text style={styles.colon}>:</Text>
-          <TextInput
-            style={styles.timeInput}
-            placeholder="00"
-            placeholderTextColor="#A8A8A8"
-            keyboardType="numeric"
-            value={endTime.minutes}
-            onChangeText={(text) => setEndTime({ ...endTime, minutes: text })}
-          />
-          <View style={styles.dropdownContainer}>
-            <RNPickerSelect
-              onValueChange={(value) => setEndPeriod(value)}
-              items={[
-                { label: 'AM', value: 'AM', color: 'black' },
-                { label: 'PM', value: 'PM', color: 'black' },
-              ]}
-              value={endPeriod}
-              style={{
-                inputIOS: {
-                  fontSize: 16,
-                  color: 'black',
-                  height: 40,
-                  width: 75,
-                  backgroundColor: '#E9E9E9',
-                  borderRadius: 17,
-                  paddingLeft: 15,
-                  paddingRight: 35, 
-                  textAlign: 'left', 
-                },
-                inputAndroid: {
-                  fontSize: 16,
-                  color: 'black',
-                  height: 40,
-                  backgroundColor: '#E9E9E9',
-                  borderRadius: 17,
-                  paddingLeft: 15, 
-                  paddingRight: 35, 
-                  textAlign: 'left', 
-                },
-                iconContainer: {
-                  position: 'absolute',
-                  right: 13, 
-                  top: '50%', 
-                  transform: [{ translateY: '-50%' }], 
-                },
-              }}
-              useNativeAndroidPickerStyle={false}
-              placeholder={{}}
-              Icon={() => (
-                <Image source={Dropdown} style={styles.dropdownImage} />
-              )}
-            />
-          </View>
-        </View>
-
-        <Text style={styles.subHeading}>Available dates</Text>
-        <View style={styles.calendarContainer}>
-          <Calendar
-              style={styles.calendar}
-              onDayPress={handleDateSelect}
-              markedDates={selectedDates}
-              markingType={'period'}
-              theme={{
-                  textDayFontSize: 13,
-                  textMonthFontSize: 13,
-                  textDayHeaderFontSize: 13,
-                  textDayFontFamily: 'NotoSansTaiTham-Regular',
-                  textMonthFontFamily: 'NotoSansTaiTham-Bold',
-                  textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
-                  calendarBackground: 'white',
-                  textSectionTitleColor: 'black',
-                  dayTextColor: 'black',
-                  monthTextColor: 'black',
-                  todayTextColor: 'black',
-                  arrowColor: 'rgba(6, 83, 161, 1)',
-                  selectedDayTextColor: 'black',
+          <Text style={styles.title}>List Your Space</Text>
+          <Text style={styles.subHeading}>Location</Text>
+          <View>
+              <Searchbar
+                placeholder="Search Address"
+                onChangeText={(query) => {
+                  setLocation(query);
+                  fetchAddressSuggestions(query);
                 }}
-            />
-        </View>
-        <View style={styles.priceAndNegotiableContainer}>
-          <View style={styles.priceSection}>
-            <Text style={styles.subHeading}>Price</Text>
-            <View style={[styles.priceInputs, { marginTop: '-2.5%' }]}>
-            <View style={styles.priceContainer}>
-              <Text style={styles.dollarSign}>$</Text>
-              <TextInput
-                style={styles.inputPrice}
-                keyboardType="numeric"
-                placeholder="0.00"
-                value={price}
-                onChangeText={(text) => {
-                  // Allow only numbers and one decimal point
-                  let sanitizedText = text.replace(/[^0-9.]/g, '');
-                  // Ensure only one decimal point
-                  if ((sanitizedText.match(/\./g) || []).length > 1) {
-                    sanitizedText = sanitizedText.slice(0, -1);
-                  }
-                  // Limit to two digits after the decimal
-                  if (sanitizedText.includes('.')) {
-                    const parts = sanitizedText.split('.');
-                    if (parts[1]?.length > 2) {
-                      sanitizedText = `${parts[0]}.${parts[1].slice(0, 2)}`;
-                    }
-                  }
-                  // Convert to a number and enforce range limits
-                  const numericValue = parseFloat(sanitizedText);
-                  if (numericValue > 999999.99) {
-                    sanitizedText = '999999.99';
-                  } else if (numericValue < 0) {
-                    sanitizedText = '0.00';
-                  }
-                  setPrice(sanitizedText);
-                }}
+                value={location}
+                style={styles.searchInput}
+                inputStyle={styles.searchText}
+                placeholderTextColor="#A8A8A8"
               />
-            </View>
-              <Text style={styles.slash}>/</Text>
+              {suggestions.length > 0 && (
+              <View style={styles.suggestionsContainer}>
+                {suggestions.map((item, index) => (
+                  <TouchableOpacity key={item.place_id} onPress={() => handleSelectAddress(item.description)}>
+                    <Text style={[
+                      styles.suggestionItem,
+                      index === suggestions.length - 1 && { borderBottomWidth: 0 }
+                    ]}>
+                      {item.description}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+          <Text style={styles.subHeading}>Start Time</Text>
+          <View style={styles.timeContainer}>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="12"
+              placeholderTextColor="#A8A8A8"
+              keyboardType="numeric"
+              value={startTime.hours}
+              onChangeText={(text) => setStartTime({ ...startTime, hours: text })}
+            />
+            <Text style={styles.colon}>:</Text>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="00"
+              placeholderTextColor="#A8A8A8"
+              keyboardType="numeric"
+              value={startTime.minutes}
+              onChangeText={(text) => setStartTime({ ...startTime, minutes: text })}
+            />
+            <View style={styles.dropdownContainer}>
               <RNPickerSelect
-                onValueChange={(value) => setRentalPeriod(value)}
+                onValueChange={(value) => setStartPeriod(value)}
                 items={[
-                  { label: 'Hour', value: 'hour', color: 'black'},
-                  { label: 'Day', value: 'day', color: 'black' },
-                  { label: 'Week', value: 'week', color: 'black' },
-                  { label: 'Month', value: 'month', color: 'black' },
-                  { label: 'Semstr', value: 'semester', color: 'black' },
+                  { label: 'AM', value: 'AM', color: 'black' },
+                  { label: 'PM', value: 'PM', color: 'black' },
                 ]}
+                value={startPeriod}
                 style={{
                   inputIOS: {
                     fontSize: 16,
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    borderRadius: 17,
-                    backgroundColor: '#E9E9E9',
+                    color: 'black',
                     height: 40,
-                    width: 110,
-                    paddingLeft: '3.5%',
+                    width: 75,
+                    backgroundColor: '#E9E9E9',
+                    borderRadius: 17,
+                    paddingLeft: 15,
+                    paddingRight: 35, 
+                    textAlign: 'left', 
                   },
                   inputAndroid: {
                     fontSize: 16,
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    borderRadius: 17,
-                    backgroundColor: '#E9E9E9',
+                    color: 'black',
                     height: 40,
-                    width: 110,
-                    paddingLeft: '3.5%',
+                    backgroundColor: '#E9E9E9',
+                    borderRadius: 17,
+                    paddingLeft: 15, 
+                    paddingRight: 35, 
+                    textAlign: 'left', 
                   },
                   iconContainer: {
-                    top: '40%',
-                    right: '14%',
+                    position: 'absolute',
+                    right: 13, 
+                    top: '50%', 
+                    transform: [{ translateY: '-50%' }], 
                   },
                 }}
-                value={rentalPeriod}
                 useNativeAndroidPickerStyle={false}
                 placeholder={{}}
                 Icon={() => (
@@ -619,147 +486,318 @@ function PostScreen({ navigation, route }) {
             </View>
           </View>
 
-          <View style={styles.negotiableSection}>
-            <Text style={[styles.subHeading, {marginLeft: '1%'}]}>Negotiable</Text>
-            <View style={styles.negotiableOptions}>
-            <TouchableOpacity
-              style={styles.option}
-              onPress={() => setIsNegotiable((prev) => (prev === true ? null : true))}
-            >
-              <View style={styles.unselectedCircle}>
-                {isNegotiable === true && <View style={styles.selectedCircle} />}
-              </View>
-              <Text style={styles.optionText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.option}
-              onPress={() => setIsNegotiable((prev) => (prev === false ? null : false))}
-            >
-              <View style={styles.unselectedCircle}>
-                {isNegotiable === false && <View style={styles.selectedCircle} />}
-              </View>
-              <Text style={styles.optionText}>No</Text>
-            </TouchableOpacity>
+          <Text style={styles.subHeading}>End Time</Text>
+          <View style={styles.timeContainer}>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="12"
+              placeholderTextColor="#A8A8A8"
+              keyboardType="numeric"
+              value={endTime.hours}
+              onChangeText={(text) => setEndTime({ ...endTime, hours: text })}
+            />
+            <Text style={styles.colon}>:</Text>
+            <TextInput
+              style={styles.timeInput}
+              placeholder="00"
+              placeholderTextColor="#A8A8A8"
+              keyboardType="numeric"
+              value={endTime.minutes}
+              onChangeText={(text) => setEndTime({ ...endTime, minutes: text })}
+            />
+            <View style={styles.dropdownContainer}>
+              <RNPickerSelect
+                onValueChange={(value) => setEndPeriod(value)}
+                items={[
+                  { label: 'AM', value: 'AM', color: 'black' },
+                  { label: 'PM', value: 'PM', color: 'black' },
+                ]}
+                value={endPeriod}
+                style={{
+                  inputIOS: {
+                    fontSize: 16,
+                    color: 'black',
+                    height: 40,
+                    width: 75,
+                    backgroundColor: '#E9E9E9',
+                    borderRadius: 17,
+                    paddingLeft: 15,
+                    paddingRight: 35, 
+                    textAlign: 'left', 
+                  },
+                  inputAndroid: {
+                    fontSize: 16,
+                    color: 'black',
+                    height: 40,
+                    backgroundColor: '#E9E9E9',
+                    borderRadius: 17,
+                    paddingLeft: 15, 
+                    paddingRight: 35, 
+                    textAlign: 'left', 
+                  },
+                  iconContainer: {
+                    position: 'absolute',
+                    right: 13, 
+                    top: '50%', 
+                    transform: [{ translateY: '-50%' }], 
+                  },
+                }}
+                useNativeAndroidPickerStyle={false}
+                placeholder={{}}
+                Icon={() => (
+                  <Image source={Dropdown} style={styles.dropdownImage} />
+                )}
+              />
             </View>
           </View>
-        </View>
 
-        <Text style={styles.subHeading}>Size</Text>
-        <View style={styles.sizeInput}>
-          <RNPickerSelect
-            onValueChange={(value) => setSize(value)}
-            items={[
-              { label: 'Sedan', value: 'sedan', color: 'black' },
-              { label: 'SUV', value: 'suv', color: 'black' },
-              { label: 'Minivan', value: 'minivan', color: 'black' },
-              { label: 'Full-bed Truck', value: 'fullbedtruck', color: 'black' },
-              { label: 'Half-bed Truck', value: 'halfbedtruck', color: 'black' },
-              { label: 'RV', value: 'rv', color: 'black' },
-              { label: 'Camper Van', value: 'campervan', color: 'black' },
-            ]}
-            value={sizeOfCar}
-            style={{
-              inputIOS: {
-                fontSize: 16,
-                paddingVertical: 10,
-                paddingHorizontal: 10,
-                borderRadius: 17,
-                backgroundColor: '#E9E9E9',
-                height: 40,
-                width: 100,
-                paddingLeft: '3.5%',
-              },
-              inputAndroid: {
-                fontSize: 16,
-                paddingVertical: 10,
-                paddingHorizontal: 10,
-                borderRadius: 17,
-                backgroundColor: '#E9E9E9',
-                height: 40,
-                width: 100,
-                paddingLeft: '3.5%',
-              },
-              iconContainer: {
-                top: '40%',
-                right: '14%',
-              },
-            }}
-            useNativeAndroidPickerStyle={false}
-            placeholder={{}}
-            Icon={() => (
-              <Image source={Dropdown} style={styles.dropdownImage} />
-            )}
-          />
-        </View>
-
-        <Text style={styles.subHeading}>Tags</Text>
-        <View style={styles.tagsContainer}>
-          <TouchableOpacity style={styles.addTagButton} onPress={() => setIsTagsModalOpen(true)}>
-            <Text style={styles.addTagButtonText}>+ Add</Text>
-          </TouchableOpacity>
-          {tags.map((tag, index) => (
-            <View key={index} style={styles.tag}>
-              <Text style={styles.tagText}>{tag}</Text>
-              {/* <TouchableOpacity onPress={() => handleRemoveTag(index)}>
-                <Text style={styles.removeTagText}>×</Text>
-              </TouchableOpacity> */}
-            </View>
-          ))}
-        </View>
-        <Text style={styles.subHeading}>Upload Images</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: '3.5%' }}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ flexGrow: 0 }}
-            contentContainerStyle={{ flexDirection: 'row' }}
-          >
-            {[...Array(4)].map((_, index) => {
-              const uri = images[index];
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => {
-                    setSelectedSlotIndex(index);
-                    setUploadModalVisible(true);
+          <Text style={styles.subHeading}>Available dates</Text>
+          <View style={styles.calendarContainer}>
+            <Calendar
+                style={styles.calendar}
+                onDayPress={handleDateSelect}
+                markedDates={selectedDates}
+                markingType={'period'}
+                theme={{
+                    textDayFontSize: 13,
+                    textMonthFontSize: 13,
+                    textDayHeaderFontSize: 13,
+                    textDayFontFamily: 'NotoSansTaiTham-Regular',
+                    textMonthFontFamily: 'NotoSansTaiTham-Bold',
+                    textDayHeaderFontFamily: 'NotoSansTaiTham-Regular',
+                    calendarBackground: 'white',
+                    textSectionTitleColor: 'black',
+                    dayTextColor: 'black',
+                    monthTextColor: 'black',
+                    todayTextColor: 'black',
+                    arrowColor: 'rgba(6, 83, 161, 1)',
+                    selectedDayTextColor: 'black',
                   }}
+              />
+          </View>
+          <View style={styles.priceAndNegotiableContainer}>
+            <View style={styles.priceSection}>
+              <Text style={styles.subHeading}>Price</Text>
+              <View style={[styles.priceInputs, { marginTop: '-2.5%' }]}>
+              <View style={styles.priceContainer}>
+                <Text style={styles.dollarSign}>$</Text>
+                <TextInput
+                  style={styles.inputPrice}
+                  keyboardType="numeric"
+                  placeholder="0.00"
+                  value={price}
+                  onChangeText={(text) => {
+                    // Allow only numbers and one decimal point
+                    let sanitizedText = text.replace(/[^0-9.]/g, '');
+                    // Ensure only one decimal point
+                    if ((sanitizedText.match(/\./g) || []).length > 1) {
+                      sanitizedText = sanitizedText.slice(0, -1);
+                    }
+                    // Limit to two digits after the decimal
+                    if (sanitizedText.includes('.')) {
+                      const parts = sanitizedText.split('.');
+                      if (parts[1]?.length > 2) {
+                        sanitizedText = `${parts[0]}.${parts[1].slice(0, 2)}`;
+                      }
+                    }
+                    // Convert to a number and enforce range limits
+                    const numericValue = parseFloat(sanitizedText);
+                    if (numericValue > 999999.99) {
+                      sanitizedText = '999999.99';
+                    } else if (numericValue < 0) {
+                      sanitizedText = '0.00';
+                    }
+                    setPrice(sanitizedText);
+                  }}
+                />
+              </View>
+                <Text style={styles.slash}>/</Text>
+                <RNPickerSelect
+                  onValueChange={(value) => setRentalPeriod(value)}
+                  items={[
+                    { label: 'Hour', value: 'hour', color: 'black'},
+                    { label: 'Day', value: 'day', color: 'black' },
+                    { label: 'Week', value: 'week', color: 'black' },
+                    { label: 'Month', value: 'month', color: 'black' },
+                    { label: 'Semstr', value: 'semester', color: 'black' },
+                  ]}
                   style={{
-                    width: 120,
-                    height: 120,
-                    backgroundColor: '#E9E9E9',
-                    borderRadius: 10,
-                    marginRight: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden',
+                    inputIOS: {
+                      fontSize: 16,
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      borderRadius: 17,
+                      backgroundColor: '#E9E9E9',
+                      height: 40,
+                      width: 110,
+                      paddingLeft: '3.5%',
+                    },
+                    inputAndroid: {
+                      fontSize: 16,
+                      paddingVertical: 10,
+                      paddingHorizontal: 10,
+                      borderRadius: 17,
+                      backgroundColor: '#E9E9E9',
+                      height: 40,
+                      width: 110,
+                      paddingLeft: '3.5%',
+                    },
+                    iconContainer: {
+                      top: '40%',
+                      right: '14%',
+                    },
                   }}
-                >
-                  {uri ? (
-                    <Image
-                      source={{ uri }}
-                      style={{ width: '100%', height: '100%', borderRadius: 10 }}
-                      resizeMode="cover"
-                    />
-                  ) : (
-                    <Image source={UploadIcon} style={{ width: 40, height: 40 }} />
+                  value={rentalPeriod}
+                  useNativeAndroidPickerStyle={false}
+                  placeholder={{}}
+                  Icon={() => (
+                    <Image source={Dropdown} style={styles.dropdownImage} />
                   )}
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
-        <Text style={styles.subHeading}>Additional Notes</Text>
-        <TextInput
-          style={[styles.input, styles.notesInput]}
-          placeholder="Please remove your car on time."
-          placeholderTextColor="#A8A8A8"
-          multiline
-          value={notes}
-          onChangeText={setNotes}
-        />
-        <TouchableOpacity style={styles.listButton} onPress={onPostPress}>
-          <Text style={styles.listButtonText}>List</Text>
-        </TouchableOpacity>
+                />
+              </View>
+            </View>
+
+            <View style={styles.negotiableSection}>
+              <Text style={[styles.subHeading, {marginLeft: '1%'}]}>Negotiable</Text>
+              <View style={styles.negotiableOptions}>
+              <TouchableOpacity
+                style={styles.option}
+                onPress={() => setIsNegotiable((prev) => (prev === true ? null : true))}
+              >
+                <View style={styles.unselectedCircle}>
+                  {isNegotiable === true && <View style={styles.selectedCircle} />}
+                </View>
+                <Text style={styles.optionText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.option}
+                onPress={() => setIsNegotiable((prev) => (prev === false ? null : false))}
+              >
+                <View style={styles.unselectedCircle}>
+                  {isNegotiable === false && <View style={styles.selectedCircle} />}
+                </View>
+                <Text style={styles.optionText}>No</Text>
+              </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          <Text style={styles.subHeading}>Size</Text>
+          <View style={styles.sizeInput}>
+            <RNPickerSelect
+              onValueChange={(value) => setSize(value)}
+              items={[
+                { label: 'Sedan', value: 'sedan', color: 'black' },
+                { label: 'SUV', value: 'suv', color: 'black' },
+                { label: 'Minivan', value: 'minivan', color: 'black' },
+                { label: 'Full-bed Truck', value: 'fullbedtruck', color: 'black' },
+                { label: 'Half-bed Truck', value: 'halfbedtruck', color: 'black' },
+                { label: 'RV', value: 'rv', color: 'black' },
+                { label: 'Camper Van', value: 'campervan', color: 'black' },
+              ]}
+              value={sizeOfCar}
+              style={{
+                inputIOS: {
+                  fontSize: 16,
+                  paddingVertical: 10,
+                  paddingHorizontal: 10,
+                  borderRadius: 17,
+                  backgroundColor: '#E9E9E9',
+                  height: 40,
+                  width: 100,
+                  paddingLeft: '3.5%',
+                },
+                inputAndroid: {
+                  fontSize: 16,
+                  paddingVertical: 10,
+                  paddingHorizontal: 10,
+                  borderRadius: 17,
+                  backgroundColor: '#E9E9E9',
+                  height: 40,
+                  width: 100,
+                  paddingLeft: '3.5%',
+                },
+                iconContainer: {
+                  top: '40%',
+                  right: '14%',
+                },
+              }}
+              useNativeAndroidPickerStyle={false}
+              placeholder={{}}
+              Icon={() => (
+                <Image source={Dropdown} style={styles.dropdownImage} />
+              )}
+            />
+          </View>
+
+          <Text style={styles.subHeading}>Tags</Text>
+          <View style={styles.tagsContainer}>
+            <TouchableOpacity style={styles.addTagButton} onPress={() => setIsTagsModalOpen(true)}>
+              <Text style={styles.addTagButtonText}>+ Add</Text>
+            </TouchableOpacity>
+            {tags.map((tag, index) => (
+              <View key={index} style={styles.tag}>
+                <Text style={styles.tagText}>{tag}</Text>
+                {/* <TouchableOpacity onPress={() => handleRemoveTag(index)}>
+                  <Text style={styles.removeTagText}>×</Text>
+                </TouchableOpacity> */}
+              </View>
+            ))}
+          </View>
+          <Text style={styles.subHeading}>Upload Images</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginHorizontal: '3.5%' }}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ flexGrow: 0 }}
+              contentContainerStyle={{ flexDirection: 'row' }}
+            >
+              {[...Array(4)].map((_, index) => {
+                const uri = images[index];
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      setSelectedSlotIndex(index);
+                      setUploadModalVisible(true);
+                    }}
+                    style={{
+                      width: 120,
+                      height: 120,
+                      backgroundColor: '#E9E9E9',
+                      borderRadius: 10,
+                      marginRight: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {uri ? (
+                      <Image
+                        source={{ uri }}
+                        style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                        resizeMode="cover"
+                      />
+                    ) : (
+                      <Image source={UploadIcon} style={{ width: 40, height: 40 }} />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+          <Text style={styles.subHeading}>Additional Notes</Text>
+          <TextInput
+            style={[styles.input, styles.notesInput]}
+            placeholder="Please remove your car on time."
+            placeholderTextColor="#A8A8A8"
+            multiline
+            value={notes}
+            onChangeText={setNotes}
+          />
+          <TouchableOpacity style={styles.listButton} onPress={onPostPress}>
+            <Text style={styles.listButtonText}>List</Text>
+          </TouchableOpacity>
       </ScrollView>
       <TagsModal 
           isVisible={isTagsModalOpen} 
@@ -800,7 +838,7 @@ function PostScreen({ navigation, route }) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -972,6 +1010,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: '5%',
+    marginBottom: '23%',
   },
   listButtonText: {
     color: '#ffffff',

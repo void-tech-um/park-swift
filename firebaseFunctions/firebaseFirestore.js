@@ -1,9 +1,11 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import { app } from '../services/configFirestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const auth = getAuth();
 const database = getFirestore(app);
+const storage = getStorage(app);
 
 export { collection, getDocs, doc, query, where, addDoc, setDoc, getDoc, database, updateDoc };
 
@@ -47,7 +49,7 @@ export function loginUser(email, password) {
         });
 }
 
-export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate, startTime, endTime, sizeOfCar, latitude, longitude, selectedTags) {
+export function createPost(userID, location, rentalPeriod, price, negotiable, firstDate, lastDate, startTime, endTime, sizeOfCar, latitude, longitude, selectedTags, images = []) {
     if (!location || !firstDate || !lastDate) {
         alert('All parameters must be provided');
         return Promise.reject(new Error('Missing required parameters'));
@@ -70,6 +72,7 @@ export function createPost(userID, location, rentalPeriod, price, negotiable, fi
         longitude,
         selectedTags,
         createdAt: new Date().toISOString(),
+        images,
     })
     .then(async (docRef) => {
         const postID = docRef.id;  // The unique Firestore-generated ID
@@ -207,6 +210,7 @@ export function getAllPosts() {
                 postID: data.postID | null,
                 latitude: data.latitude || null,
                 longitude: data.longitude || null,
+                images: data.images || [],
             });
         });
         return posts;
@@ -222,12 +226,17 @@ export function getPost(postID) {
     return getDoc(postDocRef)
         .then((docSnapshot) => {
             if (docSnapshot.exists()) {
-                return docSnapshot.data();
+                const data = docSnapshot.data();
+                return {
+                    ...data,
+                    images: data.images || [],  // ✅ default to empty array
+                };
             } else {
                 throw new Error('Post does not exist');
             }
         });
 }
+
 
 export function getUser(userId) {
     const userDocRef = doc(database, 'users', userId);
@@ -252,5 +261,14 @@ export async function deletePost(postId, userId) {
       throw error;
     }
   }
-  
-  
+
+export const uploadImageAndGetURL = async (uri, path) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const imageRef = ref(storage, path);
+    await uploadBytes(imageRef, blob);
+
+    const downloadURL = await getDownloadURL(imageRef);
+    return downloadURL;
+};
