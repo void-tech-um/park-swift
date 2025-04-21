@@ -57,11 +57,6 @@ const MapScreen = ({ route }) => {
   }
 
   const openListing = (currentPost) => {
-    // console.log(currentPost.price && currentPost.rentalPeriod
-    //   ? `$${currentPost.price} /${currentPost.rentalPeriod}`
-    //   : null);
-
-
     const params = {
       id: currentPost.id,
       address: currentPost.location,

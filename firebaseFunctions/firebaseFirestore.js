@@ -202,7 +202,6 @@ export function getAllPosts() {
         const posts = [];
         querySnapshot.forEach((doc) => {
             const data = doc.data();
-            // console.log(data);
             posts.push({
                 ...data,
                 postID: data.postID | null,

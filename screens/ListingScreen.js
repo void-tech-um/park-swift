@@ -67,7 +67,6 @@ const ListingScreen = ({ route }) => {
     const cityState = addressState?.split(',').slice(1, 3).join(',') || '';
 
     const formatCostText = (cost, rentalPeriod = "hour") => {
-        console.log(cost);
         if (!cost) return "";
         const readablePeriod = rentalPeriod
             .replace("hr", "hour")
