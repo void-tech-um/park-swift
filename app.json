@@ -6,15 +6,21 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "splash": {
-      "resizeMode": "contain",      
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "googleMaps": {
-          "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
-        }
+        "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
+      },
+      "bundleIdentifier": "com.voidtech.parkswift",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.voidtech.parkswift",
@@ -22,7 +28,10 @@
         "googleMaps": {
           "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
         }
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-font",
@@ -33,6 +42,11 @@
         }
       ]
     ],
-    "privacy": "public"
+    "privacy": "public",
+    "extra": {
+      "eas": {
+        "projectId": "c2b771b1-6b4f-497b-bed2-0aa2f14583c1"
+      }
+    }
   }
 }
