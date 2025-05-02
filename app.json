@@ -12,14 +12,26 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "permissions": "The app accesses your camera and photo library to upload images."
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.voidtech.parkswift",
       "googleMaps": {
         "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
       },
-      "bundleIdentifier": "com.voidtech.parkswift",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "This app uses the camera to take photos for uploads.",
+        "NSPhotoLibraryUsageDescription": "This app accesses your photo library to upload images.",
+        "NSLocationWhenInUseUsageDescription": "Location is used to find and display nearby parking spots."
       }
     },
     "android": {
@@ -30,18 +42,13 @@
         }
       },
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
       ]
     },
-    "plugins": [
-      "expo-font",
-      [
-        "expo-image-picker",
-        {
-          "permissions": "The app accesses your camera and photo library to upload images."
-        }
-      ]
-    ],
     "privacy": "public",
     "extra": {
       "eas": {
