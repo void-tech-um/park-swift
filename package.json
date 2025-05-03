@@ -29,6 +29,7 @@
     "cross-spawn": "^7.0.6",
     "execa": "^9.5.2",
     "expo": "~52.0.46",
+    "expo-dev-client": "~5.0.20",
     "expo-firebase": "^0.0.0-alpha.0",
     "expo-font": "~13.0.4",
     "expo-image-picker": "~16.0.6",
@@ -49,7 +50,7 @@
     "react-native-get-random-values": "^1.11.0",
     "react-native-image-picker": "^8.2.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-maps": "^1.18.0",
+    "react-native-maps": "^1.2.0",
     "react-native-pager-view": "^6.5.1",
     "react-native-paper": "^5.12.3",
     "react-native-picker-select": "^9.0.1",
@@ -61,8 +62,7 @@
     "react-native-vector-icons": "^10.2.0",
     "undici": "^7.3.0",
     "yargs": "^17.7.2",
-    "yargs-parser": "^21.1.1",
-    "expo-dev-client": "~5.0.20"
+    "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5"

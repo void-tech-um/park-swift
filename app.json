@@ -57,6 +57,17 @@
     },
     "experimental": {
       "newArchEnabled": false
+    },
+    "expo": {
+      "jsEngine": "hermes",
+      "plugins": [
+        [
+          "react-native-maps",
+          {
+            "concurrentRoot": false
+          }
+        ]
+      ]
     }
   }
 }
