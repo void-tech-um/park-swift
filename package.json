@@ -61,7 +61,8 @@
     "react-native-vector-icons": "^10.2.0",
     "undici": "^7.3.0",
     "yargs": "^17.7.2",
-    "yargs-parser": "^21.1.1"
+    "yargs-parser": "^21.1.1",
+    "expo-dev-client": "~5.0.20"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5"
