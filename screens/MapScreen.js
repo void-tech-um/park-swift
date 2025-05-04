@@ -104,14 +104,14 @@ const MapScreen = ({ route }) => {
               key={index}
               coordinate={{ latitude: post.latitude, longitude: post.longitude }} 
               title={post.location}
+              onPress={() => openListing(post)}
             >
-              <TouchableOpacity onPress={() => openListing(post)}>
-                <Image
-                  source={require('../assets/map-pin.png')}
-                  style={{ width: markerSize, height: markerSize }}
-                />
-              </TouchableOpacity>
+              <Image
+                source={require('../assets/map-pin.png')}
+                style={{ width: markerSize, height: markerSize }}
+              />
             </Marker>
+
           ) : null
         ))}
       </MapView>
