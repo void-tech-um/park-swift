@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Image, Dimensions, TouchableOpacity, Modal } from 'react-native';
+import { View, StyleSheet, Text, Image, Dimensions, Modal } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { getAllPosts } from '../firebaseFunctions/firebaseFirestore';
 import MenuSearchBar from '../components/MenuSearchBar.js';
 import ListingScreen from './ListingScreen';
-import { getRelativeCoords } from 'react-native-reanimated';
-import { BottomNavigation } from 'react-native-paper';
 
 const { width, height } = Dimensions.get('window');
 const markerSize = Math.min(width, height) * 0.1; 
@@ -15,7 +13,6 @@ const MapScreen = ({ route }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [posts, setPosts] = useState([]); // Store listing locations
   const [isListingScreenVisible, setIsListingScreenVisible] = useState(false);
-
   const [currentParams, setCurrentParams] = useState(null);
 
   useEffect(() => {
