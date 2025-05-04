@@ -1,24 +1,8 @@
 {
   "cli": {
-    "version": ">= 3.13.0",
-    "appVersionSource": "remote"
+    "version": ">= 3.13.0"
   },
   "build": {
-    "production": {
-      "ios": {
-        "buildConfiguration": "Release",
-        "resourceClass": "m-medium",
-        "autoIncrement": true,
-        "env": {
-          "EXPO_NO_NEW_ARCHITECTURE": "true"
-        }
-      }
-    },
-    "preview": {
-      "env": {
-        "RCT_NEW_ARCH_ENABLED": "0"
-      }
-    },
     "development": {
       "developmentClient": true,
       "distribution": "internal",
@@ -28,13 +12,22 @@
         }
       }
     },
-    "adhoc": {
+    "preview": {
       "distribution": "internal",
       "ios": {
-        "simulator": false
-      },
-      "env": {
-        "RCT_NEW_ARCH_ENABLED": "0"
+        "env": {
+          "EXPO_NO_NEW_ARCHITECTURE": "true"
+        }
+      }
+    },
+    "production": {
+      "ios": {
+        "buildConfiguration": "Release",
+        "autoIncrement": true,
+        "resourceClass": "m-medium",
+        "env": {
+          "EXPO_NO_NEW_ARCHITECTURE": "true"
+        }
       }
     }
   }

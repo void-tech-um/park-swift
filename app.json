@@ -2,23 +2,28 @@
   "expo": {
     "name": "Park Swift",
     "slug": "Park-Swift",
-    "icon": "./assets/appLogo.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/appLogo.png",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+    "jsEngine": "hermes",
     "plugins": [
       "expo-font",
       [
         "expo-image-picker",
         {
           "permissions": "The app accesses your camera and photo library to upload images."
+        }
+      ],
+      [
+        "react-native-maps",
+        {
+          "concurrentRoot": false
         }
       ]
     ],
@@ -37,20 +42,16 @@
     },
     "android": {
       "package": "com.voidtech.parkswift",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w"
         }
-      },
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
-      ]
+      }
     },
-    "privacy": "public",
     "extra": {
       "eas": {
         "projectId": "c2b771b1-6b4f-497b-bed2-0aa2f14583c1"
@@ -58,17 +59,6 @@
     },
     "experimental": {
       "newArchEnabled": false
-    },
-    "expo": {
-      "jsEngine": "hermes",
-      "plugins": [
-        [
-          "react-native-maps",
-          {
-            "concurrentRoot": false
-          }
-        ]
-      ]
     }
   }
 }
