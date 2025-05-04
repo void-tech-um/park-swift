@@ -11,19 +11,13 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
-    "jsEngine": "hermes",
+    "jsEngine": "jsc",
     "plugins": [
       "expo-font",
       [
         "expo-image-picker",
         {
           "permissions": "The app accesses your camera and photo library to upload images."
-        }
-      ],
-      [
-        "react-native-maps",
-        {
-          "concurrentRoot": false
         }
       ]
     ],
