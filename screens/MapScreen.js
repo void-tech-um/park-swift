@@ -6,17 +6,66 @@ import { getAllPosts } from '../firebaseFunctions/firebaseFirestore';
 import MenuSearchBar from '../components/MenuSearchBar';
 import ListingScreen from './ListingScreen';
 
+const API_KEY = 'AIzaSyC5Fz0BOBAJfvvMwmGB27hJYRhFNq7ll5w';
 const { width, height } = Dimensions.get('window');
 
-const getMapUrl = (lat, lng, posts) => {
-  const markers = posts
+// 🧠 Function to generate HTML for interactive map
+const getInteractiveMapHtml = (lat, lng, posts, apiKey) => {
+  const markersJS = posts
     .filter(post => post.latitude && post.longitude)
-    .map(post =>
-      `&markers=color:red%7Clabel:P%7C${post.latitude},${post.longitude}`
+    .map(
+      post => `new google.maps.Marker({ position: { lat: ${post.latitude}, lng: ${post.longitude} }, map });`
     )
-    .join('');
+    .join('\n');
 
-  return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=14&size=600x600&scale=2&maptype=roadmap${markers}&key=YOUR_GOOGLE_MAPS_API_KEY`;
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          html, body, #map {
+            height: 100%;
+            
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+          }
+          .gm-style-mtc {
+            transform: scale(2);
+            margin-left: 50px;
+            margin-top: 30px;
+            margin-right: 70px;
+          }
+          .gm-style-mtc button {
+            color: black !important;
+            font-weight: bold !important;
+            opacity: 1 !important;
+          }
+          .gm-bundled-control {
+            transform: scale(2);
+            left: 895px;
+            top: 1450px;
+          }
+
+        </style>
+        <script src="https://maps.googleapis.com/maps/api/js?key=${apiKey}"></script>
+        <script>
+          function initMap() {
+            const center = { lat: ${lat}, lng: ${lng} };
+            const map = new google.maps.Map(document.getElementById("map"), {
+              zoom: 19,
+              center: center
+            });
+            ${markersJS}
+          }
+        </script>
+      </head>
+      <body onload="initMap()">
+        <div id="map"></div>
+      </body>
+    </html>
+  `;
 };
 
 const MapScreen = ({ route }) => {
@@ -81,23 +130,26 @@ const MapScreen = ({ route }) => {
   if (!userLocation) {
     return <Text>Loading...</Text>;
   }
+  console.log(getInteractiveMapHtml(userLocation.latitude, userLocation.longitude, posts, API_KEY));
 
   return (
     <View style={styles.container}>
       <MenuSearchBar />
       <WebView
-        source={{ uri: getMapUrl(userLocation.latitude, userLocation.longitude, posts) }}
-        style={{ flex: 1 }}
         originWhitelist={['*']}
+        source={{
+          html: getInteractiveMapHtml(userLocation.latitude, userLocation.longitude, posts, API_KEY),
+        }}
         javaScriptEnabled={true}
         domStorageEnabled={true}
+        style={{ flex: 1 }}
       />
       <Modal
-        animationType='slide'
+        animationType="slide"
         transparent={false}
         visible={isListingScreenVisible}
         onRequestClose={() => setIsListingScreenVisible(false)}
-        presentationStyle={'pageSheet'}
+        presentationStyle="pageSheet"
       >
         <ListingScreen
           route={{
