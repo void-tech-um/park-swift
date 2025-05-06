@@ -23,42 +23,61 @@ const getInteractiveMapHtml = (lat, lng, posts, apiKey) => {
     <html>
       <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
         <style>
           html, body, #map {
             height: 100%;
-            
             margin: 0;
             padding: 0;
             overflow: hidden;
-          }
-          .gm-style-mtc {
-            transform: scale(2);
-            margin-left: 50px;
-            margin-top: 30px;
-            margin-right: 70px;
           }
           .gm-style-mtc button {
             color: black !important;
             font-weight: bold !important;
             opacity: 1 !important;
           }
-          .gm-bundled-control {
-            transform: scale(2);
-            left: 895px;
-            top: 1450px;
-          }
 
         </style>
         <script src="https://maps.googleapis.com/maps/api/js?key=${apiKey}"></script>
         <script>
           function initMap() {
-            const center = { lat: ${lat}, lng: ${lng} };
-            const map = new google.maps.Map(document.getElementById("map"), {
-              zoom: 19,
-              center: center
-            });
-            ${markersJS}
-          }
+          const center = { lat: ${lat}, lng: ${lng} };
+          const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 17,
+            center: center,
+            minZoom: 3,
+            gestureHandling: "greedy", 
+          });
+
+          // 👤 User location marker (blue dot)
+          new google.maps.Marker({
+            position: center,
+            map: map,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 6,
+              fillColor: "#4285F4",
+              fillOpacity: 1,
+              strokeWeight: 2,
+              strokeColor: "white"
+            }
+          });
+
+          // 🟢 360-degree visual radius
+          new google.maps.Circle({
+            strokeColor: "#4285F4",
+            strokeOpacity: 0.8,
+            strokeWeight: 1,
+            fillColor: "#4285F4",
+            fillOpacity: 0.2,
+            map: map,
+            center: center,
+            radius: 20 // in meters — adjust to make larger/smaller
+          });
+
+          // 📍 Other listing markers
+          ${markersJS}
+        }
         </script>
       </head>
       <body onload="initMap()">
